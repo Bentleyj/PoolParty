@@ -1,2 +1,4 @@
+ofxCv
 ofxGui
 ofxNestedFileLoader
+ofxOpenCv

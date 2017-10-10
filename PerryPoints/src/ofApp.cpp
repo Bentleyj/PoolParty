@@ -1,8 +1,19 @@
 #include "ofApp.h"
+#define NUM_STEPS 500
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	img.load("Tapestry.jpg");
 
+	for (int x = 0; x < img.getWidth(); x += img.getWidth()/NUM_STEPS) {
+		for (int y = 0; y < img.getHeight(); y += img.getHeight() / NUM_STEPS) {
+			mesh.addVertex(ofVec3f(x, y, 0));
+			mesh.addColor(img.getColor(x, y));
+		}
+	}
+
+	mesh.setMode(OF_PRIMITIVE_POINTS);
+	ofBackground(0);
 }
 
 //--------------------------------------------------------------
@@ -12,7 +23,10 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+	cam.begin();
+	ofTranslate(-img.getWidth() / 2, -img.getHeight() / 2);
+	mesh.draw();
+	cam.end();
 }
 
 //--------------------------------------------------------------
