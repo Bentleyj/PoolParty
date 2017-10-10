@@ -25,7 +25,10 @@ class ofApp : public ofBaseApp{
 		ofImage img;
 		ofMesh mesh;
 
-		
+		ofVideoGrabber camera;
+		cv::Mat accumulator;
+		ofxCv::FlowFarneback flow;
+		ofImage flowImg;
 
 		ofShader offset;
 
