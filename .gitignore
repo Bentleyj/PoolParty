@@ -1,3 +1,6 @@
+#Project Specific Stuff
+*.mp4
+
 /bin/*  
 !/bin/data/   
 [Bb]uild/ 
@@ -9,7 +12,7 @@
 *.app/     
 *.pyc   
 .svn/   
-*.log      
+*.log    
 
 #XCode
 *.pbxuser  
