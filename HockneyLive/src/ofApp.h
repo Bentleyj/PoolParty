@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxNestedFileLoader.h"
+#include "ofxGui.h"
 #include "ofxCv.h"
 
 class ofApp : public ofBaseApp{
@@ -22,16 +24,22 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofImage img;
-		ofMesh mesh;
+		vector<string> videoPaths;
+		ofVideoGrabber cameraStream;
 
-		ofVideoGrabber camera;
-		cv::Mat accumulator;
 		ofxCv::FlowFarneback flow;
-		ofImage flowImg;
 
-		ofShader offset;
+		vector<int> topRectangles;
 
-		ofEasyCam cam;
-		
+		int topFlowIndex;
+
+		vector<ofRectangle> Grid;
+
+		float timeBetweenChecks;
+		float lastCheckTime;
+
+		ofImage largeImg;
+		ofImage fullImg;
+		ofImage smallImg;
+		ofImage smallGray;
 };
