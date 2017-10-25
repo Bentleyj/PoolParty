@@ -1,55 +1,65 @@
 #include "ofApp.h"
-
-#define NUM_VIDEOS 9
+#define CELL_WIDTH 20
+#define CELL_HEIGHT 20
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	cameraStream.setup(1920, 1080);
+	largeImg.allocate(1920, 1080, OF_IMAGE_COLOR);
+	smallImg.allocate(192, 108, OF_IMAGE_COLOR);
+	smallGray.allocate(192, 108, OF_IMAGE_GRAYSCALE);
 
-	ofxNestedFileLoader loader;
-	videoPaths = loader.load("videos");
-
-	for (int i = 0; i < NUM_VIDEOS; i++) {
-		ofVideoPlayer* vp = new ofVideoPlayer();
-		videoPlayers.push_back(vp);
+	for (int x = 0; x < smallImg.getWidth() - CELL_WIDTH; x += CELL_WIDTH) {
+		for (int y = 0; y < smallImg.getHeight() - CELL_HEIGHT; y += CELL_HEIGHT) {
+			Grid.push_back(ofRectangle(x, y, CELL_WIDTH, CELL_HEIGHT));
+		}
 	}
 
-	for (int i = 0; i < videoPlayers.size(); i++) {
-		int val = (int)ofRandom(videoPaths.size());
-		bool loaded = videoPlayers[i]->load(videoPaths[val]);
-		videoPlayers[i]->setLoopState(OF_LOOP_NONE);
-		videoPlayers[i]->play();
-	}
-
+	timeBetweenChecks = 1.0;
+	lastCheckTime = 0.0f;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	for (int i = 0; i < videoPlayers.size(); i++) {
-		videoPlayers[i]->update();
-		if (videoPlayers[i]->getIsMovieDone()) {
-			int val = (int)ofRandom(videoPaths.size());
-			videoPlayers[i]->load(videoPaths[val]);
-			videoPlayers[i]->setLoopState(OF_LOOP_NONE);
-			videoPlayers[i]->play();
+	cameraStream.update();
+	if(cameraStream.isFrameNew()) {
+		ofxCv::copy(cameraStream, largeImg);
+		ofxCv::resize(cameraStream, smallImg);
+		ofxCv::copyGray(smallImg, smallGray);
+		smallGray.update();
+		smallImg.update();
+		largeImg.update();
+		flow.calcOpticalFlow(smallGray);
+		if (timeBetweenChecks < ofGetElapsedTimef() - lastCheckTime) {
+			float topFlow = 0;
+			for (int i = 0; i < Grid.size(); i++) {
+				ofVec2f f = flow.getAverageFlowInRegion(Grid[i]);
+				float l = sqrt(f.x*f.x + f.y*f.y);
+				if (l > topFlow) {
+					topFlow = l;
+					topFlowIndex = i;
+				}
+			}
+			lastCheckTime = ofGetElapsedTimef();
 		}
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	int x = 50;
-	int y = 50;
-	float size = 500;
-	for (int i = 0; i < videoPlayers.size(); i++) {
-		videoPlayers[i]->draw(x, y, 500, 500);
-		x += size + 50;
-		if (x + size + 50 > ofGetWidth()) {
-			y += size + 50;
-			x = 50;
-		}
-	}
-
+	largeImg.draw(0, 0);
+	ofPushMatrix();
+	ofPushStyle();
+	ofScale(10, 10);
+	flow.draw();
+	ofSetColor(255, 0, 0);
+	ofNoFill();
+	ofDrawRectangle(Grid[topFlowIndex].x, Grid[topFlowIndex].y, Grid[topFlowIndex].width, Grid[topFlowIndex].height);
+	ofPopStyle();
+	ofPopMatrix();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
+
+	largeImg.drawSubsection(0, largeImg.getHeight() + 10, CELL_WIDTH * 10, CELL_WIDTH * 10, Grid[topFlowIndex].x * 10, Grid[topFlowIndex].y * 10, Grid[topFlowIndex].width * 10, Grid[topFlowIndex].height * 10);
 }
 
 //--------------------------------------------------------------

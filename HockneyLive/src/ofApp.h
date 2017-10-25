@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxNestedFileLoader.h"
 #include "ofxGui.h"
+#include "ofxCv.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,4 +25,21 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		vector<string> videoPaths;
+		ofVideoGrabber cameraStream;
+
+		ofxCv::FlowFarneback flow;
+
+		vector<int> topRectangles;
+
+		int topFlowIndex;
+
+		vector<ofRectangle> Grid;
+
+		float timeBetweenChecks;
+		float lastCheckTime;
+
+		ofImage largeImg;
+		ofImage fullImg;
+		ofImage smallImg;
+		ofImage smallGray;
 };
