@@ -39,7 +39,6 @@ class ofApp : public ofBaseApp{
 		float lastCheckTime;
 
 		ofImage largeImg;
-		ofImage fullImg;
 		ofImage smallImg;
 		ofImage smallGray;
 };
