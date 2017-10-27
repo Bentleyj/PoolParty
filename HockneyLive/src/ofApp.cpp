@@ -5,61 +5,120 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	cameraStream.setup(1920, 1080);
-	largeImg.allocate(1920, 1080, OF_IMAGE_COLOR);
-	smallImg.allocate(192, 108, OF_IMAGE_COLOR);
-	smallGray.allocate(192, 108, OF_IMAGE_GRAYSCALE);
+	largeImg.allocate(cameraStream.getWidth(), cameraStream.getHeight(), OF_IMAGE_COLOR);
+	smallImg.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_COLOR);
+	smallGray.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_GRAYSCALE);
 
+	float OffsetAmount = 50;
+	float xOffset = 0;
+	float yOffset = 0;
+	float widthOffset = 0;
+	float heightOffset = 0;
 	for (int x = 0; x < smallImg.getWidth() - CELL_WIDTH; x += CELL_WIDTH) {
+		if (x == 0)
+			xOffset = 0;
+		else
+			xOffset = OffsetAmount;
+		if (x == smallImg.getWidth() - CELL_WIDTH * 2)
+			widthOffset = 0;
+		else
+			widthOffset = OffsetAmount;
 		for (int y = 0; y < smallImg.getHeight() - CELL_HEIGHT; y += CELL_HEIGHT) {
-			Grid.push_back(ofRectangle(x, y, CELL_WIDTH, CELL_HEIGHT));
+			if (y == 0)
+				yOffset = 0;
+			else
+				yOffset = OffsetAmount;
+			if (y == smallImg.getHeight() - CELL_HEIGHT * 2)
+				heightOffset = 0;
+			else
+				heightOffset = OffsetAmount;
+			flowRectangle small;
+			small.rect = ofRectangle(x, y, CELL_WIDTH, CELL_HEIGHT);
+			small.flowMag = 0;
+			small.flow = ofVec2f(0, 0);
+			smallGrid.push_back(small);
+
+			ofRectangle large = ofRectangle(x * IMG_SCALE - xOffset, y * IMG_SCALE - yOffset, CELL_WIDTH * IMG_SCALE + widthOffset*2, CELL_HEIGHT * IMG_SCALE + heightOffset*2);
+
+			largeGrid.push_back(large);
+
+			ofRectangle displayPos = large;
+
+			displayPos.x += 10 + x * 10;
+			displayPos.y += 10 + y * 10;
+
+			displayPositions.push_back(displayPos);
 		}
 	}
 
-	timeBetweenChecks = 1.0;
-	lastCheckTime = 0.0f;
+	cells.resize(largeGrid.size());
+	int duration = 30;
+	for (int i = 0; i < cells.size(); i++) {
+		cells[i].setGrid(&largeGrid);
+		cells[i].setImg(&largeImg);
+		cells[i].setIndex(ofRandom(0, cells.size()));
+		cells[i].setSwapDuration(duration);
+		float start = ofRandom(-duration, 0);
+		cells[i].setLastSwapTime(start);
+	}
+
+	lastCheckTime = 0;
+	timeBetweenChecks = 20;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	//player.update();
 	cameraStream.update();
+	if (ofGetElapsedTimef() - lastCheckTime > timeBetweenChecks) {
+		flow.resetFlow();
+		lastCheckTime = ofGetElapsedTimef();
+	}
+
+	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
 		ofxCv::copy(cameraStream, largeImg);
 		ofxCv::resize(cameraStream, smallImg);
 		ofxCv::copyGray(smallImg, smallGray);
 		smallGray.update();
-		smallImg.update();
 		largeImg.update();
 		flow.calcOpticalFlow(smallGray);
-		if (timeBetweenChecks < ofGetElapsedTimef() - lastCheckTime) {
-			float topFlow = 0;
-			for (int i = 0; i < Grid.size(); i++) {
-				ofVec2f f = flow.getAverageFlowInRegion(Grid[i]);
-				float l = sqrt(f.x*f.x + f.y*f.y);
-				if (l > topFlow) {
-					topFlow = l;
-					topFlowIndex = i;
-				}
+		float topFlow = 0;
+		for (int i = 0; i < smallGrid.size(); i++) {
+			ofVec2f f = flow.getAverageFlowInRegion(smallGrid[i].rect);
+			float l = sqrt(f.x*f.x + f.y*f.y);
+			if (l > topFlow) {
+				topFlow = l;
+				topFlowIndex = i;
 			}
-			lastCheckTime = ofGetElapsedTimef();
+		}
+		for (int i = 0; i < cells.size(); i++) {
+			cells[i].update(topFlowIndex);
 		}
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	largeImg.draw(0, 0);
+	ofSetColor(255);
+	//player.draw(0, 0);
+	//largeImg.draw(0, 0);
 	ofPushMatrix();
 	ofPushStyle();
 	ofScale(10, 10);
 	flow.draw();
 	ofSetColor(255, 0, 0);
 	ofNoFill();
-	ofDrawRectangle(Grid[topFlowIndex].x, Grid[topFlowIndex].y, Grid[topFlowIndex].width, Grid[topFlowIndex].height);
+	ofDrawRectangle(smallGrid[topFlowIndex].rect.x, smallGrid[topFlowIndex].rect.y, smallGrid[topFlowIndex].rect.width, smallGrid[topFlowIndex].rect.height);
 	ofPopStyle();
 	ofPopMatrix();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 
-	largeImg.drawSubsection(0, largeImg.getHeight() + 10, CELL_WIDTH * 10, CELL_WIDTH * 10, Grid[topFlowIndex].x * 10, Grid[topFlowIndex].y * 10, Grid[topFlowIndex].width * 10, Grid[topFlowIndex].height * 10);
+	for (int i = 0; i < cells.size(); i++) {
+		cells[i].draw(displayPositions[i]);
+	}
+
+	//largeImg.drawSubsection(0, largeImg.getHeight() + 10, CELL_WIDTH * 10, CELL_WIDTH * 10, smallGrid[topFlowIndex].x * 10, smallGrid[topFlowIndex].y * 10, smallGrid[topFlowIndex].width * 10, smallGrid[topFlowIndex].height * 10);
 }
 
 //--------------------------------------------------------------
