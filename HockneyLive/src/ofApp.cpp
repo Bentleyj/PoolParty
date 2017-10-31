@@ -66,7 +66,6 @@ void ofApp::setup(){
 	cells.resize(displayPositions.size());
 	int duration = 30;
 	for (int i = 0; i < cells.size(); i++) {
-		//cells[i].setGrid(&largeGrid);
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(smallGrid[ofRandom(0, cells.size())].outputRect);
 		cells[i].setSwapDuration(duration);
@@ -74,7 +73,6 @@ void ofApp::setup(){
 		cells[i].setLastSwapTime(start);
 	}
 
-	//sortedFlowRectangles.resize(smallGrid.size());
 
 	for (int i = 0; i < smallGrid.size(); i++) {
 		sortedFlowRectangles.push_back(i);
@@ -86,7 +84,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	//player.update();
 	cameraStream.update();
 	if (ofGetElapsedTimef() - lastCheckTime > timeBetweenChecks) {
 		flow.resetFlow();
@@ -105,15 +102,7 @@ void ofApp::update(){
 			smallGrid[i].calculateFlow(&flow);
 		}
 		std::sort(smallGrid.begin(), smallGrid.end(), compareFlow);
-		//float topFlow = 0;
-		//for (int i = 0; i < smallGrid.size(); i++) {
-		//	ofVec2f f = flow.getAverageFlowInRegion(smallGrid[i].rect);
-		//	float l = sqrt(f.x*f.x + f.y*f.y);
-		//	if (l > topFlow) {
-		//		topFlow = l;
-		//		topFlowIndex = i;
-		//	}
-		//}
+
 		int index = ofRandom(0, 4);
 		for (int i = 0; i < cells.size(); i++) {
 			cells[i].update(smallGrid[index].outputRect);
@@ -123,25 +112,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofSetColor(255);
-	//player.draw(0, 0);
-	//largeImg.draw(0, 0);
-	ofPushMatrix();
-	ofPushStyle();
-	ofScale(10, 10);
-	flow.draw();
-	ofSetColor(255, 0, 0);
-	ofNoFill();
-	//ofDrawRectangle(smallGrid[topFlowIndex].rect.x, smallGrid[topFlowIndex].rect.y, smallGrid[topFlowIndex].rect.width, smallGrid[topFlowIndex].rect.height);
-	ofPopStyle();
-	ofPopMatrix();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
 	}
-
-	//largeImg.drawSubsection(0, largeImg.getHeight() + 10, CELL_WIDTH * 10, CELL_WIDTH * 10, smallGrid[topFlowIndex].x * 10, smallGrid[topFlowIndex].y * 10, smallGrid[topFlowIndex].width * 10, smallGrid[topFlowIndex].height * 10);
 }
 
 //--------------------------------------------------------------
