@@ -17,6 +17,8 @@ public:
 	void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
 	void draw(ofRectangle _rect);
 
+	void setOutputRect();
+
 private:
 	float swapDuration;
 	float lastSwapTime;

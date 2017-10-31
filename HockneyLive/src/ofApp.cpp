@@ -80,6 +80,8 @@ void ofApp::setup(){
 
 	lastCheckTime = 0;
 	timeBetweenChecks = 20;
+
+	ofSetFrameRate(120);
 }
 
 //--------------------------------------------------------------
