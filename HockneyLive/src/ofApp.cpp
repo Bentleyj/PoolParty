@@ -114,7 +114,7 @@ void ofApp::update(){
 		//		topFlowIndex = i;
 		//	}
 		//}
-		int index = ofRandom(0, 3);
+		int index = ofRandom(0, 4);
 		for (int i = 0; i < cells.size(); i++) {
 			cells[i].update(smallGrid[index].outputRect);
 		}

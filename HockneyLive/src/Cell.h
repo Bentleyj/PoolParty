@@ -24,5 +24,6 @@ private:
 	float scale;
 	ofImage *img;
 	ofRectangle inputRect;
-	ofVec3f randomOffset;
+	ofRectangle offsetInputRect;
+	//ofVec3f randomOffset;
 };

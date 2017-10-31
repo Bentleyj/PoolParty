@@ -40,7 +40,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		static bool compareFlow(flowRectangle a, flowRectangle b) {
-			return (a.flowMag < b.flowMag);
+			return (a.flowMag > b.flowMag);
 		}
 
 		vector<string> videoPaths;
