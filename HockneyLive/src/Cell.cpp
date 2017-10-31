@@ -39,13 +39,9 @@ void Cell::setOutputRect() {
 
 void Cell::update(ofRectangle _rect) {
 	if (ofGetElapsedTimef() - lastSwapTime > swapDuration) {
-
 		float randomRange = 50;
-
 		inputRect = _rect;
-
 		setOutputRect();
-
 		lastSwapTime = ofGetElapsedTimef();
 	}
 }
