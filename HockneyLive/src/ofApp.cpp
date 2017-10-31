@@ -81,7 +81,9 @@ void ofApp::setup(){
 	lastCheckTime = 0;
 	timeBetweenChecks = 20;
 
-	ofSetFrameRate(120);
+	ofSetBackgroundAuto(false);
+
+	//ofSetFrameRate(120);
 }
 
 //--------------------------------------------------------------
@@ -94,20 +96,22 @@ void ofApp::update(){
 
 	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
-		ofxCv::copy(cameraStream, largeImg);
-		ofxCv::resize(cameraStream, smallImg);
-		ofxCv::copyGray(smallImg, smallGray);
-		smallGray.update();
-		largeImg.update();
-		flow.calcOpticalFlow(smallGray);
-		for (int i = 0; i < smallGrid.size(); i++) {
-			smallGrid[i].calculateFlow(&flow);
-		}
-		std::sort(smallGrid.begin(), smallGrid.end(), compareFlow);
+		for (int j = 0; j < 3; j++) {
+			ofxCv::copy(cameraStream, largeImg);
+			ofxCv::resize(cameraStream, smallImg);
+			ofxCv::copyGray(smallImg, smallGray);
+			smallGray.update();
+			largeImg.update();
+			flow.calcOpticalFlow(smallGray);
+			for (int i = 0; i < smallGrid.size(); i++) {
+				smallGrid[i].calculateFlow(&flow);
+			}
+			std::sort(smallGrid.begin(), smallGrid.end(), compareFlow);
 
-		int index = ofRandom(0, 4);
-		for (int i = 0; i < cells.size(); i++) {
-			cells[i].update(smallGrid[index].outputRect);
+			int index = ofRandom(0, 4);
+			for (int i = 0; i < cells.size(); i++) {
+				cells[i].update(smallGrid[index].outputRect);
+			}
 		}
 	}
 }
