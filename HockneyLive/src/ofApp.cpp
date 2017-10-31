@@ -9,6 +9,8 @@ void ofApp::setup(){
 	smallImg.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_COLOR);
 	smallGray.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_GRAYSCALE);
 
+	int id = 0;
+
 	float OffsetAmount = 50;
 	float xOffset = 0;
 	float yOffset = 0;
@@ -36,30 +38,46 @@ void ofApp::setup(){
 			small.rect = ofRectangle(x, y, CELL_WIDTH, CELL_HEIGHT);
 			small.flowMag = 0;
 			small.flow = ofVec2f(0, 0);
-			smallGrid.push_back(small);
+			small.id = id;
+			id++;
 
 			ofRectangle large = ofRectangle(x * IMG_SCALE - xOffset, y * IMG_SCALE - yOffset, CELL_WIDTH * IMG_SCALE + widthOffset*2, CELL_HEIGHT * IMG_SCALE + heightOffset*2);
 
-			largeGrid.push_back(large);
+			small.outputRect = large;
+
+			smallGrid.push_back(small);
 
 			ofRectangle displayPos = large;
-
-			displayPos.x += 10 + x * 10;
-			displayPos.y += 10 + y * 10;
-
-			displayPositions.push_back(displayPos);
 		}
 	}
 
-	cells.resize(largeGrid.size());
+	int spacing = 10;
+	for (int x = 0; x < 5; x++) {
+		for (int y = 0; y < 5; y++) {
+			ofRectangle rect;
+			rect.width = CELL_WIDTH * IMG_SCALE + widthOffset * 2;
+			rect.height = CELL_HEIGHT * IMG_SCALE + heightOffset * 2;
+			rect.x = x * rect.width + spacing * x + spacing;
+			rect.y = y * rect.height + spacing * y + spacing;
+			displayPositions.push_back(rect);
+		}
+	}
+
+	cells.resize(displayPositions.size());
 	int duration = 30;
 	for (int i = 0; i < cells.size(); i++) {
-		cells[i].setGrid(&largeGrid);
+		//cells[i].setGrid(&largeGrid);
 		cells[i].setImg(&largeImg);
-		cells[i].setIndex(ofRandom(0, cells.size()));
+		cells[i].setInputRect(smallGrid[ofRandom(0, cells.size())].outputRect);
 		cells[i].setSwapDuration(duration);
 		float start = ofRandom(-duration, 0);
 		cells[i].setLastSwapTime(start);
+	}
+
+	//sortedFlowRectangles.resize(smallGrid.size());
+
+	for (int i = 0; i < smallGrid.size(); i++) {
+		sortedFlowRectangles.push_back(i);
 	}
 
 	lastCheckTime = 0;
@@ -83,17 +101,22 @@ void ofApp::update(){
 		smallGray.update();
 		largeImg.update();
 		flow.calcOpticalFlow(smallGray);
-		float topFlow = 0;
 		for (int i = 0; i < smallGrid.size(); i++) {
-			ofVec2f f = flow.getAverageFlowInRegion(smallGrid[i].rect);
-			float l = sqrt(f.x*f.x + f.y*f.y);
-			if (l > topFlow) {
-				topFlow = l;
-				topFlowIndex = i;
-			}
+			smallGrid[i].calculateFlow(&flow);
 		}
+		std::sort(smallGrid.begin(), smallGrid.end(), compareFlow);
+		//float topFlow = 0;
+		//for (int i = 0; i < smallGrid.size(); i++) {
+		//	ofVec2f f = flow.getAverageFlowInRegion(smallGrid[i].rect);
+		//	float l = sqrt(f.x*f.x + f.y*f.y);
+		//	if (l > topFlow) {
+		//		topFlow = l;
+		//		topFlowIndex = i;
+		//	}
+		//}
+		int index = ofRandom(0, 3);
 		for (int i = 0; i < cells.size(); i++) {
-			cells[i].update(topFlowIndex);
+			cells[i].update(smallGrid[index].outputRect);
 		}
 	}
 }
@@ -109,7 +132,7 @@ void ofApp::draw(){
 	flow.draw();
 	ofSetColor(255, 0, 0);
 	ofNoFill();
-	ofDrawRectangle(smallGrid[topFlowIndex].rect.x, smallGrid[topFlowIndex].rect.y, smallGrid[topFlowIndex].rect.width, smallGrid[topFlowIndex].rect.height);
+	//ofDrawRectangle(smallGrid[topFlowIndex].rect.x, smallGrid[topFlowIndex].rect.y, smallGrid[topFlowIndex].rect.width, smallGrid[topFlowIndex].rect.height);
 	ofPopStyle();
 	ofPopMatrix();
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);

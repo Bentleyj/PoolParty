@@ -12,10 +12,12 @@ struct flowRectangle {
 	ofRectangle rect;
 	float flowMag;
 	ofVec2f flow;
+	ofRectangle outputRect;
 	void calculateFlow(ofxCv::FlowFarneback* _flow) {
 		flow = _flow->getAverageFlowInRegion(rect);
 		flowMag = sqrt(flow.x * flow.x + flow.y * flow.y);
 	}
+	int id;
 };
 
 class ofApp : public ofBaseApp{
@@ -37,7 +39,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		bool compareFlow(flowRectangle a, flowRectangle b) {
+		static bool compareFlow(flowRectangle a, flowRectangle b) {
 			return (a.flowMag < b.flowMag);
 		}
 
@@ -52,6 +54,7 @@ class ofApp : public ofBaseApp{
 		int topFlowIndex;
 
 		vector<flowRectangle> smallGrid;
+		vector<int> sortedFlowRectangles;
 		vector<ofRectangle> largeGrid;
 		vector<ofRectangle> displayPositions;
 

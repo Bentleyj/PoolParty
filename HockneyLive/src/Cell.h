@@ -9,11 +9,11 @@
 class Cell {
 public:
 	Cell();
-	void update(int _index);
+	void update(ofRectangle _rect);
 	void draw(int x, int y, int width, int height);
-	void setIndex(int _index);
 	void setImg(ofImage* _img) { img = _img; };
-	void setGrid(vector<ofRectangle>* _grid) { grid = _grid; };
+	void setInputRect(ofRectangle _rect) { inputRect = _rect; };
+	//void setGrid(vector<ofRectangle>* _grid) { grid = _grid; };
 	void setSwapDuration(float _swapDuration) { swapDuration = _swapDuration; };
 	void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
 	void draw(ofRectangle _rect);
@@ -21,8 +21,8 @@ public:
 private:
 	float swapDuration;
 	float lastSwapTime;
-	int index;
 	float scale;
 	ofImage *img;
-	vector<ofRectangle> *grid;
+	ofRectangle inputRect;
+	ofVec3f randomOffset;
 };
