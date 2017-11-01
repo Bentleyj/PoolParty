@@ -7,6 +7,7 @@
 #include "ofxGui.h"
 #include "ofxCv.h"
 #include "Cell.h"
+#include "ImageAnalyzer.h"
 
 struct flowRectangle {
 	ofRectangle rect;
@@ -63,7 +64,5 @@ class ofApp : public ofBaseApp{
 		float timeBetweenChecks;
 		float lastCheckTime;
 
-		ofImage largeImg;
-		ofImage smallImg;
-		ofImage smallGray;
+		ImageAnalyzer analyzer;
 };
