@@ -5,9 +5,6 @@
 //--------------------------------------------------------------
 void ofApp::setup() {
 	cameraStream.setup(1920, 1080);
-	//largeImg.allocate(cameraStream.getWidth(), cameraStream.getHeight(), OF_IMAGE_COLOR);
-	//smallImg.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_COLOR);
-	//smallGray.allocate(largeImg.getWidth() / IMG_SCALE, largeImg.getHeight() / IMG_SCALE, OF_IMAGE_GRAYSCALE);
 
 	analyzer.setup(1920, 1080);
 
