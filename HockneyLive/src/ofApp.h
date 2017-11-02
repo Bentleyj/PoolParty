@@ -28,10 +28,6 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		static bool compareFlow(flowRectangle a, flowRectangle b) {
-			return (a.flowMag > b.flowMag);
-		}
-
 		vector<string> videoPaths;
 		ofVideoGrabber cameraStream;
 		ofVideoPlayer player;
@@ -40,11 +36,12 @@ class ofApp : public ofBaseApp{
 
 		vector<int> topRectangles;
 
+		ofImage largeImg;
+
 		int topFlowIndex;
 
-		vector<flowRectangle> smallGrid;
 		vector<int> sortedFlowRectangles;
-		vector<ofRectangle> largeGrid;
+		vector<ofRectangle> outputRectangles;
 		vector<ofRectangle> displayPositions;
 
 		vector<Cell> cells;
