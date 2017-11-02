@@ -8,8 +8,6 @@ void ofApp::setup() {
 
 	analyzer.setup(&cameraStream);
 
-	int id = 0;
-
 	float OffsetAmount = 50;
 	float xOffset = 0;
 	float yOffset = 0;
@@ -80,7 +78,6 @@ void ofApp::update() {
 	if(cameraStream.isFrameNew()) {
 		analyzer.copyImage();
 		//analyzer.largeImg.update();
-		flow.calcOpticalFlow(analyzer.smallGray);
 		for (int i = 0; i < smallGrid.size(); i++) {
 			smallGrid[i].calculateFlow(&flow);
 		}
@@ -98,7 +95,7 @@ void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 
 	//analyzer.largeImg.draw(0, 0);
-	flow.draw();
+	//flow.draw();
 	//for (int i = 0; i < cells.size(); i++) {
 	//	cells[i].draw(displayPositions[i]);
 	//}
@@ -106,7 +103,7 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	analyzer.startThread();
 }
 
 //--------------------------------------------------------------

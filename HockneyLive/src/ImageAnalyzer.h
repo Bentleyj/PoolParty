@@ -3,30 +3,48 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 
+struct flowRectangle {
+	ofRectangle rect;
+	float flowMag;
+	ofVec2f flow;
+	ofRectangle outputRect;
+	void calculateFlow(ofxCv::FlowFarneback* _flow) {
+		flow = _flow->getAverageFlowInRegion(rect);
+		flowMag = sqrt(flow.x * flow.x + flow.y * flow.y);
+	}
+	int id;
+};
+
 class ImageAnalyzer: public ofThread {
 public:
 	ImageAnalyzer();
 
 	void setup(ofVideoGrabber* _grabber) {
-		//largeImg.allocate(_width, _height, OF_IMAGE_COLOR);
 		width = _grabber->getWidth();
 		height = _grabber->getHeight();
 		grabber = _grabber;
 	}
 
 	void copyImage() {
-		ofxCv::copy(*grabber, largeImg);
-		ofxCv::resize(largeImg, smallImg, scale, scale);
-		ofxCv::copyGray(smallImg, smallGray);
+
 	}
 
 	void threadedFunction() {
-
+		//while (1) {
+			cout << "Thread Started!" << endl;
+			ofxCv::copy(*grabber, largeImg);
+			ofxCv::resize(largeImg, smallImg, scale, scale);
+			ofxCv::copyGray(smallImg, smallGray);
+			flow.calcOpticalFlow(smallGray);
+			cout << "Thread Done!" << endl;
+		//}
 	}
 
 	cv::Mat largeImg;
 	cv::Mat smallImg;
 	cv::Mat smallGray;
+
+	ofxCv::FlowFarneback flow;
 
 	ofVideoGrabber* grabber;
 

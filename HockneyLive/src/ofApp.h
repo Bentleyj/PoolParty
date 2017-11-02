@@ -9,18 +9,6 @@
 #include "Cell.h"
 #include "ImageAnalyzer.h"
 
-struct flowRectangle {
-	ofRectangle rect;
-	float flowMag;
-	ofVec2f flow;
-	ofRectangle outputRect;
-	void calculateFlow(ofxCv::FlowFarneback* _flow) {
-		flow = _flow->getAverageFlowInRegion(rect);
-		flowMag = sqrt(flow.x * flow.x + flow.y * flow.y);
-	}
-	int id;
-};
-
 class ofApp : public ofBaseApp{
 
 	public:
