@@ -6,7 +6,7 @@
 void ofApp::setup() {
 	cameraStream.setup(1920, 1080);
 
-	analyzer.setup(1920, 1080);
+	analyzer.setup(&cameraStream);
 
 	int id = 0;
 
@@ -21,7 +21,6 @@ void ofApp::setup() {
 		for (int y = 0; y < NUM_CELLS_Y; y++) {
 
 			flowRectangle small;
-			cout << smallCellWidth << endl;
 			small.rect = ofRectangle(x+1, y+1, smallCellWidth-2, smallCellHeight-2);
 			small.flowMag = 0;
 			small.flow = ofVec2f(0, 0);
@@ -51,7 +50,7 @@ void ofApp::setup() {
 	cells.resize(displayPositions.size());
 	int duration = 30;
 	for (int i = 0; i < cells.size(); i++) {
-		cells[i].setImg(&(analyzer.largeImg));
+		//cells[i].setImg(&(analyzer.largeImg));
 		cells[i].setInputRect(smallGrid[ofRandom(0, cells.size())].outputRect);
 		cells[i].setSwapDuration(duration);
 		float start = ofRandom(-duration, 0);
@@ -66,7 +65,7 @@ void ofApp::setup() {
 	lastCheckTime = 0;
 	timeBetweenChecks = 20;
 
-	ofSetBackgroundAuto(false);
+	ofSetBackgroundAuto(true);
 }
 
 //--------------------------------------------------------------
@@ -79,10 +78,8 @@ void ofApp::update() {
 
 	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
-		ofxCv::copy(cameraStream, analyzer.largeImg);
-		ofxCv::resize(analyzer.largeImg, analyzer.smallImg, analyzer.scale, analyzer.scale);
-		ofxCv::copyGray(analyzer.smallImg, analyzer.smallGray);
-		analyzer.largeImg.update();
+		analyzer.copyImage();
+		//analyzer.largeImg.update();
 		flow.calcOpticalFlow(analyzer.smallGray);
 		for (int i = 0; i < smallGrid.size(); i++) {
 			smallGrid[i].calculateFlow(&flow);
@@ -90,9 +87,9 @@ void ofApp::update() {
 		std::sort(smallGrid.begin(), smallGrid.end(), compareFlow);
 
 		int index = ofRandom(0, 4);
-		for (int i = 0; i < cells.size(); i++) {
-			cells[i].update(smallGrid[index].outputRect);
-		}
+		//for (int i = 0; i < cells.size(); i++) {
+		//	cells[i].update(smallGrid[index].outputRect);
+		//}
 	}
 }
 
@@ -100,10 +97,11 @@ void ofApp::update() {
 void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 
-	analyzer.largeImg.draw(0, 0);
-	for (int i = 0; i < cells.size(); i++) {
-		cells[i].draw(displayPositions[i]);
-	}
+	//analyzer.largeImg.draw(0, 0);
+	flow.draw();
+	//for (int i = 0; i < cells.size(); i++) {
+	//	cells[i].draw(displayPositions[i]);
+	//}
 }
 
 //--------------------------------------------------------------

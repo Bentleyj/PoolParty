@@ -7,23 +7,28 @@ class ImageAnalyzer: public ofThread {
 public:
 	ImageAnalyzer();
 
-	void setup(int _width, int _height) {
-		//largeImg.create()
-		largeImg.allocate(_width, _height, OF_IMAGE_COLOR);
-		//smallImg.allocate(largeImg.cols() * scale, largeImg.getHeight() * scale, OF_IMAGE_COLOR);
-		//smallGray.allocate(largeImg.getWidth() * scale, largeImg.getHeight() * scale, OF_IMAGE_GRAYSCALE);
-		width = _width;
-		height = _height;
+	void setup(ofVideoGrabber* _grabber) {
+		//largeImg.allocate(_width, _height, OF_IMAGE_COLOR);
+		width = _grabber->getWidth();
+		height = _grabber->getHeight();
+		grabber = _grabber;
+	}
+
+	void copyImage() {
+		ofxCv::copy(*grabber, largeImg);
+		ofxCv::resize(largeImg, smallImg, scale, scale);
+		ofxCv::copyGray(smallImg, smallGray);
 	}
 
 	void threadedFunction() {
 
 	}
 
-
-	ofImage largeImg;
+	cv::Mat largeImg;
 	cv::Mat smallImg;
 	cv::Mat smallGray;
+
+	ofVideoGrabber* grabber;
 
 	float scale = 0.1;
 	float width;
