@@ -15,6 +15,8 @@ public:
 	void setInputRect(ofRectangle _rect) { inputRect = _rect; };
 	void setSwapDuration(float _swapDuration) { swapDuration = _swapDuration; };
 	void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
+	void drawDebug(int x, int y, int width, int height);
+	void drawDebug(ofRectangle _rect);
 	void draw(ofRectangle _rect);
 
 	void setOutputRect();

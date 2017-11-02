@@ -50,6 +50,17 @@ void Cell::draw(int x, int y, int width, int height) {
 	img->drawSubsection(x, y, width, height, offsetInputRect.x, offsetInputRect.y, offsetInputRect.width, offsetInputRect.height);
 }
 
+void Cell::drawDebug(int x, int y, int width, int height) {
+	ofSetColor(255, 0, 0);
+	ofNoFill();
+	ofDrawRectangle(x, y, width, height);
+	ofDrawBitmapStringHighlight(ofToString(offsetInputRect.x), x + width / 2, y + height / 2);
+}
+
+void Cell::drawDebug(ofRectangle _rect) {
+	drawDebug(_rect.x, _rect.y, _rect.width, _rect.height);
+}
+
 void Cell::draw(ofRectangle _rect) {
 	draw(_rect.x, _rect.y, _rect.width, _rect.height);
 }
