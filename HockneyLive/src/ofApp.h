@@ -46,6 +46,8 @@ class ofApp : public ofBaseApp{
 
 		vector<Cell> cells;
 
+		ofMutex mutex;
+
 		float timeBetweenChecks;
 		float lastCheckTime;
 

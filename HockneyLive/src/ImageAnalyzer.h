@@ -77,18 +77,29 @@ public:
 	}
 
 	void threadedFunction() {
+		analyzeImage();	
+		for (int i = 0; i < flowGrid.size(); i++) {
+			lock();
+			orderedIDs[i] = flowGrid[i].id;
+			unlock();
+		}
+		cout << "Thread done!" << endl;
+	}
+
+	void unthreadedAnalyze() {
+		analyzeImage();
+		for (int i = 0; i < flowGrid.size(); i++) {
+			orderedIDs[i] = flowGrid[i].id;
+		}
+	}
+
+	void analyzeImage() {
 		copyImage();
 		flow.calcOpticalFlow(smallGray);
 		for (int i = 0; i < flowGrid.size(); i++) {
 			flowGrid[i].calculateFlow(&flow);
 		}
 		std::sort(flowGrid.begin(), flowGrid.end(), compareFlow);
-
-		for (int i = 0; i < flowGrid.size(); i++) {
-			lock();
-			orderedIDs[i] = flowGrid[i].id;
-			unlock();
-		}
 	}
 
 	cv::Mat largeImg;

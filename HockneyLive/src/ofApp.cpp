@@ -53,12 +53,15 @@ void ofApp::update() {
 
 	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
-		analyzer.startThread();
+		if(!analyzer.isThreadRunning())
+			analyzer.startThread();
 	}
 	int index = ofRandom(0, 4);
-	for (int i = 0; i < cells.size(); i++) {
-		cells[i].update(outputRectangles[analyzer.orderedIDs[0]]);
-	}
+	//for (int i = 0; i < cells.size(); i++) {
+	//	mutex.lock();
+	//	cells[i].update(outputRectangles[analyzer.orderedIDs[0]]);
+	//	mutex.unlock();
+	//}
 }
 
 //--------------------------------------------------------------
@@ -74,7 +77,8 @@ void ofApp::draw() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	analyzer.startThread();
+	cout << "Test!" << endl;
+	//analyzer.startThread();
 }
 
 //--------------------------------------------------------------
