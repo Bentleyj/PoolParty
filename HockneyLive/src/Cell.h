@@ -13,10 +13,13 @@ public:
 	void draw(int x, int y, int width, int height);
 	void setImg(ofImage* _img) { img = _img; };
 	void setInputRect(ofRectangle _rect) { inputRect = _rect; };
-	//void setGrid(vector<ofRectangle>* _grid) { grid = _grid; };
 	void setSwapDuration(float _swapDuration) { swapDuration = _swapDuration; };
 	void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
+	void drawDebug(int x, int y, int width, int height);
+	void drawDebug(ofRectangle _rect);
 	void draw(ofRectangle _rect);
+
+	void setOutputRect();
 
 private:
 	float swapDuration;
@@ -25,5 +28,4 @@ private:
 	ofImage *img;
 	ofRectangle inputRect;
 	ofRectangle offsetInputRect;
-	//ofVec3f randomOffset;
 };

@@ -7,18 +7,7 @@
 #include "ofxGui.h"
 #include "ofxCv.h"
 #include "Cell.h"
-
-struct flowRectangle {
-	ofRectangle rect;
-	float flowMag;
-	ofVec2f flow;
-	ofRectangle outputRect;
-	void calculateFlow(ofxCv::FlowFarneback* _flow) {
-		flow = _flow->getAverageFlowInRegion(rect);
-		flowMag = sqrt(flow.x * flow.x + flow.y * flow.y);
-	}
-	int id;
-};
+#include "ImageAnalyzer.h"
 
 class ofApp : public ofBaseApp{
 
@@ -39,10 +28,6 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		static bool compareFlow(flowRectangle a, flowRectangle b) {
-			return (a.flowMag > b.flowMag);
-		}
-
 		vector<string> videoPaths;
 		ofVideoGrabber cameraStream;
 		ofVideoPlayer player;
@@ -51,19 +36,20 @@ class ofApp : public ofBaseApp{
 
 		vector<int> topRectangles;
 
+		ofImage largeImg;
+
 		int topFlowIndex;
 
-		vector<flowRectangle> smallGrid;
 		vector<int> sortedFlowRectangles;
-		vector<ofRectangle> largeGrid;
+		vector<ofRectangle> outputRectangles;
 		vector<ofRectangle> displayPositions;
 
 		vector<Cell> cells;
 
+		ofMutex mutex;
+
 		float timeBetweenChecks;
 		float lastCheckTime;
 
-		ofImage largeImg;
-		ofImage smallImg;
-		ofImage smallGray;
+		ImageAnalyzer analyzer;
 };
