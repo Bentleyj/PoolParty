@@ -41,6 +41,7 @@ public:
                 small.flow = ofVec2f(0, 0);
                 small.id = i;
                 orderedIDs.push_back(i);
+                orderedFlows.push_back(ofVec2f(0, 0));
                 flowGrid.push_back(small);
             }
 		}
@@ -110,6 +111,7 @@ public:
 		for (int i = 0; i < flowGrid.size(); i++) {
 			lock();
 			orderedIDs[i] = flowGrid[i].id;
+            orderedFlows[i] = flowGrid[i].flow;
 			unlock();
 		}
 	}
@@ -141,6 +143,8 @@ public:
 	vector<flowRectangle> flowGrid;
 	vector<ofRectangle> outputRectangles;
 	vector<int> orderedIDs;
+    
+    vector<ofVec2f> orderedFlows;
 
 	float scale = 0.1;
 	float width;

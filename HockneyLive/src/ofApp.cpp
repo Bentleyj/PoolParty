@@ -35,8 +35,13 @@ void ofApp::setup() {
 
 	lastCheckTime = 0;
 	timeBetweenChecks = 20;
+    
+    gui.setup("Gui", "settings/settings.xml");
+    gui.add(flowScale.set("Flow Scale", 0.0, 0.0, 200.0));
 
-	ofSetBackgroundAuto(true);
+	ofSetBackgroundAuto(false);
+    
+    ofSetFrameRate(120);
 }
 
 //--------------------------------------------------------------
@@ -55,10 +60,11 @@ void ofApp::update() {
 			analyzer.startThread();
 	}
 
-	int index = ofRandom(0, 4);
+	int index = ofRandom(20);
 	for (int i = 0; i < cells.size(); i++) {
+        cells[i].setScale(flowScale);
 		mutex.lock();
-		cells[i].update(outputRectangles[analyzer.orderedIDs[0]]);
+		cells[i].update(outputRectangles[analyzer.orderedIDs[index]], analyzer.orderedFlows[index]);
 		mutex.unlock();
 	}
 }
@@ -78,11 +84,12 @@ void ofApp::draw() {
         cells[i].drawDebug();
     }
     ofPopMatrix();
+    gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	//analyzer.startThread();
+
 }
 
 //--------------------------------------------------------------
