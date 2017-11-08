@@ -20,7 +20,7 @@ public:
     //Getters
     
     //Functionality
-	void update(ofRectangle _rect);
+	void update(ofRectangle _rect, ofVec2f flow);
     
 	void draw(int x, int y, int width, int height);
     
@@ -38,4 +38,5 @@ private:
 	ofImage *img;
 	ofRectangle inputRect;
 	ofRectangle offsetInputRect;
+    ofVec2f flow;
 };

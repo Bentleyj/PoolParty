@@ -17,7 +17,10 @@ void Cell::resizeInputRect() {
 	offsetInputRect.y = inputRect.y + randomOffset.y;
 	offsetInputRect.width = inputRect.width + randomOffset.z;
 	offsetInputRect.height = inputRect.height + randomOffset.z;
-//
+    
+    offsetInputRect.x += flow.x * scale;
+    offsetInputRect.y += flow.y * scale;
+
 	if (offsetInputRect.x < 0) {
 		float offLeft = abs(offsetInputRect.x);
 		offsetInputRect.x = 0;
@@ -40,10 +43,10 @@ void Cell::resizeInputRect() {
 	}
 }
 
-void Cell::update(ofRectangle _rect) {
+void Cell::update(ofRectangle _rect, ofVec2f _flow) {
 	if (ofGetElapsedTimef() - lastSwapTime > swapDuration) {
 		inputRect = _rect;
-
+        flow = _flow;
 		resizeInputRect();
 		lastSwapTime = ofGetElapsedTimef();
 	}
