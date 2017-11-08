@@ -8,23 +8,33 @@
 
 class Cell {
 public:
+    // Constructor
 	Cell();
+    //Setters
+    void setImg(ofImage* _img) { img = _img; };
+    void setInputRect(ofRectangle _rect) { inputRect = _rect; }; //  This is the LARGE rectangle from which we sample our image
+    void setSwapDuration(float _swapDuration) { swapDuration = _swapDuration; };
+    void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
+    void setScale(float _scale) { scale = _scale; };
+
+    //Getters
+    
+    //Functionality
 	void update(ofRectangle _rect);
+    
 	void draw(int x, int y, int width, int height);
-	void setImg(ofImage* _img) { img = _img; };
-	void setInputRect(ofRectangle _rect) { inputRect = _rect; };
-	void setSwapDuration(float _swapDuration) { swapDuration = _swapDuration; };
-	void setLastSwapTime(float _lastSwapTime) { lastSwapTime = _lastSwapTime; };
-	void drawDebug(int x, int y, int width, int height);
-	void drawDebug(ofRectangle _rect);
+    
+	void drawDebug();
+    
 	void draw(ofRectangle _rect);
 
-	void setOutputRect();
+	void resizeInputRect();
 
 private:
 	float swapDuration;
 	float lastSwapTime;
 	float scale;
+    ofColor debugColor;
 	ofImage *img;
 	ofRectangle inputRect;
 	ofRectangle offsetInputRect;
