@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
-#define NUM_CELLS_X 5
-#define NUM_CELLS_Y 5
+#define NUM_CELLS_X 25
+#define NUM_CELLS_Y 25
 
 struct flowRectangle {
 	ofRectangle rect;
@@ -31,43 +31,72 @@ public:
 	void setupGrid() {
 		if (grabber != nullptr) {
 			int id = 0;
-			float OffsetAmount = 50;
-			float xOffset = 0;
-			float yOffset = 0;
-			float widthOffset = 0;
-			float heightOffset = 0;
-			int smallCellWidth = width * scale / NUM_CELLS_X;
-			int smallCellHeight = height * scale / NUM_CELLS_Y;
-			for (int x = 0; x < NUM_CELLS_X; x++) {
-				for (int y = 0; y < NUM_CELLS_Y; y++) {
-
-					flowRectangle small;
-					small.rect = ofRectangle(x + 1, y + 1, smallCellWidth - 2, smallCellHeight - 2);
-					small.flowMag = 0;
-					small.flow = ofVec2f(0, 0);
-					small.id = id;
-					orderedIDs.push_back(id);
-					id++;
-
-					flowGrid.push_back(small);
-
-					ofRectangle large = ofRectangle(x * scale, y * scale, smallCellWidth * scale, smallCellHeight * scale);
-					outputRectangles.push_back(large);
-				}
-			}
+            ofRectangle large = ofRectangle(0, 0, width, height);
+            outputRectangles = fillRectWithSquares(large);
+            vector<ofRectangle> smallRectangles = fillRectWithSquares(ofRectangle(large.x * scale, large.y * scale, large.width * scale, large.height * scale));
+            for(int i = 0; i < smallRectangles.size(); i++) {
+                flowRectangle small;
+                small.rect = smallRectangles[i];//ofRectangle(x * smallCellWidth + 1, y * smallCellHeight + 1, smallCellWidth - 2, smallCellHeight - 2);
+                small.flowMag = 0;
+                small.flow = ofVec2f(0, 0);
+                small.id = i;
+                orderedIDs.push_back(i);
+                flowGrid.push_back(small);
+            }
 		}
 		else {
 			cout << "ImageAnalyzer::setupGrid() video grabber not defined" << endl;
 		}
 	}
+    
+    vector<ofRectangle> fillRectWithSquares(ofRectangle _outerRect) {
+        vector<ofRectangle> squares;
+        float width = _outerRect.width;
+        float height = _outerRect.height;
+        float cellWidth = width / NUM_CELLS_X;
+        float cellHeight = cellWidth;
+        float xStep = cellWidth;
+        float yStep = cellHeight - ((cellHeight * NUM_CELLS_Y) - height) / NUM_CELLS_Y;
+        for(int x = 0; x < NUM_CELLS_X; x++) {
+            for(int y = 0; y < NUM_CELLS_Y - 1; y++) {
+                ofRectangle rect = ofRectangle(x * xStep, y * yStep, cellWidth, cellHeight);
+                squares.push_back(rect);
+            }
+        }
+        return squares;
+    }
 
 	vector<ofRectangle> getOutputRectangles() {
 		return outputRectangles;
 	}
+    
+    void drawDebug() {
+        ofPushMatrix();
+        ofNoFill();
+        ofTranslate(0, 0);
+        ofxCv::drawMat(largeImg, 0, 0);
+        ofSetColor(255);
+        for(int i = 0; i < outputRectangles.size(); i++) {
+            ofDrawRectangle(outputRectangles[i]);
+        }
+        ofTranslate(0, largeImg.rows);
+        ofxCv::drawMat(smallImg, 0, 0);
+        for(int i = 0; i < flowGrid.size(); i++) {
+            ofDrawRectangle(flowGrid[i].rect);
+        }
+        ofTranslate(smallImg.cols, 0);
+        ofxCv::drawMat(smallGray, 0, 0);
+        for(int i = 0; i < flowGrid.size(); i++) {
+            ofDrawRectangle(flowGrid[i].rect);
+        }
+        ofPopMatrix();
+    }
 
 	// Function
 	void copyImage() {
+        lock();
 		ofxCv::copy(*grabber, largeImg);
+        unlock();
 		ofxCv::resize(largeImg, smallImg, scale, scale);
 		ofxCv::copyGray(smallImg, smallGray);
 	}
@@ -83,7 +112,6 @@ public:
 			orderedIDs[i] = flowGrid[i].id;
 			unlock();
 		}
-		cout << "Thread done!" << endl;
 	}
 
 	void unthreadedAnalyze() {

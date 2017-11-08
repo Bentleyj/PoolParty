@@ -1,64 +1,72 @@
 #include "Cell.h"
 
 Cell::Cell() {
-
+    debugColor = ofColor(ofRandom(255), ofRandom(255), ofRandom(255));
 }
 
-void Cell::setOutputRect() {
-	float randomRange = 50;
+void Cell::resizeInputRect() {
+	float randomRange = 100;
 	ofVec3f randomOffset;
 	randomOffset.x = ofRandom(-randomRange, randomRange);
 	randomOffset.y = ofRandom(-randomRange, randomRange);
-	randomOffset.z = ofRandom(0, randomRange);
+	randomOffset.z = ofRandom(0, randomRange/2);
+    
+    offsetInputRect = inputRect;
+    
 	offsetInputRect.x = inputRect.x + randomOffset.x;
 	offsetInputRect.y = inputRect.y + randomOffset.y;
 	offsetInputRect.width = inputRect.width + randomOffset.z;
 	offsetInputRect.height = inputRect.height + randomOffset.z;
-
+//
 	if (offsetInputRect.x < 0) {
 		float offLeft = abs(offsetInputRect.x);
 		offsetInputRect.x = 0;
-		offsetInputRect.width += offLeft;
+		//offsetInputRect.width += offLeft;
 	}
 	if (offsetInputRect.y < 0) {
 		float offTop = abs(offsetInputRect.y);
 		offsetInputRect.y = 0;
-		offsetInputRect.height += offTop;
+		//offsetInputRect.height += offTop;
 	}
 	if (offsetInputRect.x + offsetInputRect.width > img->getWidth()) {
 		float offRight = img->getWidth() - offsetInputRect.x + offsetInputRect.width;
 		offsetInputRect.x -= offRight;
-		offsetInputRect.width -= offRight;
+		//offsetInputRect.width -= offRight;
 	}
 	if (offsetInputRect.y + offsetInputRect.height > img->getHeight()) {
 		float offBottom = offsetInputRect.height - (img->getHeight() - offsetInputRect.y);
 		offsetInputRect.y -= offBottom;
-		offsetInputRect.height -= offBottom;
+		//offsetInputRect.height -= offBottom;
 	}
 }
 
 void Cell::update(ofRectangle _rect) {
 	if (ofGetElapsedTimef() - lastSwapTime > swapDuration) {
-		float randomRange = 50;
 		inputRect = _rect;
-		setOutputRect();
+
+		resizeInputRect();
 		lastSwapTime = ofGetElapsedTimef();
 	}
 }
 
 void Cell::draw(int x, int y, int width, int height) {
+    ofPushStyle();
+    ofNoFill();
+    ofSetColor(debugColor);
+    ofSetLineWidth(5);
+    ofDrawRectangle(x-5, y-5, width+10, height+10);
+    ofSetColor(255);
 	img->drawSubsection(x, y, width, height, offsetInputRect.x, offsetInputRect.y, offsetInputRect.width, offsetInputRect.height);
+    ofPopStyle();
 }
 
-void Cell::drawDebug(int x, int y, int width, int height) {
-	ofSetColor(255, 0, 0);
+void Cell::drawDebug() {
+    ofPushStyle();
 	ofNoFill();
-	ofDrawRectangle(x, y, width, height);
-	ofDrawBitmapStringHighlight(ofToString(offsetInputRect.x), x + width / 2, y + height / 2);
-}
-
-void Cell::drawDebug(ofRectangle _rect) {
-	drawDebug(_rect.x, _rect.y, _rect.width, _rect.height);
+    ofSetColor(debugColor);
+    ofSetLineWidth(5);
+    ofDrawRectangle(offsetInputRect.x, offsetInputRect.y, offsetInputRect.width, offsetInputRect.height);
+    ofPopStyle();
 }
 
 void Cell::draw(ofRectangle _rect) {

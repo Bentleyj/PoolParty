@@ -23,19 +23,15 @@ void ofApp::setup() {
 	}
 
 	cells.resize(displayPositions.size());
-	int duration = 30;
+	int duration = 10;
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
 		cells[i].setSwapDuration(duration);
 		float start = ofRandom(-duration, 0);
 		cells[i].setLastSwapTime(start);
+        cells[i].setScale(analyzer.scale);
 	}
-
-
-	//for (int i = 0; i < smallGrid.size(); i++) {
-	//	sortedFlowRectangles.push_back(i);
-	//}
 
 	lastCheckTime = 0;
 	timeBetweenChecks = 20;
@@ -53,31 +49,39 @@ void ofApp::update() {
 
 	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
+        ofxCv::copy(cameraStream, largeImg);
+        largeImg.update();
 		if(!analyzer.isThreadRunning())
 			analyzer.startThread();
 	}
+
 	int index = ofRandom(0, 4);
-	//for (int i = 0; i < cells.size(); i++) {
-	//	mutex.lock();
-	//	cells[i].update(outputRectangles[analyzer.orderedIDs[0]]);
-	//	mutex.unlock();
-	//}
+	for (int i = 0; i < cells.size(); i++) {
+		mutex.lock();
+		cells[i].update(outputRectangles[analyzer.orderedIDs[0]]);
+		mutex.unlock();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
-
-	//analyzer.largeImg.draw(0, 0);
-	//flow.draw();
+    
 	for (int i = 0; i < cells.size(); i++) {
-		cells[i].drawDebug(displayPositions[i]);
+		cells[i].draw(displayPositions[i]);
 	}
+    
+    ofPushMatrix();
+    ofTranslate( 600, 0 );
+    largeImg.draw(0, 0);
+    for (int i = 0; i < cells.size(); i++) {
+        cells[i].drawDebug();
+    }
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	cout << "Test!" << endl;
 	//analyzer.startThread();
 }
 
