@@ -4,6 +4,9 @@
 
 uniform sampler2DRect tex0;
 uniform sampler2DRect curveTex;
+uniform float curveWidth;
+uniform float curveHeight;
+
 
 varying vec2 texCoord;
 
@@ -14,9 +17,9 @@ void main() {
 
     vec4 pixelColor = texture2DRect(tex0, pos);
 
-    curvesColor.r = texture2DRect(curveTex, vec2(pixelColor.r * 1794, 10)).r;//vec2(pixelColor.r * 0.1, 0)).r;
-    curvesColor.g = texture2DRect(curveTex, vec2(pixelColor.g * 1794, 10)).g;//vec2(pixelColor.g, 0)).g;
-    curvesColor.b = texture2DRect(curveTex, vec2(pixelColor.b * 1794, 10)).b;//vec2(pixelColor.b, 0)).b;
+    curvesColor.r = texture2DRect(curveTex, vec2(pixelColor.r * curveWidth, curveHeight/2)).r;//vec2(pixelColor.r * 0.1, 0)).r;
+    curvesColor.g = texture2DRect(curveTex, vec2(pixelColor.g * curveWidth, curveHeight/2)).g;//vec2(pixelColor.g, 0)).g;
+    curvesColor.b = texture2DRect(curveTex, vec2(pixelColor.b * curveWidth, curveHeight/2)).b;//vec2(pixelColor.b, 0)).b;
 
     
     // vec4 col0 = sharp(diffuseTexture, texCoord);
