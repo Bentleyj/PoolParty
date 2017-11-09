@@ -79,6 +79,9 @@ void ofApp::draw() {
     
     crossProcess.begin();
     crossProcess.setUniformTexture("curveTex", curveTexture, 1);
+    crossProcess.setUniform1f("curveWidth", curveTexture.getWidth());
+    crossProcess.setUniform1f("curveHeight", curveTexture.getHeight());
+
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
 	}
