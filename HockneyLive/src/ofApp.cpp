@@ -9,6 +9,10 @@ void ofApp::setup() {
 	largeImg.allocate(1920, 1080, OF_IMAGE_COLOR);
 
 	outputRectangles = analyzer.getOutputRectangles();
+    
+    crossProcess.load("shaders/crossProcess");
+    
+    curveTexture.load("images/curve.jpg");
 
 	int spacing = 10;
 	for (int x = 0; x < 5; x++) {
@@ -73,16 +77,16 @@ void ofApp::update() {
 void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
     
+    crossProcess.begin();
+    crossProcess.setUniformTexture("curveTex", curveTexture, 1);
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
 	}
+    crossProcess.end();
     
     ofPushMatrix();
     ofTranslate( 600, 0 );
     largeImg.draw(0, 0);
-    for (int i = 0; i < cells.size(); i++) {
-        cells[i].drawDebug();
-    }
     ofPopMatrix();
     gui.draw();
 }
