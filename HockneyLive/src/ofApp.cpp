@@ -80,7 +80,6 @@ void ofApp::draw() {
     crossProcess.begin();
     crossProcess.setUniformTexture("curveTex", curveTexture, 1);
 	for (int i = 0; i < cells.size(); i++) {
-       // crossProcess.setUniform("x")
 		cells[i].draw(displayPositions[i]);
 	}
     crossProcess.end();
