@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	cameraStream.setup(1920, 1080);
+	bool setup = cameraStream.setup(1920, 1080);
 
 	analyzer.setup(&cameraStream);
 
@@ -27,7 +27,7 @@ void ofApp::setup() {
 	}
 
 	cells.resize(displayPositions.size());
-	int duration = 10;
+	int duration = 5;
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
@@ -85,12 +85,16 @@ void ofApp::draw() {
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
 	}
-    crossProcess.end();
     
     ofPushMatrix();
     ofTranslate( 600, 0 );
     largeImg.draw(0, 0);
+    for (int i = 0; i < cells.size(); i++) {
+        cells[i].drawDebug();
+    }
     ofPopMatrix();
+    crossProcess.end();
+
     gui.draw();
 }
 

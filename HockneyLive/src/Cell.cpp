@@ -24,22 +24,18 @@ void Cell::resizeInputRect() {
 	if (offsetInputRect.x < 0) {
 		float offLeft = abs(offsetInputRect.x);
 		offsetInputRect.x = 0;
-		//offsetInputRect.width += offLeft;
 	}
 	if (offsetInputRect.y < 0) {
 		float offTop = abs(offsetInputRect.y);
 		offsetInputRect.y = 0;
-		//offsetInputRect.height += offTop;
 	}
 	if (offsetInputRect.x + offsetInputRect.width > img->getWidth()) {
-		float offRight = img->getWidth() - offsetInputRect.x + offsetInputRect.width;
+		float offRight = img->getWidth() - offsetInputRect.width;
 		offsetInputRect.x -= offRight;
-		//offsetInputRect.width -= offRight;
 	}
 	if (offsetInputRect.y + offsetInputRect.height > img->getHeight()) {
 		float offBottom = offsetInputRect.height - (img->getHeight() - offsetInputRect.y);
 		offsetInputRect.y -= offBottom;
-		//offsetInputRect.height -= offBottom;
 	}
 }
 

@@ -31,6 +31,7 @@ public:
 	void resizeInputRect();
 
 private:
+    
 	float swapDuration;
 	float lastSwapTime;
 	float scale;
