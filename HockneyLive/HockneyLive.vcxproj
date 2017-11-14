@@ -171,6 +171,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AsyncPlayer.cpp" />
     <ClCompile Include="src\ImageAnalyzer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AsyncPlayer.h" />
     <ClInclude Include="src\ImageAnalyzer.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\Cell.h" />
