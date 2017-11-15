@@ -5,6 +5,8 @@
 StreamingAssets/
 Plugins/
 AVProVideo/
+*.pdf
+*.pdf.meta
 
 #Unity specific stuff
 # =============== #
