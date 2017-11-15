@@ -2,6 +2,9 @@
 # Project Specific Stuff #
 # ====================== #
 *.mp4
+StreamingAssets/
+Plugins/
+AVProVideo/
 
 #Unity specific stuff
 # =============== #
@@ -11,7 +14,7 @@
 [Oo]bj/
 [Bb]uild
 /[Bb]uilds/
-/[Ll]ibrary/
+[Ll]ibrary/
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
