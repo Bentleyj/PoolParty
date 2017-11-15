@@ -14,6 +14,11 @@ void ofApp::setup() {
     
     curveTexture.load("images/curve.jpg");
 
+	bool loaded = player.load("videos/recordingTest.mkv");
+	player.play();
+	player.setLoopState(OF_LOOP_NORMAL);
+	cout <<"Loaded: " << loaded << endl;
+
 	int spacing = 10;
 	for (int x = 0; x < 5; x++) {
 		for (int y = 0; y < 5; y++) {
@@ -27,7 +32,7 @@ void ofApp::setup() {
 	}
 
 	cells.resize(displayPositions.size());
-	int duration = 5;
+	int duration = 10;
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
@@ -46,6 +51,12 @@ void ofApp::setup() {
 	ofSetBackgroundAuto(false);
     
     ofSetFrameRate(120);
+
+	for (int i = 0; i < 100; i++) {
+		player.update();
+		player.nextFrame();
+		cout<<"Frame: "<<player.getCurrentFrame()<<endl;
+	}
 }
 
 //--------------------------------------------------------------

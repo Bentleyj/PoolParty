@@ -50,10 +50,6 @@ void Cell::update(ofRectangle _rect, ofVec2f _flow) {
 
 void Cell::draw(int x, int y, int width, int height) {
     ofPushStyle();
-    ofNoFill();
-    ofSetColor(debugColor);
-    ofSetLineWidth(5);
-    ofDrawRectangle(x-5, y-5, width+10, height+10);
     ofSetColor(255);
 	img->drawSubsection(x, y, width, height, offsetInputRect.x, offsetInputRect.y, offsetInputRect.width, offsetInputRect.height);
     ofPopStyle();
