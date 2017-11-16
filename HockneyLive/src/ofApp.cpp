@@ -32,7 +32,7 @@ void ofApp::setup() {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
 		cells[i].setSwapDuration(duration);
-		float start = ofRandom(-duration*2, 0);
+		float start = ofRandom(duration);//ofRandom(-duration*10, 0);
 		cells[i].setLastSwapTime(start);
         cells[i].setScale(analyzer.scale);
 	}
