@@ -14,17 +14,12 @@ void ofApp::setup() {
     
     curveTexture.load("images/curve.jpg");
 
-	bool loaded = player.load("videos/recordingTest.mkv");
-	player.play();
-	player.setLoopState(OF_LOOP_NORMAL);
-	cout <<"Loaded: " << loaded << endl;
-
 	int spacing = 10;
-	for (int x = 0; x < 5; x++) {
-		for (int y = 0; y < 5; y++) {
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
 			ofRectangle rect;
-			rect.width = 100;
-			rect.height = 100;
+			rect.width = 400;
+			rect.height = 400;
 			rect.x = x * rect.width + spacing * x + spacing;
 			rect.y = y * rect.height + spacing * y + spacing;
 			displayPositions.push_back(rect);
@@ -46,17 +41,15 @@ void ofApp::setup() {
 	timeBetweenChecks = 20;
     
     gui.setup("Gui", "settings/settings.xml");
-    gui.add(flowScale.set("Flow Scale", 0.0, 0.0, 200.0));
+    gui.add(flowScale.set("Flow Scale", 200.0, 0.0, 200.0));
+	gui.add(drawDebug.set("Draw Debug", false));
+	gui.setPosition(displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20, 0);
+
+	gui.loadFromFile("settings/settings.xml");
 
 	ofSetBackgroundAuto(false);
     
     ofSetFrameRate(120);
-
-	for (int i = 0; i < 100; i++) {
-		player.update();
-		player.nextFrame();
-		cout<<"Frame: "<<player.getCurrentFrame()<<endl;
-	}
 }
 
 //--------------------------------------------------------------
@@ -97,14 +90,16 @@ void ofApp::draw() {
 		cells[i].draw(displayPositions[i]);
 	}
     
-    ofPushMatrix();
-    ofTranslate( 600, 0 );
-    largeImg.draw(0, 0);
-    for (int i = 0; i < cells.size(); i++) {
-        cells[i].drawDebug();
-    }
-    ofPopMatrix();
-    crossProcess.end();
+	if (drawDebug) {
+		ofPushMatrix();
+		ofTranslate(displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20, 0);
+		largeImg.draw(0, 0);
+		for (int i = 0; i < cells.size(); i++) {
+			cells[i].drawDebug();
+		}
+		ofPopMatrix();
+	}
+	crossProcess.end();
 
     gui.draw();
 }

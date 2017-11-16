@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
-#define NUM_CELLS_X 25
-#define NUM_CELLS_Y 25
+#define NUM_CELLS_X 10
+#define NUM_CELLS_Y 10
 
 struct flowRectangle {
 	ofRectangle rect;
