@@ -135,6 +135,7 @@ public:
 	cv::Mat largeImg;
 	cv::Mat smallImg;
 	cv::Mat smallGray;
+	cv::Mat flipLarge;
 
 	ofxCv::FlowFarneback flow;
 

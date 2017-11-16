@@ -63,12 +63,16 @@ void ofApp::update() {
 	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
         ofxCv::copy(cameraStream, largeImg);
-        largeImg.update();
+		largeImg.update();
+
 		if(!analyzer.isThreadRunning())
 			analyzer.startThread();
 	}
 
-	int index = ofRandom(20);
+	int index = ofRandom(analyzer.orderedIDs.size());
+	if (ofRandom(1) > 0.5) {
+		index = 0;
+	}
 	for (int i = 0; i < cells.size(); i++) {
         cells[i].setScale(flowScale);
 		mutex.lock();
@@ -80,11 +84,12 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
-    
+
     crossProcess.begin();
     crossProcess.setUniformTexture("curveTex", curveTexture, 1);
     crossProcess.setUniform1f("curveWidth", curveTexture.getWidth());
     crossProcess.setUniform1f("curveHeight", curveTexture.getHeight());
+
 
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
@@ -93,6 +98,8 @@ void ofApp::draw() {
 	if (drawDebug) {
 		ofPushMatrix();
 		ofTranslate(displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20, 0);
+		ofScale(-1, 1);
+		ofTranslate(-1 * (displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20), 0);
 		largeImg.draw(0, 0);
 		for (int i = 0; i < cells.size(); i++) {
 			cells[i].drawDebug();
