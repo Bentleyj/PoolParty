@@ -7,9 +7,6 @@ Cell::Cell() {
 void Cell::resizeInputRect() {
 	float randomRange = 100;
 	float randomSizeRange = 50;
-	//if (flow.length() < 1.0) {
-	//	randomRange = 500;
-	//}
 	ofVec3f randomOffset;
 	randomOffset.x = ofRandom(-randomRange, randomRange);
 	randomOffset.y = ofRandom(-randomRange, randomRange);
@@ -34,11 +31,11 @@ void Cell::resizeInputRect() {
 		offsetInputRect.y = 0;
 	}
 	if (offsetInputRect.x + offsetInputRect.width > img->getWidth()) {
-		float offRight = img->getWidth() - offsetInputRect.width;
+		float offRight = offsetInputRect.x + offsetInputRect.width - img->getWidth();
 		offsetInputRect.x -= offRight;
 	}
 	if (offsetInputRect.y + offsetInputRect.height > img->getHeight()) {
-		float offBottom = offsetInputRect.height - (img->getHeight() - offsetInputRect.y);
+		float offBottom = offsetInputRect.y + offsetInputRect.height - img->getHeight();
 		offsetInputRect.y -= offBottom;
 	}
 }

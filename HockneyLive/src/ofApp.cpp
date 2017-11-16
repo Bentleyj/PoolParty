@@ -32,7 +32,7 @@ void ofApp::setup() {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
 		cells[i].setSwapDuration(duration);
-		float start = ofRandom(-duration, 0);
+		float start = ofRandom(-duration*2, 0);
 		cells[i].setLastSwapTime(start);
         cells[i].setScale(analyzer.scale);
 	}
@@ -58,9 +58,9 @@ void ofApp::update() {
 	if (ofGetElapsedTimef() - lastCheckTime > timeBetweenChecks) {
 		flow.resetFlow();
 		lastCheckTime = ofGetElapsedTimef();
+		cout << "Reset!" << endl;
 	}
 
-	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
         ofxCv::copy(cameraStream, largeImg);
 		largeImg.update();
@@ -69,9 +69,12 @@ void ofApp::update() {
 			analyzer.startThread();
 	}
 
-	int index = ofRandom(analyzer.orderedIDs.size());
-	if (ofRandom(1) > 0.5) {
-		index = 0;
+	int index;
+	if (analyzer.orderedFlows[0].length() < 1) {
+		index = ofRandom(analyzer.orderedIDs.size());
+	}
+	else {
+		index = ofRandom(0, 5);
 	}
 	for (int i = 0; i < cells.size(); i++) {
         cells[i].setScale(flowScale);

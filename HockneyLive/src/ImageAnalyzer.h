@@ -19,6 +19,7 @@ struct flowRectangle {
 class ImageAnalyzer: public ofThread {
 public:
 	ImageAnalyzer();
+	~ImageAnalyzer();
 
 	// Setup
 	void setup(ofVideoGrabber* _grabber) {
