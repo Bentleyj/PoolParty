@@ -34,10 +34,10 @@ class ofApp : public ofBaseApp{
     
         ofxPanel gui;
         ofParameter<float> flowScale;
+		ofParameter<bool> drawDebug;
 
 		vector<string> videoPaths;
 		ofVideoGrabber cameraStream;
-		ofVideoPlayer player;
 
 		ofxCv::FlowFarneback flow;
 

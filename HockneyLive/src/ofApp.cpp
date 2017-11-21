@@ -14,17 +14,12 @@ void ofApp::setup() {
     
     curveTexture.load("images/curve.jpg");
 
-	bool loaded = player.load("videos/recordingTest.mkv");
-	player.play();
-	player.setLoopState(OF_LOOP_NORMAL);
-	cout <<"Loaded: " << loaded << endl;
-
 	int spacing = 10;
-	for (int x = 0; x < 5; x++) {
-		for (int y = 0; y < 5; y++) {
+	for (int x = 0; x < 4; x++) {
+		for (int y = 0; y < 4; y++) {
 			ofRectangle rect;
-			rect.width = 100;
-			rect.height = 100;
+			rect.width = 400;
+			rect.height = 400;
 			rect.x = x * rect.width + spacing * x + spacing;
 			rect.y = y * rect.height + spacing * y + spacing;
 			displayPositions.push_back(rect);
@@ -37,7 +32,7 @@ void ofApp::setup() {
 		cells[i].setImg(&largeImg);
 		cells[i].setInputRect(ofRectangle(0, 0, 100, 100));
 		cells[i].setSwapDuration(duration);
-		float start = ofRandom(-duration, 0);
+		float start = ofRandom(duration);
 		cells[i].setLastSwapTime(start);
         cells[i].setScale(analyzer.scale);
 	}
@@ -46,17 +41,15 @@ void ofApp::setup() {
 	timeBetweenChecks = 20;
     
     gui.setup("Gui", "settings/settings.xml");
-    gui.add(flowScale.set("Flow Scale", 0.0, 0.0, 200.0));
+    gui.add(flowScale.set("Flow Scale", 200.0, 0.0, 200.0));
+	gui.add(drawDebug.set("Draw Debug", false));
+	gui.setPosition(displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20, 0);
+
+	gui.loadFromFile("settings/settings.xml");
 
 	ofSetBackgroundAuto(false);
     
     ofSetFrameRate(120);
-
-	for (int i = 0; i < 100; i++) {
-		player.update();
-		player.nextFrame();
-		cout<<"Frame: "<<player.getCurrentFrame()<<endl;
-	}
 }
 
 //--------------------------------------------------------------
@@ -65,17 +58,24 @@ void ofApp::update() {
 	if (ofGetElapsedTimef() - lastCheckTime > timeBetweenChecks) {
 		flow.resetFlow();
 		lastCheckTime = ofGetElapsedTimef();
+		cout << "Reset!" << endl;
 	}
 
-	float lastCheckTime;
 	if(cameraStream.isFrameNew()) {
         ofxCv::copy(cameraStream, largeImg);
-        largeImg.update();
+		largeImg.update();
+
 		if(!analyzer.isThreadRunning())
 			analyzer.startThread();
 	}
 
-	int index = ofRandom(20);
+	int index;
+	if (analyzer.orderedFlows[0].length() < 1) {
+		index = ofRandom(analyzer.orderedIDs.size());
+	}
+	else {
+		index = ofRandom(0, 5);
+	}
 	for (int i = 0; i < cells.size(); i++) {
         cells[i].setScale(flowScale);
 		mutex.lock();
@@ -87,24 +87,29 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 	ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
-    
+
     crossProcess.begin();
     crossProcess.setUniformTexture("curveTex", curveTexture, 1);
     crossProcess.setUniform1f("curveWidth", curveTexture.getWidth());
     crossProcess.setUniform1f("curveHeight", curveTexture.getHeight());
 
+
 	for (int i = 0; i < cells.size(); i++) {
 		cells[i].draw(displayPositions[i]);
 	}
     
-    ofPushMatrix();
-    ofTranslate( 600, 0 );
-    largeImg.draw(0, 0);
-    for (int i = 0; i < cells.size(); i++) {
-        cells[i].drawDebug();
-    }
-    ofPopMatrix();
-    crossProcess.end();
+	if (drawDebug) {
+		ofPushMatrix();
+		ofTranslate(displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20, 0);
+		ofScale(-1, 1);
+		ofTranslate(-1 * (displayPositions[displayPositions.size() - 1].x + displayPositions[displayPositions.size() - 1].width + 20), 0);
+		largeImg.draw(0, 0);
+		for (int i = 0; i < cells.size(); i++) {
+			cells[i].drawDebug();
+		}
+		ofPopMatrix();
+	}
+	crossProcess.end();
 
     gui.draw();
 }

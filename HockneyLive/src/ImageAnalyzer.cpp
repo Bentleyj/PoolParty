@@ -3,3 +3,7 @@
 ImageAnalyzer::ImageAnalyzer() {
 
 }
+
+ImageAnalyzer::~ImageAnalyzer() {
+	grabber = nullptr;
+}

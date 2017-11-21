@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
-#define NUM_CELLS_X 25
-#define NUM_CELLS_Y 25
+#define NUM_CELLS_X 10
+#define NUM_CELLS_Y 10
 
 struct flowRectangle {
 	ofRectangle rect;
@@ -19,6 +19,7 @@ struct flowRectangle {
 class ImageAnalyzer: public ofThread {
 public:
 	ImageAnalyzer();
+	~ImageAnalyzer();
 
 	// Setup
 	void setup(ofVideoGrabber* _grabber) {
@@ -135,6 +136,7 @@ public:
 	cv::Mat largeImg;
 	cv::Mat smallImg;
 	cv::Mat smallGray;
+	cv::Mat flipLarge;
 
 	ofxCv::FlowFarneback flow;
 

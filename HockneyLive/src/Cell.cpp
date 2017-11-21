@@ -6,10 +6,11 @@ Cell::Cell() {
 
 void Cell::resizeInputRect() {
 	float randomRange = 100;
+	float randomSizeRange = 50;
 	ofVec3f randomOffset;
 	randomOffset.x = ofRandom(-randomRange, randomRange);
 	randomOffset.y = ofRandom(-randomRange, randomRange);
-	randomOffset.z = ofRandom(0, randomRange/2);
+	randomOffset.z = ofRandom(0, randomSizeRange);
     
     offsetInputRect = inputRect;
     
@@ -30,28 +31,34 @@ void Cell::resizeInputRect() {
 		offsetInputRect.y = 0;
 	}
 	if (offsetInputRect.x + offsetInputRect.width > img->getWidth()) {
-		float offRight = img->getWidth() - offsetInputRect.width;
+		float offRight = offsetInputRect.x + offsetInputRect.width - img->getWidth();
 		offsetInputRect.x -= offRight;
 	}
 	if (offsetInputRect.y + offsetInputRect.height > img->getHeight()) {
-		float offBottom = offsetInputRect.height - (img->getHeight() - offsetInputRect.y);
+		float offBottom = offsetInputRect.y + offsetInputRect.height - img->getHeight();
 		offsetInputRect.y -= offBottom;
 	}
 }
 
 void Cell::update(ofRectangle _rect, ofVec2f _flow) {
 	if (ofGetElapsedTimef() - lastSwapTime > swapDuration) {
+		flow = _flow;
 		inputRect = _rect;
-        flow = _flow;
 		resizeInputRect();
 		lastSwapTime = ofGetElapsedTimef();
+		flow.x = ofLerp(flow.x, 0, 0.01);
+		flow.y = ofLerp(flow.y, 0, 0.01);
 	}
 }
 
 void Cell::draw(int x, int y, int width, int height) {
     ofPushStyle();
+	ofPushMatrix();
+	ofScale(-1, 1);
+	ofTranslate(-1650, 0);
     ofSetColor(255);
 	img->drawSubsection(x, y, width, height, offsetInputRect.x, offsetInputRect.y, offsetInputRect.width, offsetInputRect.height);
+	ofPopMatrix();
     ofPopStyle();
 }
 
