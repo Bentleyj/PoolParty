@@ -5,21 +5,23 @@ float frame::angleBetweenTwoPoints(ofVec2f p1, ofVec2f p2)
 	return atan2(p2.y - p1.y, p2.x - p1.x);
 }
 
-void frame::draw() 
+void frame::draw(float offset) 
 {
+	ofPushMatrix();
 	ofPushStyle();
-	ofNoFill();
 	ofSetColor(255);
+	img->drawSubsection(x, y, width, height, x, y - offset);
+	ofPopStyle();
+	ofPushStyle();
+	ofTranslate(0, offset);
+	ofNoFill();
 	for (int i = 0; i < lines->size(); i++) {
 		vector<ofPoint> verts = (*lines)[i].getVertices();
 		if (verts.size() > 2) {
 			for (int i = 1; i < verts.size() - 1; i++) {
 				if (isInsideBox(verts[i])) {
-					ofSetColor(0);
-				} else {
-					ofSetColor(255);
+					ofDrawLine(verts[i], verts[i + 1]);
 				}
-				ofDrawCircle(verts[i], 5);
 				if (!isInsideBox(verts[i - 1]) && isInsideBox(verts[i])) {
 					startPoint = getNearestEdge(verts[i], verts[i - 1]);
 					ofSetColor(0, 0, 255);
@@ -33,12 +35,15 @@ void frame::draw()
 			}
 		}
 	}
-	ofSetColor(255);
-	ofDrawRectangle(x, y, width, height);
 	ofSetColor(0, 255, 0);
 	ofDrawCircle(startPoint, 5);
 	ofSetColor(255, 0, 0);
 	ofDrawCircle(endPoint, 5);
+
+	ofPopMatrix();
+
+	ofSetColor(255);
+	ofDrawRectangle(x, y, width, height);
 	ofPopStyle();
 }
 

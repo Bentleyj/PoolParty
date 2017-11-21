@@ -22,10 +22,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		vector<ofPolyline> lines;
+		vector<ofPolyline> lines1;
+		vector<ofPolyline> lines2;
 		vector<frame> frames;
 
-		bool drawingLines;
+		ofImage img1;
+		ofImage img2;
+
+		enum { display, draw1, draw2 } state;
 
 		ofVec2f linkPoint;
 		
