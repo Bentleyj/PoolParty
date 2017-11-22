@@ -8,14 +8,14 @@ void ofApp::setup(){
 	img1.load("images/maps/coastline drone/Gabriel-Scanu-2.jpg");
 	img2.load("images/maps/coastline drone/d964bb35d4a94351a1c6301edad31573.jpg");
 
-	f1.x = 20;
-	f1.y = 20;
+	f1.x = 100;
+	f1.y = 100;
 	f1.width = 400;
 	f1.height = 1000;
 	f1.img = &img1;
 
-	f2.x = f1.width + 40;
-	f2.y = 20;
+	f2.x = f1.width + 120;
+	f2.y = 100;
 	f2.width = 400;
 	f2.height = 1000;
 	f2.img = &img2;
@@ -35,10 +35,10 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	frames[0].x = ofGetMouseX();
-	frames[0].y = ofGetMouseY();
-
+//	frames[0].y = ofGetMouseY();
+//
 	frames[1].x = ofGetMouseX() + 20 + frames[0].width;
-	frames[1].y = ofGetMouseY();
+//	frames[1].y = ofGetMouseY();
 
 	//if (lines2.size() > 0) {
 	//	vector<ofPoint> verts = lines2[0].getVertices();
@@ -57,37 +57,41 @@ void ofApp::draw(){
 	ofSetColor(255);
 	if (state == draw1) {
 		img1.draw(0, 0);
+        ofSetColor(255, 255, 0);
+        for (int i = 0; i < lines1.size(); i++) {
+            lines1[i].draw();
+        }
 	}
 	if (state == draw2) {
 		img2.draw(0, 0);
+        ofSetColor(0, 255, 255);
+        for (int i = 0; i < lines2.size(); i++) {
+            lines2[i].draw();
+        }
 	}
 
 	if (state == display) {
 		float endPoint0 = frames[0].endPoint.y;
 		float startPoint1 = frames[1].startPoint.y;
-		float diff = (endPoint0 - startPoint1) / 2;
+        float target = ofGetMouseY();
+		float diff1 = (endPoint0 - target);
+        float diff2 = (startPoint1 - target);
 
 		ofSetColor(255, 255, 0);
-		frames[0].draw(-diff);
+		frames[0].draw(-diff1);
 
 		ofSetColor(0, 255, 255);
-		frames[1].draw(diff);
+		frames[1].draw(-diff2);
 	}
 	else {
-		ofPushStyle();
-		ofSetColor(255);
-		for (int i = 0; i < frames.size(); i++) {
-			frames[i].draw(0);
-		}
-		ofSetColor(255, 255, 0);
-		for (int i = 0; i < lines1.size(); i++) {
-			lines1[i].draw();
-		}
-		ofSetColor(0, 255, 255);
-		for (int i = 0; i < lines2.size(); i++) {
-			lines2[i].draw();
-		}
-		ofPopStyle();
+//		ofPushStyle();
+//		ofSetColor(255);
+//		for (int i = 0; i < frames.size(); i++) {
+//			frames[i].draw(0);
+//		}
+
+
+//		ofPopStyle();
 	}
 }
 
