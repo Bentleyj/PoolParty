@@ -5,29 +5,34 @@ void ofApp::setup(){
 	Frame f1;
 	Frame f2;
 
-	//img1.load("images/maps/coastline drone/Gabriel-Scanu-2.jpg");
-	//img2.load("images/maps/coastline drone/d964bb35d4a94351a1c6301edad31573.jpg");
+	img1.load("images/maps/filter/Screen Shot 2017-11-21 at 10.05.09.png");
+	img2.load("images/maps/filter/Screen Shot 2017-11-21 at 10.05.18.png");
 
 	f1.x = 100;
 	f1.y = 100;
 	f1.width = 200;
-	f1.height = 500;
+	f1.height = 1000;
     f1.setTargetStartPoint(ofVec2f(0, ofGetHeight()/2));
 
-	//f1.img = &img1;
+	f1.img = &img1;
 
 	f2.x = f1.width + 140;
 	f2.y = 100;
 	f2.width = 200;
-	f2.height = 500;
+	f2.height = 1000;
     f2.setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()/2));
-	//f2.img = &img2;
+    
+	f2.img = &img2;
 
 	f1.line = &line1;
 	f2.line = &line2;
 
 	frames.push_back(f1);
 	frames.push_back(f2);
+    
+    frames[0].img = &img1;
+    frames[1].img = &img2;
+
 
 	linkPoint.x = ofGetWidth() / 2;
 	linkPoint.y = ofGetHeight() / 2;
@@ -39,12 +44,15 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	//frames[0].x = ofGetMouseX() - 10 - frames[0].width;
+	frames[0].x = ofGetMouseX() - 10 - frames[0].width;
     
-	//frames[1].x = ofGetMouseX() + 10 ;
+	frames[1].x = ofGetMouseX() + 10 ;
     
+    frames[0].setTargetStartPoint(ofVec2f(0, ofGetWidth()/2));
     frames[0].setTargetEndPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetStartPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
+    frames[1].setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()*2/3));
+
 
 
 }
@@ -54,12 +62,12 @@ void ofApp::draw(){
 
 	ofSetColor(255);
 	if (state == draw1) {
-		img1.draw(0, 0);
+        img1.draw(0, 0);
         ofSetColor(255, 255, 0);
         line1.draw();
 	}
 	if (state == draw2) {
-		img2.draw(0, 0);
+        img2.draw(0, 0);
         ofSetColor(0, 255, 255);
         line2.draw();
 	}

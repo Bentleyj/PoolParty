@@ -9,18 +9,41 @@ float Frame::angleBetweenTwoPoints(ofVec2f p1, ofVec2f p2)
 	return atan2(p2.y - p1.y, p2.x - p1.x);
 }
 
+ofVec2f Frame::getMidpoint(ofVec2f p1, ofVec2f p2) {
+    return ofVec2f((p1.x + p2.x)/2, (p1.y + p2.y)/2);
+}
+
 void Frame::draw() 
 {
-    float offset = 0.0;
-    
 	ofPushMatrix();
 	ofPushStyle();
 	ofSetColor(255);
-    if(img != nullptr)
-        img->drawSubsection(x, y, width, height, x, y - offset);
+    float aVal = angleBetweenTwoPoints(startPoint, endPoint);
+    float aTar = angleBetweenTwoPoints(targetStartPoint, targetEndPoint);
+
+    float diff = (aTar - aVal) * 180 / PI;
+    
+    ofVec2f midPointVal = getMidpoint(startPoint, endPoint);
+    ofVec2f midPointTar = getMidpoint(targetStartPoint, targetEndPoint);
+    
+    ofVec2f midPointDiff = midPointTar - midPointVal;
+    
+    float distVal = distance(startPoint, endPoint);
+    float distTar = distance(targetStartPoint, targetEndPoint);
+    
+    float percent = distVal / distTar;
+
 	ofPopStyle();
 	ofPushStyle();
-	ofTranslate(0, offset);
+	ofTranslate(midPointDiff);
+    ofTranslate(midPointVal);
+    ofRotate(diff, 0, 0, 1);
+    ofScale(1/percent, 1/percent);
+    ofTranslate(-midPointVal);
+    if(img != nullptr) {
+        ofSetColor(255, 255, 255, 127);
+        img->draw(0, 0);
+    }
 	ofNoFill();
 
     vector<ofPoint> verts = line->getVertices();
@@ -42,6 +65,7 @@ void Frame::draw()
         }
         ofSetColor(255, 127, 127);
         ofDrawLine(startPoint, endPoint);
+        ofDrawCircle(midPointVal, 5);
     }
     
 	ofSetColor(0, 255, 0);
@@ -56,10 +80,15 @@ void Frame::draw()
     
     ofSetColor(200, 0, 0);
     ofDrawCircle(targetEndPoint, 5);
+    
+    ofSetColor(127, 255, 127);
+    ofDrawLine(targetStartPoint, targetEndPoint);
+    ofDrawCircle(midPointTar, 5);
 
 	ofSetColor(255);
 	ofDrawRectangle(x, y, width, height);
 	ofPopStyle();
+    
 }
 
 bool Frame::isInsideBox(ofVec2f p)
@@ -123,15 +152,15 @@ float Frame::distance(ofVec2f p1, ofVec2f p2)
 void Frame::setTargetStartPoint(ofVec2f p) {
     targetStartPoint = getTargetPoint(p);
 }
+
 void Frame::setTargetEndPoint(ofVec2f p) {
     targetEndPoint = getTargetPoint(p);
 }
+
 ofVec2f Frame::getTargetPoint(ofVec2f p) {
     if(isInsideBox(p)) {
-        cout << "Frame::getTargetPoint: Point is inside box, can't use it as target!" << endl;
         return;
     }
-    
     if(p.y < y + height && p.y > y) {
         if(p.x < x) {
             return ofVec2f(x, p.y);
