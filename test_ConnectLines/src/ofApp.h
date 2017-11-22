@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "frame.h"
+#include "Frame.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,9 +22,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		vector<ofPolyline> lines1;
-		vector<ofPolyline> lines2;
-		vector<frame> frames;
+		ofPolyline line1;
+		ofPolyline line2;
+		vector<Frame> frames;
 
 		ofImage img1;
 		ofImage img2;

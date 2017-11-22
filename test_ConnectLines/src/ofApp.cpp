@@ -2,26 +2,26 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	frame f1;
-	frame f2;
+	Frame f1;
+	Frame f2;
 
-	img1.load("images/maps/coastline drone/Gabriel-Scanu-2.jpg");
-	img2.load("images/maps/coastline drone/d964bb35d4a94351a1c6301edad31573.jpg");
+	//img1.load("images/maps/coastline drone/Gabriel-Scanu-2.jpg");
+	//img2.load("images/maps/coastline drone/d964bb35d4a94351a1c6301edad31573.jpg");
 
 	f1.x = 100;
 	f1.y = 100;
 	f1.width = 400;
 	f1.height = 1000;
-	f1.img = &img1;
+	//f1.img = &img1;
 
 	f2.x = f1.width + 120;
 	f2.y = 100;
 	f2.width = 400;
 	f2.height = 1000;
-	f2.img = &img2;
+	//f2.img = &img2;
 
-	f1.lines = &lines1;
-	f2.lines = &lines2;
+	f1.line = &line1;
+	f2.line = &line2;
 
 	frames.push_back(f1);
 	frames.push_back(f2);
@@ -30,25 +30,15 @@ void ofApp::setup(){
 	linkPoint.y = ofGetHeight() / 2;
 
 	ofBackground(210);
+    
+    state = draw1;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	frames[0].x = ofGetMouseX() - 10 - frames[0].width;
-//	frames[0].y = ofGetMouseY();
-//
+    
 	frames[1].x = ofGetMouseX() + 10 ;
-//	frames[1].y = ofGetMouseY();
-
-	//if (lines2.size() > 0) {
-	//	vector<ofPoint> verts = lines2[0].getVertices();
-
-	//	for (int i = 0; i < verts.size(); i++) {
-	//		verts[i].y += diff;
-	//	}
-	//	lines2[0].clear();
-	//	lines2[0].addVertices(verts);
-	//}
 }
 
 //--------------------------------------------------------------
@@ -58,16 +48,12 @@ void ofApp::draw(){
 	if (state == draw1) {
 		img1.draw(0, 0);
         ofSetColor(255, 255, 0);
-        for (int i = 0; i < lines1.size(); i++) {
-            lines1[i].draw();
-        }
+        line1.draw();
 	}
 	if (state == draw2) {
 		img2.draw(0, 0);
         ofSetColor(0, 255, 255);
-        for (int i = 0; i < lines2.size(); i++) {
-            lines2[i].draw();
-        }
+        line2.draw();
 	}
 
 	if (state == display) {
@@ -78,19 +64,18 @@ void ofApp::draw(){
         float diff2 = (target - startPoint1);
 
 		ofSetColor(255, 255, 0);
-		frames[0].draw(diff1);
+		frames[0].draw();
 
 		ofSetColor(0, 255, 255);
-		frames[1].draw(diff2);
+		frames[1].draw();
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	if (key == 'c') {
-		lines1.clear();
-		lines2.clear();
-		//frames.clear();
+		line1.clear();
+		line2.clear();
 	}
 	if (key == '1') {
 		state = draw1;
@@ -116,23 +101,17 @@ void ofApp::mouseMoved(int x, int y ){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
 	if (state == draw1) {
-		lines1[lines1.size()-1].addVertex(x, y);
+		line1.addVertex(x, y);
 	}
 	else if (state == draw2) {
-		lines2[lines2.size() - 1].addVertex(x, y);
+		line2.addVertex(x, y);
 	}
 
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-		ofPolyline line;
-	if (state == draw1) {
-		lines1.push_back(line);
-	}
-	else if (state == draw2) {
-		lines2.push_back(line);
-	}
+
 }
 
 //--------------------------------------------------------------
