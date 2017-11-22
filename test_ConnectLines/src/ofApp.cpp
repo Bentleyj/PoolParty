@@ -34,10 +34,10 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	frames[0].x = ofGetMouseX();
+	frames[0].x = ofGetMouseX() - 10 - frames[0].width;
 //	frames[0].y = ofGetMouseY();
 //
-	frames[1].x = ofGetMouseX() + 20 + frames[0].width;
+	frames[1].x = ofGetMouseX() + 10 ;
 //	frames[1].y = ofGetMouseY();
 
 	//if (lines2.size() > 0) {
@@ -74,24 +74,14 @@ void ofApp::draw(){
 		float endPoint0 = frames[0].endPoint.y;
 		float startPoint1 = frames[1].startPoint.y;
         float target = ofGetMouseY();
-		float diff1 = (endPoint0 - target);
-        float diff2 = (startPoint1 - target);
+		float diff1 = (target - endPoint0);
+        float diff2 = (target - startPoint1);
 
 		ofSetColor(255, 255, 0);
-		frames[0].draw(-diff1);
+		frames[0].draw(diff1);
 
 		ofSetColor(0, 255, 255);
-		frames[1].draw(-diff2);
-	}
-	else {
-//		ofPushStyle();
-//		ofSetColor(255);
-//		for (int i = 0; i < frames.size(); i++) {
-//			frames[i].draw(0);
-//		}
-
-
-//		ofPopStyle();
+		frames[1].draw(diff2);
 	}
 }
 
