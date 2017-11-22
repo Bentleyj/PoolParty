@@ -22,7 +22,7 @@ void Frame::draw()
 	ofPushStyle();
 	ofTranslate(0, offset);
 	ofNoFill();
-    
+
     vector<ofPoint> verts = line->getVertices();
     if (verts.size() > 2) {
         for (int i = 1; i < verts.size() - 1; i++) {
@@ -40,6 +40,8 @@ void Frame::draw()
                 ofDrawLine(verts[i], verts[i + 1]);
             }
         }
+        ofSetColor(255, 127, 127);
+        ofDrawLine(startPoint, endPoint);
     }
     
 	ofSetColor(0, 255, 0);
