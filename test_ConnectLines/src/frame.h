@@ -31,4 +31,8 @@ public:
     
 	float distance(ofVec2f p1, ofVec2f p2);
     
+    void setTargetStartPoint(ofVec2f p);
+    void setTargetEndPoint(ofVec2f p);
+    ofVec2f getTargetPoint(ofVec2f p);
+    
 };

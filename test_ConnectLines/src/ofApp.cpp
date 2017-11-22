@@ -10,14 +10,17 @@ void ofApp::setup(){
 
 	f1.x = 100;
 	f1.y = 100;
-	f1.width = 400;
-	f1.height = 1000;
+	f1.width = 200;
+	f1.height = 500;
+    f1.setTargetStartPoint(ofVec2f(0, ofGetHeight()/2));
+
 	//f1.img = &img1;
 
-	f2.x = f1.width + 120;
+	f2.x = f1.width + 140;
 	f2.y = 100;
-	f2.width = 400;
-	f2.height = 1000;
+	f2.width = 200;
+	f2.height = 500;
+    f2.setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()/2));
 	//f2.img = &img2;
 
 	f1.line = &line1;
@@ -36,9 +39,14 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	frames[0].x = ofGetMouseX() - 10 - frames[0].width;
+	//frames[0].x = ofGetMouseX() - 10 - frames[0].width;
     
-	frames[1].x = ofGetMouseX() + 10 ;
+	//frames[1].x = ofGetMouseX() + 10 ;
+    
+    frames[0].setTargetEndPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
+    frames[1].setTargetStartPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
+
+
 }
 
 //--------------------------------------------------------------

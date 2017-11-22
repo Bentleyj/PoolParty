@@ -50,6 +50,12 @@ void Frame::draw()
 	ofDrawCircle(endPoint, 5);
 
 	ofPopMatrix();
+    
+    ofSetColor(0, 200, 0);
+    ofDrawCircle(targetStartPoint, 5);
+    
+    ofSetColor(200, 0, 0);
+    ofDrawCircle(targetEndPoint, 5);
 
 	ofSetColor(255);
 	ofDrawRectangle(x, y, width, height);
@@ -113,6 +119,49 @@ float Frame::distance(ofVec2f p1, ofVec2f p2)
 {
 	return sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
 }
+
+void Frame::setTargetStartPoint(ofVec2f p) {
+    targetStartPoint = getTargetPoint(p);
+}
+void Frame::setTargetEndPoint(ofVec2f p) {
+    targetEndPoint = getTargetPoint(p);
+}
+ofVec2f Frame::getTargetPoint(ofVec2f p) {
+    if(isInsideBox(p)) {
+        cout << "Frame::getTargetPoint: Point is inside box, can't use it as target!" << endl;
+        return;
+    }
+    
+    if(p.y < y + height && p.y > y) {
+        if(p.x < x) {
+            return ofVec2f(x, p.y);
+        } else if(p.x > x + width) {
+            return ofVec2f(x + width, p.y);
+        }
+    }
+    if(p.x < x + width && p.x > x) {
+        if(p.y < y) {
+            return ofVec2f(p.x, y);
+        } else if(p.y > y + height) {
+            return ofVec2f(p.x, y + height);
+        }
+    }
+    if(p.x > x + width) {
+        if(p.y > y + height) {
+            return ofVec2f(x + width, y + height);
+        } else if(p.y < y) {
+            return ofVec2f(x + width, y);
+        }
+    }
+    if(p.x < x) {
+        if(p.y > y + height) {
+            return ofVec2f(x, y + height);
+        } else if(p.y < y) {
+            return ofVec2f(x, y);
+        }
+    }
+}
+
 
 Frame::~Frame() {
     img = nullptr;
