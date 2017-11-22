@@ -5,8 +5,8 @@ void ofApp::setup(){
 	frame f1;
 	frame f2;
 
-	img1.load("images/Gabriel-Scanu-7.jpg");
-	img2.load("images/Screen Shot 2017-11-21 at 10.01.04.png");
+	img1.load("images/maps/coastline drone/Gabriel-Scanu-2.jpg");
+	img2.load("images/maps/coastline drone/d964bb35d4a94351a1c6301edad31573.jpg");
 
 	f1.x = 20;
 	f1.y = 20;
