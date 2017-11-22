@@ -7,6 +7,8 @@ Plugins/
 AVProVideo/
 *.pdf
 *.pdf.meta
+*.png
+*.jpg
 
 #Unity specific stuff
 # =============== #
