@@ -65,10 +65,10 @@ void ofApp::draw(){
 	if (state == display) {
 		float endPoint0 = frames[0].endPoint.y;
 		float startPoint1 = frames[1].startPoint.y;
-		float diff = endPoint0 - startPoint1;
+		float diff = (endPoint0 - startPoint1) / 2;
 
 		ofSetColor(255, 255, 0);
-		frames[0].draw(0);
+		frames[0].draw(-diff);
 
 		ofSetColor(0, 255, 255);
 		frames[1].draw(diff);
