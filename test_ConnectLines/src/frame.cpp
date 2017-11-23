@@ -36,19 +36,26 @@ void Frame::draw()
 
 	ofPopStyle();
 	ofPushStyle();
+
+	ofSetColor(255, 255, 255, 127);
+	shader.begin();
+	shader.setUniformTexture("diffuseTexture", *img, 0);
+	shader.setUniform2f("midPointDiff", midPointDiff);
+	shader.setUniform2f("midPointVal", midPointVal);
+	shader.setUniform1f("rot", diff * PI / 180);
+	shader.setUniform1f("scale", 1/percent);
+	ofDrawRectangle(x, y, width, height);
+	//img->draw(0, 0);
+	shader.end();
+
 	ofTranslate(midPointDiff);
     ofTranslate(midPointVal);
     ofRotate(diff, 0, 0, 1);
     ofScale(1/percent, 1/percent);
     ofTranslate(-midPointVal);
-    if(img != nullptr) {
-        ofSetColor(255, 255, 255, 127);
-		//shader.begin();
-		//shader.setUniformTexture("diffuseTexture", *img, 0);
-		//shader.setUniform4f("bounds", x, y, x + width, y + height);
-        img->draw(0, 0);
-		//shader.end();
-    }
+    //if(img != nullptr) {
+
+    //}
 	ofNoFill();
 
     vector<ofPoint> verts = line->getVertices();

@@ -5,22 +5,22 @@ void ofApp::setup(){
 	Frame f1;
 	Frame f2;
 
-	img1.load("images/Gabriel-Scanu-7.jpg");
-	img2.load("images/Screen Shot 2017-11-21 at 10.01.04.png");
+	img1.load("images/Nevis1.png");
+	img2.load("images/Nevis2.png");
 
 	f1.x = 100;
 	f1.y = 100;
-	f1.width = 200;
+	f1.width = 500;
 	f1.height = 1000;
-    f1.setTargetStartPoint(ofVec2f(0, ofGetHeight()/2));
+    f1.setTargetStartPoint(ofVec2f(0, 250));
 
 	f1.img = &img1;
 
 	f2.x = f1.width + 140;
 	f2.y = 100;
-	f2.width = 200;
+	f2.width = 500;
 	f2.height = 1000;
-    f2.setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()/2));
+    f2.setTargetEndPoint(ofVec2f(ofGetWidth(), 250));
     
 	f2.img = &img2;
 
@@ -43,14 +43,16 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	frames[0].x = ofGetMouseX() - 10 - frames[0].width;
+	//frames[0].x = ofGetMouseX() - 10 - frames[0].width;
+	//frames[0].y = ofGetMouseY() - frames[0].height / 2;
     
-	frames[1].x = ofGetMouseX() + 10 ;
+	//frames[1].x = ofGetMouseX() + 10 ;
+	//frames[1].y = ofGetMouseY() - frames[1].height / 2;
     
-    frames[0].setTargetStartPoint(ofVec2f(0, ofGetWidth()/2));
+    frames[0].setTargetStartPoint(ofVec2f(0, 250));
     frames[0].setTargetEndPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetStartPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
-    frames[1].setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()*2/3));
+    frames[1].setTargetEndPoint(ofVec2f(ofGetWidth(), 250));
 }
 
 //--------------------------------------------------------------
