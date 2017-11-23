@@ -5,8 +5,8 @@ void ofApp::setup(){
 	Frame f1;
 	Frame f2;
 
-	img1.load("images/maps/filter/Screen Shot 2017-11-21 at 10.05.09.png");
-	img2.load("images/maps/filter/Screen Shot 2017-11-21 at 10.05.18.png");
+	img1.load("images/Gabriel-Scanu-7.jpg");
+	img2.load("images/Screen Shot 2017-11-21 at 10.01.04.png");
 
 	f1.x = 100;
 	f1.y = 100;

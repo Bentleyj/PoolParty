@@ -16,6 +16,8 @@ public:
 	ofPolyline* line;
     
 	ofImage *img;
+
+	ofShader shader;
     
     float r;
     

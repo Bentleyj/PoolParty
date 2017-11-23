@@ -2,6 +2,7 @@
 
 Frame::Frame() {
     img = nullptr;
+	shader.load("shaders/cutout");
 }
 
 float Frame::angleBetweenTwoPoints(ofVec2f p1, ofVec2f p2)
@@ -42,7 +43,11 @@ void Frame::draw()
     ofTranslate(-midPointVal);
     if(img != nullptr) {
         ofSetColor(255, 255, 255, 127);
+		//shader.begin();
+		//shader.setUniformTexture("diffuseTexture", *img, 0);
+		//shader.setUniform4f("bounds", x, y, x + width, y + height);
         img->draw(0, 0);
+		//shader.end();
     }
 	ofNoFill();
 
@@ -159,7 +164,7 @@ void Frame::setTargetEndPoint(ofVec2f p) {
 
 ofVec2f Frame::getTargetPoint(ofVec2f p) {
     if(isInsideBox(p)) {
-        return;
+        return ofVec2f(0, 0);
     }
     if(p.y < y + height && p.y > y) {
         if(p.x < x) {
