@@ -33,7 +33,6 @@ void ofApp::setup(){
     frames[0].img = &img1;
     frames[1].img = &img2;
 
-
 	linkPoint.x = ofGetWidth() / 2;
 	linkPoint.y = ofGetHeight() / 2;
 
@@ -52,9 +51,6 @@ void ofApp::update(){
     frames[0].setTargetEndPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetStartPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()*2/3));
-
-
-
 }
 
 //--------------------------------------------------------------
