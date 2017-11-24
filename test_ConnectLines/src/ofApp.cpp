@@ -52,9 +52,6 @@ void ofApp::update(){
     frames[0].setTargetEndPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetStartPoint(ofVec2f(ofGetMouseX(), ofGetMouseY()));
     frames[1].setTargetEndPoint(ofVec2f(ofGetWidth(), ofGetHeight()*2/3));
-
-
-
 }
 
 //--------------------------------------------------------------
