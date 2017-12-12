@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Frame.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,16 +20,5 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-		ofPolyline line1;
-		ofPolyline line2;
-		vector<Frame> frames;
-
-		ofImage img1;
-		ofImage img2;
-
-		enum { display, draw1, draw2 } state;
-
-		ofVec2f linkPoint;
 		
 };

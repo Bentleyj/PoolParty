@@ -1,53 +1,109 @@
-#include "frame.h"
+#include "Frame.h"
 
-float frame::angleBetweenTwoPoints(ofVec2f p1, ofVec2f p2)
+Frame::Frame() {
+    img = nullptr;
+	shader.load("shaders/cutout");
+}
+
+float Frame::angleBetweenTwoPoints(ofVec2f p1, ofVec2f p2)
 {
 	return atan2(p2.y - p1.y, p2.x - p1.x);
 }
 
-void frame::draw(float offset) 
+ofVec2f Frame::getMidpoint(ofVec2f p1, ofVec2f p2) {
+    return ofVec2f((p1.x + p2.x)/2, (p1.y + p2.y)/2);
+}
+
+void Frame::draw() 
 {
 	ofPushMatrix();
 	ofPushStyle();
 	ofSetColor(255);
-	img->drawSubsection(x, y, width, height, x, y - offset);
+    float aVal = angleBetweenTwoPoints(startPoint, endPoint);
+    float aTar = angleBetweenTwoPoints(targetStartPoint, targetEndPoint);
+
+    float diff = (aTar - aVal) * 180 / PI;
+    
+    ofVec2f midPointVal = getMidpoint(startPoint, endPoint);
+    ofVec2f midPointTar = getMidpoint(targetStartPoint, targetEndPoint);
+    
+    ofVec2f midPointDiff = midPointTar - midPointVal;
+    
+    float distVal = distance(startPoint, endPoint);
+    float distTar = distance(targetStartPoint, targetEndPoint);
+    
+    float percent = distVal / distTar;
+
 	ofPopStyle();
 	ofPushStyle();
-	ofTranslate(0, offset);
+
+	ofSetColor(255, 255, 255, 127);
+	shader.begin();
+	shader.setUniformTexture("diffuseTexture", *img, 0);
+	shader.setUniform2f("midPointDiff", midPointDiff);
+	shader.setUniform2f("midPointVal", midPointVal);
+	shader.setUniform1f("rot", diff * PI / 180);
+	shader.setUniform1f("scale", 1/percent);
+	ofDrawRectangle(x, y, width, height);
+	//img->draw(0, 0);
+	shader.end();
+
+	ofTranslate(midPointDiff);
+    ofTranslate(midPointVal);
+    ofRotate(diff, 0, 0, 1);
+    ofScale(1/percent, 1/percent);
+    ofTranslate(-midPointVal);
+    //if(img != nullptr) {
+
+    //}
 	ofNoFill();
-	for (int i = 0; i < lines->size(); i++) {
-		vector<ofPoint> verts = (*lines)[i].getVertices();
-		if (verts.size() > 2) {
-			for (int i = 1; i < verts.size() - 1; i++) {
-				if (isInsideBox(verts[i])) {
-					ofDrawLine(verts[i], verts[i + 1]);
-				}
-				if (!isInsideBox(verts[i - 1]) && isInsideBox(verts[i])) {
-					startPoint = getNearestEdge(verts[i], verts[i - 1]);
-					ofSetColor(0, 0, 255);
-					ofDrawLine(verts[i], verts[i - 1]);
-				}
-				else if (isInsideBox(verts[i]) && !isInsideBox(verts[i + 1])) {
-					endPoint = getNearestEdge(verts[i], verts[i + 1]);
-					ofSetColor(0, 0, 255);
-					ofDrawLine(verts[i], verts[i + 1]);
-				}
-			}
-		}
-	}
+
+    vector<ofPoint> verts = line->getVertices();
+    if (verts.size() > 2) {
+        for (int i = 1; i < verts.size() - 1; i++) {
+            if (isInsideBox(verts[i])) {
+                ofDrawLine(verts[i], verts[i + 1]);
+            }
+            if (!isInsideBox(verts[i - 1]) && isInsideBox(verts[i])) {
+                startPoint = getNearestEdge(verts[i], verts[i - 1]);
+                ofSetColor(0, 0, 255);
+                ofDrawLine(verts[i], verts[i - 1]);
+            }
+            else if (isInsideBox(verts[i]) && !isInsideBox(verts[i + 1])) {
+                endPoint = getNearestEdge(verts[i], verts[i + 1]);
+                ofSetColor(0, 0, 255);
+                ofDrawLine(verts[i], verts[i + 1]);
+            }
+        }
+        ofSetColor(255, 127, 127);
+        ofDrawLine(startPoint, endPoint);
+        ofDrawCircle(midPointVal, 5);
+    }
+    
 	ofSetColor(0, 255, 0);
 	ofDrawCircle(startPoint, 5);
 	ofSetColor(255, 0, 0);
 	ofDrawCircle(endPoint, 5);
 
 	ofPopMatrix();
+    
+    ofSetColor(0, 200, 0);
+    ofDrawCircle(targetStartPoint, 5);
+    
+    ofSetColor(200, 0, 0);
+    ofDrawCircle(targetEndPoint, 5);
+    
+    ofSetColor(127, 255, 127);
+    ofDrawLine(targetStartPoint, targetEndPoint);
+    ofDrawCircle(midPointTar, 5);
 
 	ofSetColor(255);
 	ofDrawRectangle(x, y, width, height);
 	ofPopStyle();
+    
 }
 
-bool frame::isInsideBox(ofVec2f p)
+bool Frame::isInsideBox(ofVec2f p)
 {
 	if (p.x > x && p.x < x + width) {
 		if (p.y > y && p.y < y + height) {
@@ -57,7 +113,7 @@ bool frame::isInsideBox(ofVec2f p)
 	return false;
 }
 
-ofVec2f frame::getNearestEdge(ofVec2f p1, ofVec2f p2)
+ofVec2f Frame::getNearestEdge(ofVec2f p1, ofVec2f p2)
 {
 	float m = (p2.y - p1.y) / (p2.x - p1.x);
 	float b = p2.y - m * p2.x;
@@ -100,7 +156,55 @@ ofVec2f frame::getNearestEdge(ofVec2f p1, ofVec2f p2)
 	return nearest;
 }
 
-float frame::distance(ofVec2f p1, ofVec2f p2)
+float Frame::distance(ofVec2f p1, ofVec2f p2)
 {
 	return sqrt((p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y));
+}
+
+void Frame::setTargetStartPoint(ofVec2f p) {
+    targetStartPoint = getTargetPoint(p);
+}
+
+void Frame::setTargetEndPoint(ofVec2f p) {
+    targetEndPoint = getTargetPoint(p);
+}
+
+ofVec2f Frame::getTargetPoint(ofVec2f p) {
+    if(isInsideBox(p)) {
+        return ofVec2f(0, 0);
+    }
+    if(p.y < y + height && p.y > y) {
+        if(p.x < x) {
+            return ofVec2f(x, p.y);
+        } else if(p.x > x + width) {
+            return ofVec2f(x + width, p.y);
+        }
+    }
+    if(p.x < x + width && p.x > x) {
+        if(p.y < y) {
+            return ofVec2f(p.x, y);
+        } else if(p.y > y + height) {
+            return ofVec2f(p.x, y + height);
+        }
+    }
+    if(p.x > x + width) {
+        if(p.y > y + height) {
+            return ofVec2f(x + width, y + height);
+        } else if(p.y < y) {
+            return ofVec2f(x + width, y);
+        }
+    }
+    if(p.x < x) {
+        if(p.y > y + height) {
+            return ofVec2f(x, y + height);
+        } else if(p.y < y) {
+            return ofVec2f(x, y);
+        }
+    }
+}
+
+
+Frame::~Frame() {
+    img = nullptr;
+    line = nullptr;
 }
