@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "particle.h"
 
 class ofApp : public ofBaseApp{
 
@@ -27,6 +28,8 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> noiseSize;
 		ofParameter<float> noiseScale;
 
+		vector<Particle> particles;
+
 		vector<ofVec2f> points;
-		ofMesh line;		
+		ofMesh line;
 };

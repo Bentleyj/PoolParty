@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#define NUM_PARTICLES 200
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -11,48 +12,38 @@ void ofApp::setup(){
 	gui.add(noiseScale.set("noiseScale", 1, 0, 1));
 	gui.loadFromFile(settingsPath);
 
-	float x = ofGetWidth() / 1000 + 5;
+	float x = ofGetWidth() / NUM_PARTICLES + 5;
 	float y = ofGetHeight() / 2;
-	for (int i = 0; i < 1000; i++) {
-		points.push_back(ofVec3f(x, y));
-		line.addVertex(ofVec3f(x, y, 0));
-		x += ofGetWidth() / 1000;
+
+	for (int i = 0; i < NUM_PARTICLES; i++) {
+		Particle p;
+		p.col = ofColor(255);
+		p.pos = ofVec2f(x, y);
+		p.width = ofGetWidth() / NUM_PARTICLES - 2;
+		p.height = ofRandom(10, 20);
+		x += ofGetWidth() / NUM_PARTICLES + 1;
+		particles.push_back(p);
 	}
 
-	line.setMode(OF_PRIMITIVE_LINE_STRIP);
+	cout << particles.size() << endl;
 
 	ofBackground(20);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	for (int i = 0; i < line.getNumVertices(); i++) {
-		ofVec2f p = points[i];
-		p.y += (0.5 - ofNoise(p.x * noiseScale)) * 2.0 * noiseSize;
-		line.setVertex(i, p);
-	}
-
-	for (int i = 1; i < noiseIterations; i++) {
-		for (int j = 0; j < line.getNumVertices()-1; j++) {
-			ofVec2f p = line.getVertex(j);
-			ofVec2f pNext = line.getVertex(j + 1);
-			ofVec2f v = pNext - p;
-			ofVec2f vPerp = ofVec2f(v.y, -v.x);
-			vPerp /= v.length();
-			p.x -= vPerp.x * (0.5 - ofNoise(p.x * noiseScale * i)) * 2.0 * noiseSize / i;
-			p.y -= vPerp.y * (0.5 - ofNoise(p.x * noiseScale * i)) * 2.0 * noiseSize / i;
-			line.setVertex(j, p);
-		}
+	for (int i = 0; i < particles.size(); i++) {
+		particles[i].update();
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	for (int i = 0; i < particles.size(); i++) {
+		particles[i].draw();
+	}
 
-	ofSetColor(255);
-	line.draw();
-
-	gui.draw();
+	//gui.draw();
 }
 
 //--------------------------------------------------------------
