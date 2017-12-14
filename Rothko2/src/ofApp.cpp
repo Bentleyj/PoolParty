@@ -2,57 +2,48 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//shader.load("shaders/Rothko");
+	shader.load("shaders/Rothko");
 
-	string settingsPath = "settings/settings.xml";
-	gui.setup("Controls", settingsPath);
-	gui.add(noiseIterations.set("noiseIterations", 0, 0, 10));
-	gui.add(noiseSize.set("noiseSize", 0, 0, 1000));
-	gui.add(noiseScale.set("noiseScale", 1, 0, 1));
-	gui.loadFromFile(settingsPath);
-
-	float x = ofGetWidth() / 1000 + 5;
-	float y = ofGetHeight() / 2;
-	for (int i = 0; i < 1000; i++) {
-		points.push_back(ofVec3f(x, y));
-		line.addVertex(ofVec3f(x, y, 0));
-		x += ofGetWidth() / 1000;
-	}
-
-	line.setMode(OF_PRIMITIVE_LINE_STRIP);
+	img.load("images/hsportrait.png");
+	img.resize(ofGetWidth()/3, ofGetHeight()/3);
+	img.update();
 
 	ofBackground(20);
+	buffer[0].allocate(ofGetWidth()/3, ofGetHeight()/3);
+	buffer[1].allocate(ofGetWidth()/3, ofGetHeight()/3);
+
+	buffer[0].begin();
+	img.draw(0, 0);
+	buffer[0].end();
+
+
+	index = 0;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	for (int i = 0; i < line.getNumVertices(); i++) {
-		ofVec2f p = points[i];
-		p.y += (0.5 - ofNoise(p.x * noiseScale)) * 2.0 * noiseSize;
-		line.setVertex(i, p);
-	}
 
-	for (int i = 1; i < noiseIterations; i++) {
-		for (int j = 0; j < line.getNumVertices()-1; j++) {
-			ofVec2f p = line.getVertex(j);
-			ofVec2f pNext = line.getVertex(j + 1);
-			ofVec2f v = pNext - p;
-			ofVec2f vPerp = ofVec2f(v.y, -v.x);
-			vPerp /= v.length();
-			p.x -= vPerp.x * (0.5 - ofNoise(p.x * noiseScale * i)) * 2.0 * noiseSize / i;
-			p.y -= vPerp.y * (0.5 - ofNoise(p.x * noiseScale * i)) * 2.0 * noiseSize / i;
-			line.setVertex(j, p);
-		}
-	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
 	ofSetColor(255);
-	line.draw();
+	buffer[index].begin();
+	shader.begin();
+	shader.setUniform2f("resolution", ofVec2f(ofGetWidth(), ofGetHeight()));
+	shader.setUniformTexture("texture0", buffer[(index+1)%2].getTexture(), 0);
+	ofDrawRectangle(0, 0, buffer[index].getWidth(), buffer[index].getHeight());
+	shader.end();
+	buffer[index].end();
 
-	gui.draw();
+	buffer[index].draw(0, 0);
+
+	index++;
+	index %= 2;
+
+	buffer[0].draw(buffer[0].getWidth(), 0);
+	buffer[1].draw(buffer[0].getWidth() * 2, 0);
 }
 
 //--------------------------------------------------------------

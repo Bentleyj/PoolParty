@@ -22,11 +22,9 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		ofxPanel gui;
-		ofParameter<int> noiseIterations;
-		ofParameter<float> noiseSize;
-		ofParameter<float> noiseScale;
+		ofShader shader;
+		ofImage img;
 
-		vector<ofVec2f> points;
-		ofMesh line;		
+		ofFbo buffer[2];
+		int index;
 };
