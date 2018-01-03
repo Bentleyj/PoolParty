@@ -5,12 +5,12 @@ void ofApp::setup(){
 	shader.load("shaders/Rothko");
 
 	img.load("images/hsportrait.png");
-	img.resize(ofGetWidth()/3, ofGetHeight()/3);
-	img.update();
+	//img.resize(ofGetWidth()/3, ofGetHeight()/3);
+	//img.update();
 
 	ofBackground(20);
-	buffer[0].allocate(ofGetWidth()/3, ofGetHeight()/3);
-	buffer[1].allocate(ofGetWidth()/3, ofGetHeight()/3);
+	buffer[0].allocate(img.getWidth(), img.getHeight());
+	buffer[1].allocate(img.getWidth(), img.getHeight());
 
 	buffer[0].begin();
 	img.draw(0, 0);
@@ -18,6 +18,8 @@ void ofApp::setup(){
 
 
 	index = 0;
+
+	test = 2.0;
 }
 
 //--------------------------------------------------------------
@@ -31,19 +33,21 @@ void ofApp::draw(){
 	ofSetColor(255);
 	buffer[index].begin();
 	shader.begin();
-	shader.setUniform2f("resolution", ofVec2f(ofGetWidth(), ofGetHeight()));
-	shader.setUniformTexture("texture0", buffer[(index+1)%2].getTexture(), 0);
+	shader.setUniform2f("resolution", ofVec2f(buffer[index].getWidth(), buffer[index].getHeight()));
+	shader.setUniformTexture("texture0", buffer[(index+1)%2].getTexture(), index);
 	ofDrawRectangle(0, 0, buffer[index].getWidth(), buffer[index].getHeight());
 	shader.end();
 	buffer[index].end();
 
-	buffer[index].draw(0, 0);
+	test = 0.0;
+
+	buffer[index].draw(0, 0, buffer[index].getWidth()*2, buffer[index].getHeight()*2);
 
 	index++;
 	index %= 2;
 
-	buffer[0].draw(buffer[0].getWidth(), 0);
-	buffer[1].draw(buffer[0].getWidth() * 2, 0);
+	buffer[0].draw(buffer[0].getWidth() * 2, 0);
+	buffer[1].draw(buffer[0].getWidth() * 3, 0);
 }
 
 //--------------------------------------------------------------

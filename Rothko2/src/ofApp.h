@@ -25,6 +25,8 @@ class ofApp : public ofBaseApp{
 		ofShader shader;
 		ofImage img;
 
+		float test;
+
 		ofFbo buffer[2];
 		int index;
 };

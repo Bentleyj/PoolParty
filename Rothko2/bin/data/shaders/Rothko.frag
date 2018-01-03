@@ -4,6 +4,7 @@
 
 uniform sampler2DRect texture0;
 uniform vec2 resolution;
+uniform float test;
 
 #define RotNum 3
 #define angRnd 1.0
@@ -39,27 +40,35 @@ float getRot(vec2 uv, float sc)
 
 void main() {
     vec2 uv = gl_FragCoord.xy / resolution;//gl_TexCoord[0].xy;
+	//uv.y = 1.0 - uv.y;
     vec2 scr=uv*2.0-vec2(1.0);
-    
+	//scr.y = 1.0 - scr.y;
+
     float sc=1.0/max(resolution.x,resolution.y);
     vec2 v=vec2(0);
-    for(int level=0;level<20;level++)
-    {
+	float rot;
+	for(int level=0;level<20;level++)
+	{
         if ( sc > 0.7 ) break;
         float ang2 = angRnd*ang*randS(uv).y;
-        vec2 p = vec2(cos(ang2),sin(ang2));
+		vec2 p = vec2(cos(ang2),sin(ang2));
         for(int i=0;i<RotNum;i++)
         {
             vec2 p2=p*sc;
-            float rot=getRot(uv+p2,sc);
+            rot=getRot(uv+p2,sc);
             //v+=cross(vec3(0,0,rot),vec3(p2,0.0)).xy;
             v+=p2.yx*rot*vec2(-1,1); //maybe faster than above
             p = m*p;
         }
       	sc*=2.0;
-    }
+	}
 
-    vec4 color = texture2DRect(texture0, fract(uv+v*3.0/resolution.x) * resolution);//vec4(uv.x, uv.y, 1.0, 1.0);
-    //color.xy += (0.01*scr.xy / (dot(scr,scr)/0.1+0.3)) + gl_Color;
+	vec4 color = texture2DRect(texture0, fract(uv + v*3.0 / resolution.x) * resolution);
+ //   color.xy += (0.01*scr.xy / (dot(scr,scr)/0.1+0.3)) + gl_Color.xy;
+	////if (test > 1.0) color = vec4(1.0, 0, 0, 1);
+	////color.r += 0.1;
+	////if(color.r > 1.0) color.r = 0.0;
+	
+	color = vec4(rot, 0.0, 1.0);
     gl_FragColor = color;
 }
