@@ -25,6 +25,8 @@ struct ColorPosition {
 void ofApp::setup(){
 	img.load("Tapestry.jpg");
 
+	videoPlayer.load("Videos/SeaOverhead.mp4");
+
 	vector<ColorPosition> colorStartingPositions;
 
 	float distTolerance = 15.0;
@@ -43,11 +45,11 @@ void ofApp::setup(){
 				// add to bin
 				for (auto it = colorStartingPositions.begin(); it != colorStartingPositions.end(); it++) {
 					if (it->id == id) {
-						mesh.addVertex(it->nextPos);
-						mesh.addColor(col);
-						mesh.addIndex(it->lastIndex);
-						it->lastIndex = mesh.getNumVertices() - 1;
-						mesh.addIndex(it->lastIndex);
+						meshes[id].addVertex(it->nextPos);
+						meshes[id].addColor(col);
+						meshes[id].addIndex(it->lastIndex);
+						it->lastIndex = meshes[id].getNumVertices() - 1;
+						meshes[id].addIndex(it->lastIndex);
 						it->nextPos.x += 5;
 					}
 				}
@@ -55,14 +57,18 @@ void ofApp::setup(){
 			else {
 				// Create new bin
 				ColorPosition p;
-				p.nextPos.y = colorStartingPositions.size() * 5;
+				//p.nextPos.y = colorStartingPositions.size() * 5;
 				p.col = col;
 				p.id = colorStartingPositions.size();
+				ofMesh mesh;
 				mesh.addVertex(p.nextPos);
 				mesh.addColor(col);
 				p.lastIndex = mesh.getNumVertices() - 1;
 				p.nextPos.x += 5;
 				colorStartingPositions.push_back(p);
+				mesh.setMode(OF_PRIMITIVE_LINES);
+				meshes.push_back(mesh);
+
 			}
 			//i++;
 			//float percent = (float)i;// / (float)(NUM_STEPS*NUM_STEPS);
@@ -70,15 +76,13 @@ void ofApp::setup(){
 		}
 	}
 
-	offset.load("Shaders/Offset");
-
-	mesh.setMode(OF_PRIMITIVE_LINES);
+	videoPlayer.play();
 	ofBackground(0);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+	videoPlayer.update();
 }
 
 //--------------------------------------------------------------
@@ -90,13 +94,25 @@ void ofApp::draw(){
 	//offset.begin();
 	//offset.setUniform1f("u_time", ofGetElapsedTimef());
 	//offset.setUniformTexture("diffuseTexture", img, 0);
-	mesh.draw();
-	//offset.end();
-	//cam.end();
+	float x = 50;
+	float y = 50;
+	for (int i = 0; i < meshes.size()-1; i+=2) {
+		float meshWidth = meshes[i].getVertex(meshes[i].getNumVertices() - 1).x - meshes[i].getVertex(0).x;
+		float offset = ofGetWidth() / 2 - meshWidth;
+		float noise = 0.5 - ofNoise(ofGetElapsedTimef()/5, y / 80);
+		noise *= 100;
+		ofPushMatrix();
+		ofTranslate(x + offset + noise, y);
+		meshes[i].draw();
+		ofPopMatrix();
+		ofPushMatrix();
+		ofTranslate(x + meshWidth + offset + 5 + noise, y);
+		meshes[i + 1].draw();
+		y += 5;
+		ofPopMatrix();
+	}
 
-	//flowImg.draw(0, 0);
-
-	//flow.draw();
+	videoPlayer.draw(0, 0);
 }
 
 //--------------------------------------------------------------

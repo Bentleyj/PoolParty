@@ -23,15 +23,9 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		ofImage img;
-		ofMesh mesh;
+		vector<ofMesh> meshes;
 
-		ofVideoGrabber camera;
-		cv::Mat accumulator;
 		ofxCv::FlowFarneback flow;
-		ofImage flowImg;
-
-		ofShader offset;
-
-		ofEasyCam cam;
+		ofVideoPlayer videoPlayer;
 		
 };
