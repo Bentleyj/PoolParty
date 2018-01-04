@@ -78,6 +78,15 @@ void ofApp::setup(){
     
     ofSetLineWidth(3);
     
+    gui.setup("controls", "settings/settings.xml");
+    gui.add(minArea.set("Min area", 10, 1, 100));
+    gui.add(maxArea.set("Max area", 200, 1, 500));
+    gui.add(threshold.set("Threshold", 128, 0, 255));
+    gui.add(holes.set("Holes", false));
+    gui.loadFromFile("settings/settings.xml");
+    
+    gui.setPosition(20, videoPlayer.getHeight() + 20);
+    
 	videoPlayer.play();
 	ofBackground(0);
 }
@@ -88,6 +97,10 @@ void ofApp::update(){
     //videoGrabber.update();
     
     if(videoPlayer.isFrameNew()) {
+        contourFinder.setMinAreaRadius(minArea);
+        contourFinder.setMaxAreaRadius(maxArea);
+        contourFinder.setThreshold(threshold);
+        contourFinder.setFindHoles(holes);
         contourFinder.findContours(videoPlayer);
         //flow.calcOpticalFlow(videoPlayer);
         //cout<<flow.getAverageFlow()<<endl;
@@ -98,7 +111,7 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofSetLineWidth(3);
-	ofEnableDepthTest();
+	//ofEnableDepthTest();
 	//cam.begin();
 	//ofTranslate(-img.getWidth() / 2, -img.getHeight() / 2);
 	//offset.begin();
@@ -123,8 +136,10 @@ void ofApp::draw(){
 	}
     ofSetColor(255);
     ofSetLineWidth(1);
-    contourFinder.draw();
     videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
+    contourFinder.draw();
+    
+    gui.draw();
 }
 
 //--------------------------------------------------------------

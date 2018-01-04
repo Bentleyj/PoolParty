@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,6 +22,10 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+        ofxPanel gui;
+        ofParameter<float> minArea, maxArea, threshold;
+        ofParameter<bool> holes;
 
 		ofImage img;
 		vector<ofMesh> meshes;
