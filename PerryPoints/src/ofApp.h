@@ -25,7 +25,7 @@ class ofApp : public ofBaseApp{
 		ofImage img;
 		vector<ofMesh> meshes;
 
-		ofxCv::FlowFarneback flow;
+        ofxCv::ContourFinder contourFinder;
 		ofVideoPlayer videoPlayer;
 		
 };

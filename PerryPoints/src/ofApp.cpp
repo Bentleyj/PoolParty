@@ -23,9 +23,9 @@ struct ColorPosition {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	img.load("Tapestry.jpg");
+	img.load("Tapestry.png");
 
-	videoPlayer.load("Videos/SeaOverhead.mp4");
+	videoPlayer.load("Videos/BirdsEyeViewWaves480.mov");
 
 	vector<ColorPosition> colorStartingPositions;
 
@@ -75,7 +75,9 @@ void ofApp::setup(){
 			//cout << percent << "%" << endl;
 		}
 	}
-
+    
+    ofSetLineWidth(3);
+    
 	videoPlayer.play();
 	ofBackground(0);
 }
@@ -83,11 +85,19 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	videoPlayer.update();
+    //videoGrabber.update();
+    
+    if(videoPlayer.isFrameNew()) {
+        contourFinder.findContours(videoPlayer);
+        //flow.calcOpticalFlow(videoPlayer);
+        //cout<<flow.getAverageFlow()<<endl;
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+    ofSetLineWidth(3);
 	ofEnableDepthTest();
 	//cam.begin();
 	//ofTranslate(-img.getWidth() / 2, -img.getHeight() / 2);
@@ -111,8 +121,10 @@ void ofApp::draw(){
 		y += 5;
 		ofPopMatrix();
 	}
-
-	videoPlayer.draw(0, 0);
+    ofSetColor(255);
+    ofSetLineWidth(1);
+    contourFinder.draw();
+    videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 //--------------------------------------------------------------
