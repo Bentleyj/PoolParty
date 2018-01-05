@@ -29,7 +29,7 @@ void ofApp::setup(){
 
 	vector<ColorPosition> colorStartingPositions;
 
-	float distTolerance = 15.0;
+	float distTolerance = 18.0;
 	float i = 0;
 
 	for (int x = 0; x < img.getWidth(); x += img.getWidth()/NUM_STEPS) {
@@ -122,7 +122,7 @@ void ofApp::draw(){
 	for (int i = 0; i < meshes.size()-1; i+=2) {
 		float meshWidth = meshes[i].getVertex(meshes[i].getNumVertices() - 1).x - meshes[i].getVertex(0).x;
 		float offset = ofGetWidth() / 2 - meshWidth;
-		float noise = 0.5 - ofNoise(ofGetElapsedTimef()/5, y / 80);
+        float noise = 0.0;//0.5 - ofNoise(ofGetElapsedTimef()/5, y / 80);
 		noise *= 100;
 		ofPushMatrix();
 		ofTranslate(x + offset + noise, y);
@@ -136,8 +136,17 @@ void ofApp::draw(){
 	}
     ofSetColor(255);
     ofSetLineWidth(1);
-    videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
-    contourFinder.draw();
+//    videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
+//    contourFinder.draw();
+//    auto contours = contourFinder.getContours();
+//    for(int i = 0; i < contours.size(); i++) {
+//        ofSetColor(255, 255, 0);
+//        for(int j = 0; j < contours[i].size()-1; j+=2) {
+//            cv::Point p1 = contours[i][j];
+//            cv::Point p2 = contours[i][j+1];
+//            ofDrawLine(p1.x, p1.y, p2.x, p2.y);
+//        }
+//    }
     
     gui.draw();
 }
