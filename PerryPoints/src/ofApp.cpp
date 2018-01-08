@@ -76,7 +76,7 @@ void ofApp::setup(){
 		}
 	}
     
-    ofSetLineWidth(3);
+    shader.load("shaders/Colors");
     
     gui.setup("controls", "settings/settings.xml");
     gui.add(minArea.set("Min area", 10, 1, 100));
@@ -89,6 +89,8 @@ void ofApp::setup(){
     
 	videoPlayer.play();
 	ofBackground(0);
+    
+    buffer.allocate(videoPlayer.getWidth(), videoPlayer.getHeight());
 }
 
 //--------------------------------------------------------------
@@ -105,48 +107,72 @@ void ofApp::update(){
         //flow.calcOpticalFlow(videoPlayer);
         //cout<<flow.getAverageFlow()<<endl;
     }
+    
+    threshold+=0.6;
+    if(threshold > 256) threshold = 100;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    ofSetLineWidth(3);
-	//ofEnableDepthTest();
-	//cam.begin();
-	//ofTranslate(-img.getWidth() / 2, -img.getHeight() / 2);
-	//offset.begin();
-	//offset.setUniform1f("u_time", ofGetElapsedTimef());
-	//offset.setUniformTexture("diffuseTexture", img, 0);
-	float x = 50;
-	float y = 50;
-	for (int i = 0; i < meshes.size()-1; i+=2) {
-		float meshWidth = meshes[i].getVertex(meshes[i].getNumVertices() - 1).x - meshes[i].getVertex(0).x;
-		float offset = ofGetWidth() / 2 - meshWidth;
-        float noise = 0.0;//0.5 - ofNoise(ofGetElapsedTimef()/5, y / 80);
-		noise *= 100;
-		ofPushMatrix();
-		ofTranslate(x + offset + noise, y);
-		meshes[i].draw();
-		ofPopMatrix();
-		ofPushMatrix();
-		ofTranslate(x + meshWidth + offset + 5 + noise, y);
-		meshes[i + 1].draw();
-		y += 5;
-		ofPopMatrix();
-	}
-    ofSetColor(255);
-    ofSetLineWidth(1);
-//    videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
-//    contourFinder.draw();
-//    auto contours = contourFinder.getContours();
-//    for(int i = 0; i < contours.size(); i++) {
-//        ofSetColor(255, 255, 0);
-//        for(int j = 0; j < contours[i].size()-1; j+=2) {
-//            cv::Point p1 = contours[i][j];
-//            cv::Point p2 = contours[i][j+1];
-//            ofDrawLine(p1.x, p1.y, p2.x, p2.y);
-//        }
+//    ofSetLineWidth(3);
+//    //ofEnableDepthTest();
+//    //cam.begin();
+//    //ofTranslate(-img.getWidth() / 2, -img.getHeight() / 2);
+//    //offset.begin();
+//    //offset.setUniform1f("u_time", ofGetElapsedTimef());
+//    //offset.setUniformTexture("diffuseTexture", img, 0);
+//    float x = 50;
+//    float y = 50;
+//    for (int i = 0; i < meshes.size()-1; i+=2) {
+//        float meshWidth = meshes[i].getVertex(meshes[i].getNumVertices() - 1).x - meshes[i].getVertex(0).x;
+//        float offset = ofGetWidth() / 2 - meshWidth;
+//        float noise = 0.0;//0.5 - ofNoise(ofGetElapsedTimef()/5, y / 80);
+//        noise *= 100;
+//        ofPushMatrix();
+//        ofTranslate(x + offset + noise, y);
+//        meshes[i].draw();
+//        ofPopMatrix();
+//        ofPushMatrix();
+//        ofTranslate(x + meshWidth + offset + 5 + noise, y);
+//        meshes[i + 1].draw();
+//        y += 5;
+//        ofPopMatrix();
 //    }
+//    ofSetColor(255);
+//    ofSetLineWidth(1);
+   // videoPlayer.draw(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
+    
+    vector<ofPolyline> lines = contourFinder.getPolylines();
+    buffer.begin();
+    ofClear(0, 0, 0, 0);
+    for(int i = 0; i < lines.size(); i++) {
+        ofPolyline line = lines[i].getSmoothed(20);
+        line.draw();
+    }
+    buffer.end();
+    
+    float colors[60];
+    for(int i = 0; i < 60; i++) {
+        colors[i] = 0;
+    }
+    for(int i = 0; i < 20; i++) {
+        ofColor col = meshes[i].getColor(0);
+        colors[i*3] = col.r / 255.0;
+        colors[i*3+1] = col.g / 255.0;
+        colors[i*3+2] = col.b / 255.0;
+    }
+    
+    shader.begin();
+        shader.setUniformTexture("diffuseTexture", videoPlayer, 0);
+        //ofDrawRectangle(0, 0, videoPlayer.getWidth(), videoPlayer.getHeight());
+    shader.end();
+    buffer.draw(0, 0);
+    ofPushMatrix();
+    ofTranslate(buffer.getWidth(), 0);
+    ofScale(-1, 1);
+    buffer.draw(0, 0);
+    ofPopMatrix();
     
     gui.draw();
 }

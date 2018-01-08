@@ -26,7 +26,11 @@ class ofApp : public ofBaseApp{
         ofxPanel gui;
         ofParameter<float> minArea, maxArea, threshold;
         ofParameter<bool> holes;
-
+    
+        ofFbo buffer;
+    
+        ofShader shader;
+    
 		ofImage img;
 		vector<ofMesh> meshes;
 
