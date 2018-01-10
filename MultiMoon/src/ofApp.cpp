@@ -26,6 +26,8 @@ void ofApp::setup(){
         moon.y = ofGetHeight();
         moon.radius = ofRandom(5, 25);
         moon.horizon = &horizon;
+        moon.targetY = ofGetHeight();
+        moon.speed = 0.05;
         moons.push_back(moon);
     }
     
@@ -73,8 +75,15 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-    if(key == ' ') {
-        moons[index].rise(ofGetHeight() / 4);
+    if(key == 'r') {
+        moons[index].rise(ofRandom(50, horizon));
+        index++;
+        if(index >= moons.size()) {
+            index = 0;
+        }
+    }
+    if(key == 's') {
+        moons[index].set();
         index++;
         if(index >= moons.size()) {
             index = 0;

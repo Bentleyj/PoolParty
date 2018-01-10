@@ -12,7 +12,7 @@ Moon::Moon() {
 };
 
 void Moon::update() {
-    x = ofNoise(ofGetElapsedTimef() * 0.01 + offset) * ofGetWidth() * 2.0;
+    x = ofNoise(ofGetElapsedTimef() * 0.01 + offset) * ofGetWidth();
     y = ofLerp(y, targetY, speed);
 }
 
