@@ -28,8 +28,8 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> animate;
     ofFbo top, bottom;
     
-    Moon myMoon;
-    
+    int index;
+        
     vector<Moon> moons;
     
 };

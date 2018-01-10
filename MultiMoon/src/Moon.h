@@ -12,7 +12,7 @@
 
 class Moon {
 public:
-    float x, y, width, radius, offset, speed;
+    float x, y, targetY, width, radius, offset, speed;
     ofParameter<float>* horizon;
     ofColor color;
     
@@ -21,6 +21,12 @@ public:
     void drawTop();
     void drawBottom();
     void update();
+    void rise(float target) {
+        targetY = target;
+    };
+    void set() {
+        targetY = ofGetHeight();
+    };
     float max(float a, float b);
     
 };
