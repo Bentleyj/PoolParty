@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "particle.h"
+#include "Moon.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,14 +22,14 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-		ofxPanel gui;
-		ofParameter<int> noiseIterations;
-		ofParameter<float> noiseSize;
-		ofParameter<float> noiseScale;
-
-		vector<Particle> particles;
-
-		vector<ofVec2f> points;
-		ofMesh line;
+    
+    ofxPanel gui;
+    ofParameter<float> x, y, width, horizon;
+    ofParameter<bool> animate;
+    ofFbo top, bottom;
+    
+    int index;
+        
+    vector<Moon> moons;
+    
 };
