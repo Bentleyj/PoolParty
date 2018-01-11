@@ -13,16 +13,19 @@
 class line {
 public:
     vector<ofVec2f> points;
-    line* comparatorLine;
     ofShader noiseWobble;
+    ofColor col;
+    int sign;
     int noiseIterations;
     float noiseSize;
     float noiseSpeed;
     float noiseScale;
+    float offset;
+    float baseHeight;
     
     line();
     void setup();
-    void update();
+    void update(line* comparatorLine);
     void draw();
 
 };

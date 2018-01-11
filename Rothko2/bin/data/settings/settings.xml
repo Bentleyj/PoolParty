@@ -3,4 +3,10 @@
 <Controls/>
 <noiseSize>70</noiseSize>
 	<noiseScale>0.01</noiseScale>
+<group>
+		<noiseIterations>10</noiseIterations>
+		<noiseSize>10</noiseSize>
+		<noiseScale>0.0005</noiseScale>
+		<noiseSpeed>0.17</noiseSpeed>
+	</group>
 </Controls>

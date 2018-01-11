@@ -7,10 +7,10 @@
 
 #include "line.hpp"
 
-#define LINE_RESOLUTION 100
+#define LINE_RESOLUTION 300
 
 line::line() {
-    
+    offset = ofRandom(10000);
 }
 
 void line::setup() {
@@ -22,11 +22,16 @@ void line::setup() {
     }
 }
 
-void line::update() {
-    for(int i = 0; i < noiseIterations; i++) {
-        float offset = i;
-        for(int i = 0; i < points.size(); i++) {
-            points[i].y = ofGetWidth()/2 + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed, points[i].x * (noiseScale*offset), offset)) * noiseSize*offset;
+void line::update(line* comparatorLine) {
+    if(comparatorLine == nullptr) {
+        return;
+    } else {
+        for(int i = 0; i < noiseIterations; i++) {
+            float o = i;
+            for(int j = 0; j < points.size(); j++) {
+                points[j].y = comparatorLine->points[j].y + sign * ofNoise(ofGetElapsedTimef() * noiseSpeed, points[j].x * (noiseScale*o), offset) * noiseSize*o;
+                points[j].y += sign * baseHeight;
+            }
             
         }
     }
@@ -34,7 +39,7 @@ void line::update() {
 
 void line::draw() {
     ofPushStyle();
-    ofSetColor(255);
+    ofSetColor(col);
     for(int i = 0; i < points.size()-1; i++) {
         ofDrawLine(points[i], points[i+1]);
     }

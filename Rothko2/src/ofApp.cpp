@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#define NUM_PARTICLES 2
+#define NUM_PARTICLES 10
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -11,35 +11,64 @@ void ofApp::setup(){
 	gui.add(noiseSize.set("noiseSize", 0, 0, 1000));
 	gui.add(noiseScale.set("noiseScale", 0.005, 0, 0.1));
     gui.add(noiseSpeed.set("noiseSpeed", 1, 0, 2));
+    gui.add(horizon.set("Horizon", 0, -ofGetHeight()/2, ofGetHeight()/2));
 	gui.loadFromFile(settingsPath);
     
-    line* linep = nullptr;
     for(int i = 0; i < NUM_PARTICLES; i++) {
         line newLine;
         newLine.setup();
-        newLine.comparatorLine = linep;
-        linep = &newLine;
-        lines.push_back(newLine);
+        newLine.sign = 1;
+        newLine.col = ofColor(28, 81, 170);
+        linesBottom.push_back(newLine);
+    }
+    
+    for(int i = 0; i < NUM_PARTICLES; i++) {
+        line newLine;
+        newLine.setup();
+        newLine.sign = -1;
+        newLine.col = ofColor(149, 113, 105);
+        linesTop.push_back(newLine);
     }
 
 	ofBackground(20);
+    
+    ofSetLineWidth(2);
+    
+    ofEnableAntiAliasing();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    for(int i = 0; i < lines.size(); i++) {
-        lines[i].noiseSpeed = noiseSpeed;
-        lines[i].noiseSize = noiseSize;
-        lines[i].noiseScale = noiseScale;
-        lines[i].noiseIterations = noiseIterations;
-        lines[i].update();
+    for(int i = 1; i < linesBottom.size(); i++) {
+        linesBottom[i].noiseSpeed = noiseSpeed;
+        linesBottom[i].noiseSize = noiseSize;
+        linesBottom[i].noiseScale = noiseScale;
+        linesBottom[i].noiseIterations = noiseIterations;
+        linesBottom[i].update(&linesBottom[i-1]);
     }
+    
+    for(int i = 1; i < linesTop.size(); i++) {
+        linesTop[i].noiseSpeed = noiseSpeed;
+        linesTop[i].noiseSize = noiseSize;
+        linesTop[i].noiseScale = noiseScale;
+        linesTop[i].noiseIterations = noiseIterations;
+        linesTop[i].update(&linesTop[i-1]);
+    }
+    for(int i = 0; i < linesBottom[0].points.size(); i++) {
+        linesBottom[0].points[i].y = horizon;
+        linesTop[0].points[i].y = ofGetHeight() - horizon;
+
+    }
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    for(int i = 0; i < lines.size(); i++) {
-        lines[i].draw();
+    for(int i = 1; i < linesBottom.size(); i++) {
+        linesBottom[i].draw();
+    }
+    for(int i = 1; i < linesTop.size(); i++) {
+        linesTop[i].draw();
     }
 	gui.draw();
 }

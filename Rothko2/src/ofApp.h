@@ -29,9 +29,11 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> noiseSize;
         ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
+        ofParameter<float> horizon;
 
 		vector<Particle> particles;
-        vector<line> lines;
+        vector<line> linesBottom;
+        vector<line> linesTop;
 
 		vector<ofVec2f> points;
 };
