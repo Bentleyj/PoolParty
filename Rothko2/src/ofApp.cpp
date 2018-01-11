@@ -7,9 +7,10 @@ void ofApp::setup(){
 
 	string settingsPath = "settings/settings.xml";
 	gui.setup("Controls", settingsPath);
-	gui.add(noiseIterations.set("noiseIterations", 0, 0, 10));
+	gui.add(noiseIterations.set("noiseIterations", 2, 2, 10));
 	gui.add(noiseSize.set("noiseSize", 0, 0, 1000));
-	gui.add(noiseScale.set("noiseScale", 1, 0, 1));
+	gui.add(noiseScale.set("noiseScale", 0.005, 0, 0.1));
+    gui.add(noiseSpeed.set("noiseSpeed", 1, 0, 2));
 	gui.loadFromFile(settingsPath);
 
 	float x = ofGetWidth() / NUM_PARTICLES + 5;
@@ -24,6 +25,13 @@ void ofApp::setup(){
 		x += ofGetWidth() / NUM_PARTICLES + 1;
 		particles.push_back(p);
 	}
+    
+    for(int i = 0; i < NUM_PARTICLES; i++) {
+        ofVec2f p;
+        p.x = i * ofGetWidth() / NUM_PARTICLES;
+        p.y = ofGetHeight() / 2;
+        points.push_back(p);
+    }
 
 	cout << particles.size() << endl;
 
@@ -32,18 +40,31 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	for (int i = 0; i < particles.size(); i++) {
-		particles[i].update();
-	}
+    for(int i = 0; i < noiseIterations; i++) {
+        float offset = i;
+        for(int i = 0; i < points.size(); i++) {
+            points[i].y = ofGetWidth()/2 + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed, points[i].x * (noiseScale*offset), offset)) * noiseSize*offset;
+
+        }
+    }
+
+//    for (int i = 0; i < particles.size(); i++) {
+//        particles[i].update();
+//    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	for (int i = 0; i < particles.size(); i++) {
-		particles[i].draw();
-	}
+    ofSetColor(255);
+    for(int i = 0; i < points.size()-1; i++) {
+        ofDrawLine(points[i], points[i+1]);
+//        points[i].y += (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed, points[i].x * noiseSize)) * noiseScale;
+    }
+//    for (int i = 0; i < particles.size(); i++) {
+//        particles[i].draw();
+//    }
 
-	//gui.draw();
+	gui.draw();
 }
 
 //--------------------------------------------------------------

@@ -26,6 +26,7 @@ class ofApp : public ofBaseApp{
 		ofxPanel gui;
 		ofParameter<int> noiseIterations;
 		ofParameter<float> noiseSize;
+        ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
 
 		vector<Particle> particles;
