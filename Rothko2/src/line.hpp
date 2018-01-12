@@ -24,7 +24,7 @@ public:
     float baseHeight;
     
     line();
-    void setup();
+    void setup(float base);
     void update(line* comparatorLine);
     void draw();
 

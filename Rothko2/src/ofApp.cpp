@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#define NUM_PARTICLES 10
+#define NUM_LINES 10
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -14,19 +14,19 @@ void ofApp::setup(){
     gui.add(horizon.set("Horizon", 0, -ofGetHeight()/2, ofGetHeight()/2));
 	gui.loadFromFile(settingsPath);
     
-    for(int i = 0; i < NUM_PARTICLES; i++) {
+    for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.setup();
-        newLine.sign = 1;
         newLine.col = ofColor(28, 81, 170);
+        newLine.setup(ofGetHeight());
+        newLine.sign = 1;
         linesBottom.push_back(newLine);
     }
     
-    for(int i = 0; i < NUM_PARTICLES; i++) {
+    for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.setup();
-        newLine.sign = -1;
         newLine.col = ofColor(149, 113, 105);
+        newLine.setup(0);
+        newLine.sign = -1;
         linesTop.push_back(newLine);
     }
 
@@ -54,6 +54,7 @@ void ofApp::update(){
         linesTop[i].noiseIterations = noiseIterations;
         linesTop[i].update(&linesTop[i-1]);
     }
+    
     for(int i = 0; i < linesBottom[0].mesh.getNumVertices(); i++) {
         ofVec3f vb =  linesBottom[0].mesh.getVertex(i);
         vb.y = horizon;
