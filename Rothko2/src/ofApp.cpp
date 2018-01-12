@@ -54,12 +54,14 @@ void ofApp::update(){
         linesTop[i].noiseIterations = noiseIterations;
         linesTop[i].update(&linesTop[i-1]);
     }
-    for(int i = 0; i < linesBottom[0].points.size(); i++) {
-        linesBottom[0].points[i].y = horizon;
-        linesTop[0].points[i].y = ofGetHeight() - horizon;
-
+    for(int i = 0; i < linesBottom[0].mesh.getNumVertices(); i++) {
+        ofVec3f vb =  linesBottom[0].mesh.getVertex(i);
+        vb.y = horizon;
+        linesBottom[0].mesh.setVertex(i, vb);
+        ofVec3f vt =  linesTop[0].mesh.getVertex(i);
+        vt.y = ofGetHeight() - horizon;
+        linesTop[0].mesh.setVertex(i, vt);
     }
-
 }
 
 //--------------------------------------------------------------

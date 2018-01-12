@@ -8,5 +8,6 @@
 		<noiseSize>10</noiseSize>
 		<noiseScale>0.0005</noiseScale>
 		<noiseSpeed>0.17</noiseSpeed>
+	<Horizon>384</Horizon>
 	</group>
 </Controls>

@@ -12,7 +12,7 @@
 
 class line {
 public:
-    vector<ofVec2f> points;
+    ofMesh mesh;
     ofShader noiseWobble;
     ofColor col;
     int sign;

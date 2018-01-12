@@ -18,8 +18,10 @@ void line::setup() {
         ofVec2f p;
         p.x = i * ofGetWidth() / LINE_RESOLUTION;
         p.y = ofGetHeight() / 2;
-        points.push_back(p);
+        mesh.addVertex(ofVec3f(p.x, p.y, 0));
+        //points.push_back(p);
     }
+    mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
 }
 
 void line::update(line* comparatorLine) {
@@ -28,9 +30,11 @@ void line::update(line* comparatorLine) {
     } else {
         for(int i = 0; i < noiseIterations; i++) {
             float o = i;
-            for(int j = 0; j < points.size(); j++) {
-                points[j].y = comparatorLine->points[j].y + sign * ofNoise(ofGetElapsedTimef() * noiseSpeed, points[j].x * (noiseScale*o), offset) * noiseSize*o;
-                points[j].y += sign * baseHeight;
+            for(int j = 0; j < mesh.getNumVertices(); j++) {
+                ofVec3f v = mesh.getVertex(j);
+                v.y = comparatorLine->mesh.getVertex(j).y + sign * ofNoise(ofGetElapsedTimef() * noiseSpeed, mesh.getVertex(j).x * (noiseScale*o), offset) * noiseSize*o;
+                v.y += sign * baseHeight;
+                mesh.setVertex(j, v);
             }
             
         }
@@ -40,8 +44,9 @@ void line::update(line* comparatorLine) {
 void line::draw() {
     ofPushStyle();
     ofSetColor(col);
-    for(int i = 0; i < points.size()-1; i++) {
-        ofDrawLine(points[i], points[i+1]);
-    }
+    mesh.draw();
+//    for(int i = 0; i < points.size()-1; i++) {
+//        ofDrawLine(points[i], points[i+1]);
+//    }
     ofPopStyle();
 }
