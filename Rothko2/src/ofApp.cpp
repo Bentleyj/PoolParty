@@ -69,10 +69,11 @@ void ofApp::update(){
 void ofApp::draw(){
     for(int i = 1; i < linesBottom.size(); i++) {
         linesBottom[i].draw();
-    }
-    for(int i = 1; i < linesTop.size(); i++) {
         linesTop[i].draw();
+
     }
+//    for(int i = 1; i < linesTop.size(); i++) {
+//    }
 	gui.draw();
 }
 

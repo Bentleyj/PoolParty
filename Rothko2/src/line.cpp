@@ -19,9 +19,10 @@ void line::setup(float base) {
         p.x = i * ofGetWidth() / LINE_RESOLUTION;
         p.y = ofGetHeight() / 2;
         mesh.addVertex(ofVec3f(p.x, p.y, 0));
-        mesh.addColor(255);
-        mesh.addVertex(ofVec3f(p.x, base));
         mesh.addColor(col);
+        mesh.addVertex(ofVec3f(p.x, base));
+        mesh.addColor(255);
+
     }
     for(int i = 0; i < mesh.getNumVertices()-2; i++) {
         mesh.addIndex(i);
