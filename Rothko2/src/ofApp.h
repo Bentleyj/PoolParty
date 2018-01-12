@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "particle.h"
+#include "line.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -26,10 +27,13 @@ class ofApp : public ofBaseApp{
 		ofxPanel gui;
 		ofParameter<int> noiseIterations;
 		ofParameter<float> noiseSize;
+        ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
+        ofParameter<float> horizon;
 
 		vector<Particle> particles;
+        vector<line> linesBottom;
+        vector<line> linesTop;
 
 		vector<ofVec2f> points;
-		ofMesh line;
 };

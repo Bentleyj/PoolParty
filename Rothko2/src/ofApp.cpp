@@ -1,5 +1,5 @@
 #include "ofApp.h"
-#define NUM_PARTICLES 200
+#define NUM_LINES 10
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -7,43 +7,74 @@ void ofApp::setup(){
 
 	string settingsPath = "settings/settings.xml";
 	gui.setup("Controls", settingsPath);
-	gui.add(noiseIterations.set("noiseIterations", 0, 0, 10));
+	gui.add(noiseIterations.set("noiseIterations", 2, 2, 10));
 	gui.add(noiseSize.set("noiseSize", 0, 0, 1000));
-	gui.add(noiseScale.set("noiseScale", 1, 0, 1));
+	gui.add(noiseScale.set("noiseScale", 0.005, 0, 0.1));
+    gui.add(noiseSpeed.set("noiseSpeed", 1, 0, 2));
+    gui.add(horizon.set("Horizon", 0, -ofGetHeight()/2, ofGetHeight()/2));
 	gui.loadFromFile(settingsPath);
-
-	float x = ofGetWidth() / NUM_PARTICLES + 5;
-	float y = ofGetHeight() / 2;
-
-	for (int i = 0; i < NUM_PARTICLES; i++) {
-		Particle p;
-		p.col = ofColor(255);
-		p.pos = ofVec2f(x, y);
-		p.width = ofGetWidth() / NUM_PARTICLES - 2;
-		p.height = ofRandom(10, 20);
-		x += ofGetWidth() / NUM_PARTICLES + 1;
-		particles.push_back(p);
-	}
-
-	cout << particles.size() << endl;
+    
+    for(int i = 0; i < NUM_LINES; i++) {
+        line newLine;
+        newLine.col = ofColor(28, 81, 170);
+        newLine.setup(ofGetHeight());
+        newLine.sign = 1;
+        linesBottom.push_back(newLine);
+    }
+    
+    for(int i = 0; i < NUM_LINES; i++) {
+        line newLine;
+        newLine.col = ofColor(149, 113, 105);
+        newLine.setup(0);
+        newLine.sign = -1;
+        linesTop.push_back(newLine);
+    }
 
 	ofBackground(20);
+    
+    ofSetLineWidth(2);
+    
+    ofEnableAntiAliasing();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	for (int i = 0; i < particles.size(); i++) {
-		particles[i].update();
-	}
+    for(int i = 1; i < linesBottom.size(); i++) {
+        linesBottom[i].noiseSpeed = noiseSpeed;
+        linesBottom[i].noiseSize = noiseSize;
+        linesBottom[i].noiseScale = noiseScale;
+        linesBottom[i].noiseIterations = noiseIterations;
+        linesBottom[i].update(&linesBottom[i-1]);
+    }
+    
+    for(int i = 1; i < linesTop.size(); i++) {
+        linesTop[i].noiseSpeed = noiseSpeed;
+        linesTop[i].noiseSize = noiseSize;
+        linesTop[i].noiseScale = noiseScale;
+        linesTop[i].noiseIterations = noiseIterations;
+        linesTop[i].update(&linesTop[i-1]);
+    }
+    
+    for(int i = 0; i < linesBottom[0].mesh.getNumVertices(); i++) {
+        ofVec3f vb =  linesBottom[0].mesh.getVertex(i);
+        vb.y = horizon;
+        linesBottom[0].mesh.setVertex(i, vb);
+        ofVec3f vt =  linesTop[0].mesh.getVertex(i);
+        vt.y = ofGetHeight() - horizon;
+        linesTop[0].mesh.setVertex(i, vt);
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	for (int i = 0; i < particles.size(); i++) {
-		particles[i].draw();
-	}
+    for(int i = 1; i < linesBottom.size(); i++) {
+        linesBottom[i].draw();
+        linesTop[i].draw();
 
-	//gui.draw();
+    }
+//    for(int i = 1; i < linesTop.size(); i++) {
+//    }
+	gui.draw();
 }
 
 //--------------------------------------------------------------
