@@ -70,7 +70,6 @@ void ofApp::draw(){
     for(int i = 1; i < linesBottom.size(); i++) {
         linesBottom[i].draw();
         linesTop[i].draw();
-
     }
 //    for(int i = 1; i < linesTop.size(); i++) {
 //    }
