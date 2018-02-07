@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxNestedFileLoader.h"
 
 class ofApp : public ofBaseApp{
 
@@ -24,6 +25,10 @@ class ofApp : public ofBaseApp{
 
 		ofImage img;
 		ofMesh mesh;
+    
+        int imageIndex;
+        vector<string> imagePaths;
+
 
 		ofVideoGrabber camera;
 		cv::Mat accumulator;
