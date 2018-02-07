@@ -26,13 +26,21 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     vector<string> imagePaths;
+    vector<string> videoPaths;
+
     
     int imageIndex;
+    int videoIndex;
     
     ofVec2f originalSize;
     
     ofxPanel gui;
     ofParameter<float> scale;
+    ofParameter<float> yPos;
+    ofParameter<float> boxSize;
+    ofParameter<float> displayScale;
+    
+    ofVideoPlayer player;
     
     ofImage img;
     ofImage dst;
