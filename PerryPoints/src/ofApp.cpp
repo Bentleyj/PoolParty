@@ -66,9 +66,6 @@ void ofApp::setup(){
 				p.nextPos.x += 5;
 				colorStartingPositions.push_back(p);
 			}
-			//i++;
-			//float percent = (float)i;// / (float)(NUM_STEPS*NUM_STEPS);
-			//cout << percent << "%" << endl;
 		}
 	}
 
