@@ -26,6 +26,18 @@ class ofApp : public ofBaseApp{
         ofVec3f sphericalToCartesian(ofVec3f point);
         ofVec3f starCoordsToSpherical(float ra, float de);
     
+        ofxPanel gui;
+        ofParameterGroup star;
+        ofParameter<float> ra;
+        ofParameter<float> de;
+        ofParameterGroup test;
+        ofParameter<float> theta;
+        ofParameter<float> phi;
+    
+        float radius;
+    
+        ofMesh sphere;
+    
         ofEasyCam cam;
 		
 };
