@@ -39,11 +39,13 @@ class ofApp : public ofBaseApp{
         ofParameter<float> theta;
         ofParameter<float> phi;
     
-        ofMesh celestialSphere;
+        ofVboMesh celestialSphere;
     
         ofxCsv starData;
     
-        vector<string> url;
+        ofShader starPoints;
+    
+        vector<float> pointSize;
     
         ofxXmlSettings starsData;
     

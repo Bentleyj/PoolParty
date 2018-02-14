@@ -25,7 +25,7 @@ void ofApp::setup(){
     gui.loadFromFile("settings/starPosition.xml");
     
     starData.load("data/hygdata_v3.csv", ",");
-    int step = 10;
+    int step = 5;
     for(int i = 1; i < starData.getNumRows()-step; i+=step) {
         star newStar;
         ofxCsvRow row = starData.getRow(i);
@@ -36,7 +36,17 @@ void ofApp::setup(){
         stars.push_back(newStar);
         celestialSphere.addVertex(newStar.p);
         celestialSphere.addColor(ofColor(ofMap(newStar.mag, 0.0, 15.0, 0.0, 255, true)));
+        pointSize.push_back(ofMap(newStar.mag, 0.0, 15.0, 0.0, 5.0, true));
     }
+    
+    starPoints.load("shaders/starSize");
+    
+    starPoints.begin();
+    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
+    starPoints.end();
+    
+//    glEnable(GL_POINT_SPRITE);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     
     celestialSphere.setMode(OF_PRIMITIVE_POINTS);
 }
@@ -53,7 +63,9 @@ void ofApp::draw(){
     
     ofSetColor(0, 255, 0);
     
+    starPoints.begin();
     celestialSphere.draw();
+    starPoints.end();
 //    ofVec3f p = sphericalToCartesian(starCoordsToSpherical(ra, de));
 //    ofDrawSphere(p, 2.0);
 //
