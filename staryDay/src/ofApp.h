@@ -39,6 +39,8 @@ class ofApp : public ofBaseApp{
         ofParameter<float> theta;
         ofParameter<float> phi;
     
+        ofMesh celestialSphere;
+    
         ofxCsv starData;
     
         vector<string> url;

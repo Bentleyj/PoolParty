@@ -2,7 +2,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cam.setPosition(0, 0, 10);
+    cam.setPosition(0, 0, 0);
     cam.lookAt(ofVec3f(0, 0, 0));
     
     radius = 200.0;
@@ -17,17 +17,15 @@ void ofApp::setup(){
     starGroup.setName("Star");
     starGroup.add(ra.set("Right Ascension",12, 0, 24));
     starGroup.add(de.set("Declination", 45, -90, 90));
-    ra.addListener(this, &ofApp::pChanged);
-    de.addListener(this, &ofApp::pChanged);
     gui.add(starGroup);
     testGroup.setName("Test");
     testGroup.add(theta.set("Theta",0, 0, 2*PI));
     testGroup.add(phi.set("Phi", 0, 0, PI));
     gui.add(testGroup);
-//    gui.loadFromFile("settings/starPosition.xml");
+    gui.loadFromFile("settings/starPosition.xml");
     
     starData.load("data/hygdata_v3.csv", ",");
-    int step = 1;
+    int step = 10;
     for(int i = 1; i < starData.getNumRows()-step; i+=step) {
         star newStar;
         ofxCsvRow row = starData.getRow(i);
@@ -36,7 +34,11 @@ void ofApp::setup(){
         newStar.p = sphericalToCartesian(starCoordsToSpherical(newStar.ra, newStar.de));
         newStar.mag = row.getFloat(13);
         stars.push_back(newStar);
+        celestialSphere.addVertex(newStar.p);
+        celestialSphere.addColor(ofColor(ofMap(newStar.mag, 0.0, 15.0, 0.0, 255, true)));
     }
+    
+    celestialSphere.setMode(OF_PRIMITIVE_POINTS);
 }
 
 //--------------------------------------------------------------
@@ -50,14 +52,16 @@ void ofApp::draw(){
     cam.begin();
     
     ofSetColor(0, 255, 0);
-    ofVec3f p = sphericalToCartesian(starCoordsToSpherical(ra, de));
-    ofDrawSphere(p, 2.0);
     
-    for(int i = 0; i < stars.size(); i++) {
-        ofSetColor(ofMap(stars[i].mag, 0.0, 15.0, 127, 255, true));
-        ofVec3f p = stars[i].p;
-        ofDrawSphere(p, 0.5);
-    }
+    celestialSphere.draw();
+//    ofVec3f p = sphericalToCartesian(starCoordsToSpherical(ra, de));
+//    ofDrawSphere(p, 2.0);
+//
+//    for(int i = 0; i < stars.size(); i++) {
+//        ofSetColor(ofMap(stars[i].mag, 0.0, 15.0, 0.0, 255, true));
+//        ofVec3f p = stars[i].p;
+//        ofDrawSphere(p, ofMap(stars[i].mag, 0.0, 15.0, 0.0, 1.0, true));
+//    }
 
     cam.end();
     
