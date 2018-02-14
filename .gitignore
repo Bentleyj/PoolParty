@@ -9,6 +9,7 @@ AVProVideo/
 *.pdf.meta
 *.png
 *.jpg
+*.csv
 
 #Unity specific stuff
 # =============== #

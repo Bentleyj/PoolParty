@@ -2,6 +2,9 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxXmlSettings.h"
+#include "star.hpp"
+#include "ofxCsv.h"
 
 class ofApp : public ofBaseApp{
 
@@ -22,17 +25,27 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        void pChanged(float & p);
+    
         ofVec3f cartesianToSpherical(ofVec3f point);
         ofVec3f sphericalToCartesian(ofVec3f point);
-        ofVec3f starCoordsToSpherical(float ra, float de);
+        ofVec3f starCoordsToSpherical(double ra, double de);
     
         ofxPanel gui;
-        ofParameterGroup star;
+        ofParameterGroup starGroup;
         ofParameter<float> ra;
         ofParameter<float> de;
-        ofParameterGroup test;
+        ofParameterGroup testGroup;
         ofParameter<float> theta;
         ofParameter<float> phi;
+    
+        ofxCsv starData;
+    
+        vector<string> url;
+    
+        ofxXmlSettings starsData;
+    
+        vector<star> stars;
     
         float radius;
     

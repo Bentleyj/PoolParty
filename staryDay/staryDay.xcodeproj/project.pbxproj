@@ -524,6 +524,146 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>1C82207691E461688320AE63</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCsvRow.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxCsv/src/ofxCsvRow.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>EE4D1E14E6E3D28AB35B1BB3</key>
+			<dict>
+				<key>fileRef</key>
+				<string>0E1BE77F4732248CB1EDDF29</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>0E1BE77F4732248CB1EDDF29</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCsvRow.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxCsv/src/ofxCsvRow.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>3BAFE2897D2FABE86454A7AD</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCsv.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxCsv/src/ofxCsv.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>412E4BCA71876A3B006CE76E</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>EFECE002FA2814DBD4904261</string>
+					<string>3BAFE2897D2FABE86454A7AD</string>
+					<string>0E1BE77F4732248CB1EDDF29</string>
+					<string>1C82207691E461688320AE63</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>5CFAC65997CFC4C36CD009B7</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>412E4BCA71876A3B006CE76E</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxCsv</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>77699BF6BD81647F909A0009</key>
+			<dict>
+				<key>fileRef</key>
+				<string>EFECE002FA2814DBD4904261</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>EFECE002FA2814DBD4904261</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCsv.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxCsv/src/ofxCsv.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>05D33028EBCDBFBEBFE7B82F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>star.hpp</string>
+				<key>path</key>
+				<string>src/star.hpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E1ABCA18860688B2F161C9C1</key>
+			<dict>
+				<key>fileRef</key>
+				<string>C7EC5C150BF0D24D95FB1428</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>C7EC5C150BF0D24D95FB1428</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>star.cpp</string>
+				<key>path</key>
+				<string>src/star.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>6948EE371B920CB800B5AC1A</key>
 			<dict>
 				<key>children</key>
@@ -539,6 +679,7 @@
 			<dict>
 				<key>children</key>
 				<array>
+					<string>5CFAC65997CFC4C36CD009B7</string>
 					<string>480A780D8D0308AE4A368801</string>
 					<string>1F4FB5C423662B96ADFDCC0B</string>
 				</array>
@@ -694,6 +835,8 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
+						<string>../../../addons/ofxCsv/src</string>
 						<string>../../../addons/ofxGui/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
@@ -754,6 +897,8 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
+						<string>../../../addons/ofxCsv/src</string>
 						<string>../../../addons/ofxGui/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
@@ -813,6 +958,9 @@
 				<array>
 					<string>E4B69E200A3A1BDC003C02F2</string>
 					<string>E4B69E210A3A1BDC003C02F2</string>
+					<string>E1ABCA18860688B2F161C9C1</string>
+					<string>77699BF6BD81647F909A0009</string>
+					<string>EE4D1E14E6E3D28AB35B1BB3</string>
 					<string>856AA354D08AB4B323081444</string>
 					<string>5CBB2AB3A60F65431D7B555D</string>
 					<string>B266578FC55D23BFEBC042E7</string>
@@ -908,6 +1056,8 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
+						<string>../../../addons/ofxCsv/src</string>
 						<string>../../../addons/ofxGui/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
@@ -958,6 +1108,8 @@
 					<key>HEADER_SEARCH_PATHS</key>
 					<array>
 						<string>$(OF_CORE_HEADERS)</string>
+						<string>src</string>
+						<string>../../../addons/ofxCsv/src</string>
 						<string>../../../addons/ofxGui/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
@@ -1006,6 +1158,8 @@
 					<string>E4B69E1D0A3A1BDC003C02F2</string>
 					<string>E4B69E1E0A3A1BDC003C02F2</string>
 					<string>E4B69E1F0A3A1BDC003C02F2</string>
+					<string>C7EC5C150BF0D24D95FB1428</string>
+					<string>05D33028EBCDBFBEBFE7B82F</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>

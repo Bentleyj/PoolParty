@@ -14,16 +14,29 @@ void ofApp::setup(){
     ofBackground(0);
     
     gui.setup("Star Position", "settings/starPosition.xml");
-    star.setName("Star");
-    star.add(ra.set("Right Ascension",0, 0, 24));
-    star.add(de.set("Declination", 0, -90, 90));
-    gui.add(star);
-    test.setName("Test");
-    test.add(theta.set("Theta",0, 0, 2*PI));
-    test.add(phi.set("Phi", 0, 0, PI));
-    gui.add(test);
-    gui.loadFromFile("settings/starPosition.xml");
+    starGroup.setName("Star");
+    starGroup.add(ra.set("Right Ascension",12, 0, 24));
+    starGroup.add(de.set("Declination", 45, -90, 90));
+    ra.addListener(this, &ofApp::pChanged);
+    de.addListener(this, &ofApp::pChanged);
+    gui.add(starGroup);
+    testGroup.setName("Test");
+    testGroup.add(theta.set("Theta",0, 0, 2*PI));
+    testGroup.add(phi.set("Phi", 0, 0, PI));
+    gui.add(testGroup);
+//    gui.loadFromFile("settings/starPosition.xml");
     
+    starData.load("data/hygdata_v3.csv", ",");
+    int step = 1;
+    for(int i = 1; i < starData.getNumRows()-step; i+=step) {
+        star newStar;
+        ofxCsvRow row = starData.getRow(i);
+        newStar.ra = row.getFloat(7);
+        newStar.de = row.getFloat(8);
+        newStar.p = sphericalToCartesian(starCoordsToSpherical(newStar.ra, newStar.de));
+        newStar.mag = row.getFloat(13);
+        stars.push_back(newStar);
+    }
 }
 
 //--------------------------------------------------------------
@@ -35,31 +48,54 @@ void ofApp::update(){
 void ofApp::draw(){
     ofEnableDepthTest();
     cam.begin();
-//    float theta = 0;
-//    float phi = 0;
-//    float r = radius;
-    int numSteps = 100;
-    ofSetColor(255);
-//    for(int i = 0; i < numSteps; i++) {
-//        for(int j = 0; j < numSteps; j++) {
-//            ofVec3f p = sphericalToCartesian(ofVec3f(r, theta, phi));
-//            ofDrawSphere(p, 10.0);
-//            phi += 2 * PI / numSteps;
-//        }
-//        phi += PI / numSteps;
-//    }
-    ofSetColor(255, 0, 0);
-    sphere.draw();
     
     ofSetColor(0, 255, 0);
     ofVec3f p = sphericalToCartesian(starCoordsToSpherical(ra, de));
-  //  ofVec3f p = sphericalToCartesian(ofVec3f(radius, theta, phi));
+    ofDrawSphere(p, 2.0);
+    
+    for(int i = 0; i < stars.size(); i++) {
+        ofSetColor(ofMap(stars[i].mag, 0.0, 15.0, 127, 255, true));
+        ofVec3f p = stars[i].p;
+        ofDrawSphere(p, 0.5);
+    }
 
-    ofDrawSphere(p, 15);
     cam.end();
+    
+
     
     ofDisableDepthTest();
     gui.draw();
+    
+//    for(int i = 0; i < stars.size(); i++) {
+//        ofDrawCircle(ofMap(stars[i].ra, 0, 24, 0, ofGetWidth()), ofMap(stars[i].de, -90, 90, ofGetHeight(), 0), 2);
+//    }
+
+}
+
+void ofApp::pChanged(float & p) {
+
+//    string starURL = url[0] + ofToString(ra) + url[1] + ofToString(de) + url[2];
+//    ofHttpResponse resp = ofLoadURL(starURL);
+//
+//    bool loaded = starsData.loadFromBuffer(resp.data);
+//
+//    starsData.pushTag("response");
+//    int numStars = starsData.getNumTags("star");
+//
+//    stars.clear();
+//
+//    for(int i = 0; i < numStars; i++) {
+//        starsData.pushTag("star", i);
+//        star newStar;
+//        newStar.ra = starsData.getValue("ra", 0);
+//        newStar.de = starsData.getValue("de", 0);
+//        newStar.catID = starsData.getValue("catId", "NONE");
+//        newStar.mag = starsData.getValue("mag", 0);
+//        ofVec3f p = sphericalToCartesian(starCoordsToSpherical(newStar.ra, newStar.de));
+//        newStar.p = p;
+//        stars.push_back(newStar);
+//        starsData.popTag();
+//    }
 }
 
 //--------------------------------------------------------------
@@ -68,30 +104,30 @@ void ofApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-ofVec3f ofApp::starCoordsToSpherical(float ra, float de) {
+ofVec3f ofApp::starCoordsToSpherical(double ra, double de) {
     // phi -> declination
     // theta -> right ascension
-    float phi = ofMap(de, -90, 90, 0, PI);
-    float theta = ofMap(ra, 0, 24, 0, 2 * PI);
+    double phi = ofMap(de, -90, 90, 0, PI);
+    double theta = ofMap(ra, 0, 24, 0, 2 * PI);
     return ofVec3f(radius, theta, phi);
 }
 
 //--------------------------------------------------------------
 ofVec3f ofApp::cartesianToSpherical(ofVec3f point) {
-    float r = sqrt(point.x*point.x + point.y*point.y + point.z*point.z);
-    float theta = atan2(point.y , point.x);
-    float phi = acos(point.z/r);
+    double r = sqrt(point.x*point.x + point.y*point.y + point.z*point.z);
+    double theta = atan2(point.y , point.x);
+    double phi = acos(point.z/r);
     return ofVec3f(r, theta, phi);
 }
 
 //--------------------------------------------------------------
 ofVec3f ofApp::sphericalToCartesian(ofVec3f point) {
-    float r = point.x;
-    float theta = point.y;
-    float phi = point.z;
-    float x = r * cos(theta) * sin(phi);
-    float y = r * sin(theta) * sin(phi);
-    float z = r * cos(phi);
+    double r = point.x;
+    double theta = point.y;
+    double phi = point.z;
+    double x = r * cos(theta) * sin(phi);
+    double y = r * sin(theta) * sin(phi);
+    double z = r * cos(phi);
     return ofVec3f(x, y, z);
 }
 

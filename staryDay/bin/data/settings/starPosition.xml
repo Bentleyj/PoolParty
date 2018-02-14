@@ -1,0 +1,11 @@
+<group>
+	<Star>
+		<Right_Ascension>0</Right_Ascension>
+		<Declination>90</Declination>
+	</Star>
+	<Test>
+		<Theta>0</Theta>
+		<Phi>0</Phi>
+	</Test>
+<group/>
+</group>
