@@ -8,7 +8,7 @@ varying float col;
 void main() {
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
     gl_PointSize = point_size;
-    col = point_size / 5.0; 
+    col = point_size / 3.0; 
     //gl_TexCoord[0] = gl_MultiTexCoord0;
     //gl_FrontColor = gl_Color;
 }

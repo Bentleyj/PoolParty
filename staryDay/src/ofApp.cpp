@@ -36,7 +36,7 @@ void ofApp::setup(){
         stars.push_back(newStar);
         celestialSphere.addVertex(newStar.p);
         celestialSphere.addColor(ofColor(ofMap(newStar.mag, 0.0, 15.0, 0.0, 255, true)));
-        pointSize.push_back(ofMap(newStar.mag, 0.0, 15.0, 0.0, 5.0, true));
+        pointSize.push_back(ofMap(newStar.mag, 0.0, 15.0, 0.0, 3.0, true));
     }
     
     starPoints.load("shaders/starSize");
