@@ -60,7 +60,6 @@ void main() {
     
     vec3 tc = texture2DRect(inputTexture1,fract(uv+v*3.0/resolution.x) * resolution.xy).rgb;
     
-    
     // Motor
     if(uv.y < 0.1)
         tc.y = 0.1;
