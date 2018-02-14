@@ -63,9 +63,9 @@ void main() {
     
     // Motor
     if(uv.y < 0.1)
-        tc.y -= 0.2;
+        tc.y = 0.1;
     if(uv.y > 0.9)
-        tc.y += 0.2;
+        tc.y = 0.9;
     
     gl_FragColor = vec4(tc, 1.0);
 }

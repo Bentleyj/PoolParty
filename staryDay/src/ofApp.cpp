@@ -22,9 +22,9 @@ void ofApp::draw(){
         for(int j = 0; j < numSteps; j++) {
             ofVec3f p = sphericalToCartesian(ofVec3f(r, theta, phi));
             ofDrawSphere(p, 0.1);
-            theta += PI / numSteps / 2;
+            theta += 2 * PI / numSteps;
         }
-        phi +=  2 * PI / numSteps;
+        phi += PI / numSteps;
     }
     cam.end();
 }
