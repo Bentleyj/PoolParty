@@ -46,10 +46,10 @@ void ofApp::setup(){
 //        newStar.mag = row.getFloat(13);
 //        stars.push_back(newStar);
 //        celestialSphere.addVertex(newStar.p);
-//        celestialSphere.addColor(ofColor(newStar.mag, 0.0, 0.0));
+//        celestialSphere.addColor(ofColor(ofMap(newStar.mag, 0.0, 15.0, 0.0, 255), 0.0, 0.0));
 //        pointSize.push_back(ofMap(newStar.mag, 0.0, 15.0, 0.0, 6.0, true));
 //    }
-//
+
 //    celestialSphere.save("models/sphere.ply");
     
     starPoints.load("shaders/starSize");
@@ -156,7 +156,8 @@ ofVec3f ofApp::starCoordsToSpherical(double ra, double de) {
     // theta -> right ascension
     double phi = ofMap(de, -90, 90, 0, PI);
     double theta = ofMap(ra, 0, 24, 0, 2 * PI);
-    return ofVec3f(radius, theta, phi);
+    float r = ofRandom(0.0, radius);
+    return ofVec3f(r, theta, phi);
 }
 
 //--------------------------------------------------------------

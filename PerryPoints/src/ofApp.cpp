@@ -73,6 +73,7 @@ void ofApp::setup(){
 
 	mesh.setMode(OF_PRIMITIVE_LINES);
 	ofBackground(0);
+    ofSetLineWidth(5);
 }
 
 //--------------------------------------------------------------
