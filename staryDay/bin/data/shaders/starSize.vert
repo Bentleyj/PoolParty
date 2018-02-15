@@ -4,11 +4,20 @@
 
 attribute float point_size;
 varying float col;
+uniform float distanceToCenter;
+uniform float starDensity;
+uniform float maxSize;
+
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
 
 void main() {
     gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-    gl_PointSize = point_size;
-    col = point_size / 3.0; 
-    //gl_TexCoord[0] = gl_MultiTexCoord0;
-    //gl_FrontColor = gl_Color;
+    float pointSize = point_size;
+    float r = rand(gl_Vertex.xy);
+    if(r > starDensity)
+        pointSize = 0.0;
+    gl_PointSize = pointSize * distanceToCenter * maxSize + r;
+    col = point_size;
 }

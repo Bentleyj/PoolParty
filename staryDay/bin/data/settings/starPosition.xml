@@ -8,4 +8,13 @@
 		<Phi>0</Phi>
 	</Test>
 <group/>
+<Stars>
+		<Density>0.484694</Density>
+		<Max_Size>0.714286</Max_Size>
+	</Stars>
+	<Camera>
+		<Free_Camera>0</Free_Camera>
+		<Right_Ascension>15.3061</Right_Ascension>
+		<Declination>28.4694</Declination>
+	</Camera>
 </group>

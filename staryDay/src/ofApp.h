@@ -33,11 +33,19 @@ class ofApp : public ofBaseApp{
     
         ofxPanel gui;
         ofParameterGroup starGroup;
+        ofParameter<float> starDensity;
+        ofParameter<float> maxStarSize;
+
+
+        ofParameterGroup cameraGroup;
+        ofParameter<bool> freeCamera;
         ofParameter<float> ra;
         ofParameter<float> de;
-        ofParameterGroup testGroup;
-        ofParameter<float> theta;
-        ofParameter<float> phi;
+    
+    
+    
+        ofVec3f camPosTarget;
+        ofVec3f camLookAtTarget;
     
         ofVboMesh celestialSphere;
     
