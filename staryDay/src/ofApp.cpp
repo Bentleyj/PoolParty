@@ -7,16 +7,14 @@ void ofApp::setup(){
     
     radius = 200.0;
     
-    sphere = ofMesh::sphere(radius);
-    
-    sphere.setMode(OF_PRIMITIVE_LINE_LOOP);
-    
     ofBackground(0);
     
     gui.setup("Controls", "settings/starPosition.xml");
     starGroup.setName("Stars");
     starGroup.add(starDensity.set("Density", 0.0, 0.0, 1.0));
     starGroup.add(maxStarSize.set("Max Size", 4.0, 0.0, 10.0));
+    starGroup.add(rotSpeed.set("Rotation Speed", 0.0, 0.0, 1.0));
+    starGroup.add(trailLength.set("Trail Length", 0.0, 0.0, 1.0));
 
     gui.add(starGroup);
     cameraGroup.setName("Camera");
@@ -27,43 +25,46 @@ void ofApp::setup(){
     gui.add(cameraGroup);
     gui.loadFromFile("settings/starPosition.xml");
     
+    img.load("images/Tapestry.png");
+    
+    cols = colorFinder.getColorsFromImage(img);
+    
     ofMesh verts;
     verts.load("models/sphere.ply");
 
     for(int i = 0; i < verts.getNumVertices(); i++) {
-        celestialSphere.addVertex(verts.getVertex(i));
-        pointSize.push_back(ofMap(verts.getColor(i).r*255, 45, 60, 0.0, 4.0));
+        ofVec3f v = verts.getVertex(i);
+        ofVec3f vS = cartesianToSpherical(v);
+        vS.x += radius/4 - ofRandom(0, radius/2);
+        ofVec3f vr = sphericalToCartesian(vS);
+        celestialSphere.addVertex(vr);
+        celestialSphere.addColor(cols[i%cols.size()]);
+        pointSize.push_back(ofMap(verts.getColor(i).r*255, 45, 65, 0.0, 4.0));
     }
     
-//    starData.load("data/hygdata_v3.csv", ",");
-//    int step = 1;
-//    for(int i = 1; i < starData.getNumRows()-step; i+=step) {
-//        star newStar;
-//        ofxCsvRow row = starData.getRow(i);
-//        newStar.ra = row.getFloat(7);
-//        newStar.de = row.getFloat(8);
-//        newStar.p = sphericalToCartesian(starCoordsToSpherical(newStar.ra, newStar.de));
-//        newStar.mag = row.getFloat(13);
-//        stars.push_back(newStar);
-//        celestialSphere.addVertex(newStar.p);
-//        celestialSphere.addColor(ofColor(ofMap(newStar.mag, 0.0, 15.0, 0.0, 255), 0.0, 0.0));
-//        pointSize.push_back(ofMap(newStar.mag, 0.0, 15.0, 0.0, 6.0, true));
-//    }
-
-//    celestialSphere.save("models/sphere.ply");
-    
     starPoints.load("shaders/starSize");
+    fade.load("shaders/fade");
     
-    camPosTarget = ofVec3f(0, 0, 0);
     camPosTarget = ofVec3f(0, 0, 0);
 
     starPoints.begin();
+    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
     celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
     starPoints.end();
     
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     
     celestialSphere.setMode(OF_PRIMITIVE_POINTS);
+    
+//    ofSetBackgroundAuto(false);
+    
+    drawBuffer.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
+    
+    fadeBufferDraw.begin();
+    ofBackground(0);
+    fadeBufferDraw.end();
 }
 
 //--------------------------------------------------------------
@@ -86,63 +87,45 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    drawBuffer.begin();
+    ofBackground(0);
+    ofSetColor(255);
     ofEnableDepthTest();
     cam.begin();
-    
-    ofSetColor(0, 255, 0);
     starPoints.begin();
     starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));
     starPoints.setUniform1f("starDensity", starDensity);
     starPoints.setUniform1f("maxSize", maxStarSize);
-
+    ofRotate(rotation, 0.5, 1, 0);
     celestialSphere.draw();
+    ofRotate(rotation/2, 0.5, 1, 0);
     starPoints.end();
-//    ofVec3f p = sphericalToCartesian(starCoordsToSpherical(ra, de));
-//    ofDrawSphere(p, 2.0);
-//
-//    for(int i = 0; i < stars.size(); i++) {
-//        ofSetColor(ofMap(stars[i].mag, 0.0, 15.0, 0.0, 255, true));
-//        ofVec3f p = stars[i].p;
-//        ofDrawSphere(p, ofMap(stars[i].mag, 0.0, 15.0, 0.0, 1.0, true));
-//    }
-
+    rotation += rotSpeed;
     cam.end();
-    
-
+    drawBuffer.end();
     
     ofDisableDepthTest();
-    gui.draw();
+    fadeBufferSave.begin();
+    fade.begin();
+    fade.setUniformTexture("thisFrame", drawBuffer, 0);
+    fade.setUniformTexture("lastFrame", fadeBufferDraw, 1);
+    fade.setUniform1f("percent", trailLength);
+    ofSetColor(255);
+    ofDrawRectangle(0, 0, fadeBufferSave.getWidth(), fadeBufferSave.getHeight());
+    fade.end();
+    fadeBufferSave.end();
     
-//    for(int i = 0; i < stars.size(); i++) {
-//        ofDrawCircle(ofMap(stars[i].ra, 0, 24, 0, ofGetWidth()), ofMap(stars[i].de, -90, 90, ofGetHeight(), 0), 2);
-//    }
+    fadeBufferDraw.begin();
+    ofBackground(0);
+    fadeBufferSave.draw(0, 0, fadeBufferDraw.getWidth(), fadeBufferDraw.getHeight());
+    fadeBufferDraw.end();
+    
+    ofSetColor(255);
+    fadeBufferDraw.draw(0, 0);
 
-}
-
-void ofApp::pChanged(float & p) {
-
-//    string starURL = url[0] + ofToString(ra) + url[1] + ofToString(de) + url[2];
-//    ofHttpResponse resp = ofLoadURL(starURL);
-//
-//    bool loaded = starsData.loadFromBuffer(resp.data);
-//
-//    starsData.pushTag("response");
-//    int numStars = starsData.getNumTags("star");
-//
-//    stars.clear();
-//
-//    for(int i = 0; i < numStars; i++) {
-//        starsData.pushTag("star", i);
-//        star newStar;
-//        newStar.ra = starsData.getValue("ra", 0);
-//        newStar.de = starsData.getValue("de", 0);
-//        newStar.catID = starsData.getValue("catId", "NONE");
-//        newStar.mag = starsData.getValue("mag", 0);
-//        ofVec3f p = sphericalToCartesian(starCoordsToSpherical(newStar.ra, newStar.de));
-//        newStar.p = p;
-//        stars.push_back(newStar);
-//        starsData.popTag();
-//    }
+    gui.draw();
+    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
 }
 
 //--------------------------------------------------------------
@@ -156,8 +139,7 @@ ofVec3f ofApp::starCoordsToSpherical(double ra, double de) {
     // theta -> right ascension
     double phi = ofMap(de, -90, 90, 0, PI);
     double theta = ofMap(ra, 0, 24, 0, 2 * PI);
-    float r = ofRandom(0.0, radius);
-    return ofVec3f(r, theta, phi);
+    return ofVec3f(radius, theta, phi);
 }
 
 //--------------------------------------------------------------
@@ -216,6 +198,9 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
+    drawBuffer.allocate(w, h);
+    fadeBufferDraw.allocate(w, h);
+    fadeBufferSave.allocate(w, h);
 
 }
 

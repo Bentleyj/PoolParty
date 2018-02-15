@@ -3,7 +3,7 @@
 #extension GL_EXT_gpu_shader4 : enable
 
 attribute float point_size;
-varying float col;
+varying vec3 col;
 uniform float distanceToCenter;
 uniform float starDensity;
 uniform float maxSize;
@@ -19,5 +19,5 @@ void main() {
     if(r > starDensity)
         pointSize = 0.0;
     gl_PointSize = pointSize * distanceToCenter * maxSize + r;
-    col = point_size;
+    col = gl_Color.rgb;
 }
