@@ -3,6 +3,11 @@
 uniform sampler2DRect lastFrame;
 uniform sampler2DRect thisFrame;
 uniform float percent;
+uniform float threshold;
+
+float length(vec3 v) {
+    return (v.x + v.y + v.z) / 3.0;
+}
 
 void main() {
     
@@ -13,6 +18,8 @@ void main() {
 
     
     vec3 col = thisCol + lastCol * percent;
+    if(length(col) < threshold)
+        col = vec3(0.0);
     
     gl_FragColor = vec4(col, 1.0);
 }

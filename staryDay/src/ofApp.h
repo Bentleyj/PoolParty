@@ -33,6 +33,7 @@ class ofApp : public ofBaseApp{
         ofParameter<float> maxStarSize;
         ofParameter<float> rotSpeed;
         ofParameter<float> trailLength;
+        ofParameter<float> threshold;
 
         ofParameterGroup cameraGroup;
         ofParameter<bool> freeCamera;

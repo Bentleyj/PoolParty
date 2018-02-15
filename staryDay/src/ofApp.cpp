@@ -15,6 +15,7 @@ void ofApp::setup(){
     starGroup.add(maxStarSize.set("Max Size", 4.0, 0.0, 10.0));
     starGroup.add(rotSpeed.set("Rotation Speed", 0.0, 0.0, 1.0));
     starGroup.add(trailLength.set("Trail Length", 0.0, 0.0, 1.0));
+    starGroup.add(threshold.set("Threshold", 0.0, 0.0, 1.0));
 
     gui.add(starGroup);
     cameraGroup.setName("Camera");
@@ -111,6 +112,7 @@ void ofApp::draw(){
     fade.setUniformTexture("thisFrame", drawBuffer, 0);
     fade.setUniformTexture("lastFrame", fadeBufferDraw, 1);
     fade.setUniform1f("percent", trailLength);
+    fade.setUniform1f("threshold", threshold);
     ofSetColor(255);
     ofDrawRectangle(0, 0, fadeBufferSave.getWidth(), fadeBufferSave.getHeight());
     fade.end();
