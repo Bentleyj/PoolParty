@@ -62,9 +62,14 @@ void main() {
     
     // Motor
     if(uv.y < 0.1)
-        tc.y = 0.0;
+        tc.y = 0.1;
     if(uv.y > 0.9)
         tc.y = 0.9;
+    
+    if(uv.x < 0.1)
+        tc.x = 0.1;
+    if(uv.x > 0.9)
+        tc.x = 0.9;
     
     if(uv.y > 0.45 && uv.y < 0.55)
         tc.y = mix(tc.y, 0.5, 0.02);

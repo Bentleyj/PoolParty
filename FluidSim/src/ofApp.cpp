@@ -22,6 +22,10 @@ void ofApp::setup(){
     spectrumFinder f;
 
     cols = f.getColorsFromImage(img);
+    
+    for(int i = 0; i < 4; i++) {
+        colorIndexes.push_back(int(ofRandom(0, cols.size())));
+    }
 }
 
 //--------------------------------------------------------------
@@ -68,10 +72,10 @@ void ofApp::draw(){
     fluidShower.begin();
 //    fluidShower.setUniformTexture("particleBuffer", particleCopyBuffer, 0);
     fluidShower.setUniformTexture("texSolver", copyBuffer, 0);
-    fluidShower.setUniform3f("col1", colorToUniformRange(cols[0]));
-    fluidShower.setUniform3f("col2", colorToUniformRange(cols[int(cols.size()-1) / 4]));
-    fluidShower.setUniform3f("col3", colorToUniformRange((cols[int(cols.size()-1) / 4 + 1])));
-    fluidShower.setUniform3f("col4", colorToUniformRange(cols[cols.size() / 2]));
+    fluidShower.setUniform3f("col1", colorToUniformRange(cols[colorIndexes[0]]));
+    fluidShower.setUniform3f("col2", colorToUniformRange(cols[colorIndexes[1]]));
+    fluidShower.setUniform3f("col3", colorToUniformRange(cols[colorIndexes[2]]));
+    fluidShower.setUniform3f("col4", colorToUniformRange(cols[colorIndexes[3]]));
     ofDrawRectangle(0, 0, solverBuffer.getWidth(), solverBuffer.getHeight());
     fluidShower.end();
 //    particleBuffer.end();
@@ -81,7 +85,11 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == ' ') {
+        for(int i = 0; i < 4; i++) {
+            colorIndexes[i] = int(ofRandom(0, cols.size()));
+        }
+    }
 }
 
 //--------------------------------------------------------------

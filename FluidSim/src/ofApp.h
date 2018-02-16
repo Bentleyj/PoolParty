@@ -34,6 +34,8 @@ class ofApp : public ofBaseApp{
         ofFbo particleBuffer;
         ofFbo particleCopyBuffer;
     
+        vector<int> colorIndexes;
+    
         vector<ofColor> cols;
     
         ofImage img;

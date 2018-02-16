@@ -4,6 +4,8 @@
 #define angRnd 0.0
 #define posRnd 0.0
 
+#define SQRT2 1.4142135
+
 uniform sampler2DRect texSolver;
 uniform vec3 col1;
 uniform vec3 col2;
@@ -14,24 +16,39 @@ float map(float value, float low1, float high1, float low2, float high2) {
     return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
 }
 
+float length(vec2 v) {
+    return sqrt(v.x*v.x + v.y*v.y);
+}
+
+float average(vec2 v) {
+    return (v.x + v.y) / 2;
+}
+
 void main() {
     vec2 uv = gl_FragCoord.xy;
     
     vec3 vel = texture2DRect(texSolver, uv).xyz;
     
+    vec2 v = vel.xy;
+    
+    v.x = map(vel.x, 0.0, 1.0, -1.0, 1.0);
+    v.y = map(vel.y, 0.0, 1.0, -1.0, 1.0);
+    
+    v = abs(v);
+
     vec3 col;
     vec3 colY;
     vec3 colX;
 
     colY = mix(col3, col4, vel.y);
     
-    colX = mix(col1, col2, abs(vel.x));
+    colX = mix(col1, col2, vel.x);
     
-    col = mix(colX, colY, vel.y);
+    col = (v.x > v.y) ? colX : colY;
     
-    float mag = (vel.x + vel.y) / 2.0;
+//    float mag = length(vel);
 
-    col = mix(col, vec3(0.0), map(abs(0.5 - mag), 0.0, 0.05, 1.0, 0.0));
+    col = mix(vec3(0.0), col, length(v));
     
     gl_FragColor = vec4(col, 1.0);
 }
