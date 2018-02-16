@@ -56,9 +56,7 @@ void ofApp::setup(){
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     
     celestialSphere.setMode(OF_PRIMITIVE_POINTS);
-    
-//    ofSetBackgroundAuto(false);
-    
+
     drawBuffer.allocate(ofGetWidth(), ofGetHeight());
     fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
     fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());

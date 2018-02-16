@@ -60,12 +60,14 @@ void main() {
     
     vec3 tc = texture2DRect(inputTexture1,fract(uv+v*3.0/resolution.x) * resolution.xy).rgb;
     
-    
     // Motor
     if(uv.y < 0.1)
-        tc.y = 0.1;
+        tc.y = 0.0;
     if(uv.y > 0.9)
         tc.y = 0.9;
+    
+    if(uv.y > 0.45 && uv.y < 0.55)
+        tc.y = mix(tc.y, 0.5, 0.02);
     
     gl_FragColor = vec4(tc, 1.0);
 }
