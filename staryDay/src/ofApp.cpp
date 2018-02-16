@@ -2,10 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cam.setPosition(0, 0, 10);
+    cam.setPosition(0, 0, 0);
     cam.lookAt(ofVec3f(0, 0, 0));
-<<<<<<< Updated upstream
-=======
     
     radius = 200.0;
     
@@ -58,7 +56,7 @@ void ofApp::setup(){
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     
     celestialSphere.setMode(OF_PRIMITIVE_POINTS);
-        
+
     drawBuffer.allocate(ofGetWidth(), ofGetHeight());
     fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
     fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
@@ -66,30 +64,68 @@ void ofApp::setup(){
     fadeBufferDraw.begin();
     ofBackground(0);
     fadeBufferDraw.end();
->>>>>>> Stashed changes
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    if(!freeCamera) {
+        ofVec3f camPos = cam.getPosition();
+        camPos.x = ofLerp(camPos.x, camPosTarget.x, 0.1);
+        camPos.y = ofLerp(camPos.y, camPosTarget.y, 0.1);
+        camPos.z = ofLerp(camPos.z, camPosTarget.z, 0.1);
+        cam.setPosition(camPos);
+        
+        camLookAtTarget = sphericalToCartesian(starCoordsToSpherical(ra, de));
+        ofVec3f lookDir = cam.getLookAtDir();
+        lookDir.x = ofLerp(lookDir.x, camLookAtTarget.x, 0.1);
+        lookDir.y = ofLerp(lookDir.y, camLookAtTarget.y, 0.1);
+        lookDir.z = ofLerp(lookDir.z, camLookAtTarget.z, 0.1);
+        cam.lookAt(lookDir);
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    drawBuffer.begin();
+    ofBackground(0);
+    ofSetColor(255);
+    ofEnableDepthTest();
     cam.begin();
-    float theta = 0;
-    float phi = 0;
-    float r = 20.0;
-    int numSteps = 100;
-    for(int i = 0; i < numSteps; i++) {
-        for(int j = 0; j < numSteps; j++) {
-            ofVec3f p = sphericalToCartesian(ofVec3f(r, theta, phi));
-            ofDrawSphere(p, 0.1);
-            theta += 2 * PI / numSteps;
-        }
-        phi += PI / numSteps;
-    }
+    starPoints.begin();
+    starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));
+    starPoints.setUniform1f("starDensity", starDensity);
+    starPoints.setUniform1f("maxSize", maxStarSize);
+    ofRotate(rotation, 0.5, 1, 0);
+    celestialSphere.draw();
+    ofRotate(rotation/2, 0.5, 1, 0);
+    starPoints.end();
+    rotation += rotSpeed;
     cam.end();
+    drawBuffer.end();
+    
+    ofDisableDepthTest();
+    fadeBufferSave.begin();
+    fade.begin();
+    fade.setUniformTexture("thisFrame", drawBuffer, 0);
+    fade.setUniformTexture("lastFrame", fadeBufferDraw, 1);
+    fade.setUniform1f("percent", trailLength);
+    fade.setUniform1f("threshold", threshold);
+    ofSetColor(255);
+    ofDrawRectangle(0, 0, fadeBufferSave.getWidth(), fadeBufferSave.getHeight());
+    fade.end();
+    fadeBufferSave.end();
+    
+    fadeBufferDraw.begin();
+    ofBackground(0);
+    fadeBufferSave.draw(0, 0, fadeBufferDraw.getWidth(), fadeBufferDraw.getHeight());
+    fadeBufferDraw.end();
+    
+    ofSetColor(255);
+    fadeBufferDraw.draw(0, 0);
+
+    gui.draw();
+    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
 }
 
 //--------------------------------------------------------------
@@ -98,26 +134,30 @@ void ofApp::keyPressed(int key){
 }
 
 //--------------------------------------------------------------
-ofVec3f ofApp::starCoordsToSpherical(float ra, float de) {
-    //float r = 1.0;
+ofVec3f ofApp::starCoordsToSpherical(double ra, double de) {
+    // phi -> declination
+    // theta -> right ascension
+    double phi = ofMap(de, -90, 90, 0, PI);
+    double theta = ofMap(ra, 0, 24, 0, 2 * PI);
+    return ofVec3f(radius, theta, phi);
 }
 
 //--------------------------------------------------------------
 ofVec3f ofApp::cartesianToSpherical(ofVec3f point) {
-    float r = point.length();
-    float theta = atan2(point.y , point.x);
-    float phi = acos(point.z / r);
+    double r = sqrt(point.x*point.x + point.y*point.y + point.z*point.z);
+    double theta = atan2(point.y , point.x);
+    double phi = acos(point.z/r);
     return ofVec3f(r, theta, phi);
 }
 
 //--------------------------------------------------------------
 ofVec3f ofApp::sphericalToCartesian(ofVec3f point) {
-    float r = point.x;
-    float theta = point.y;
-    float phi = point.z;
-    float x = r * cos(theta) * sin(phi);
-    float y = r * sin(theta) * sin(phi);
-    float z = r * cos(phi);
+    double r = point.x;
+    double theta = point.y;
+    double phi = point.z;
+    double x = r * cos(theta) * sin(phi);
+    double y = r * sin(theta) * sin(phi);
+    double z = r * cos(phi);
     return ofVec3f(x, y, z);
 }
 
@@ -158,6 +198,9 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
+    drawBuffer.allocate(w, h);
+    fadeBufferDraw.allocate(w, h);
+    fadeBufferSave.allocate(w, h);
 
 }
 

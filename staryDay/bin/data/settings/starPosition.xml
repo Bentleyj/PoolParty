@@ -1,0 +1,20 @@
+<group>
+	<Star>
+		<Right_Ascension>0</Right_Ascension>
+		<Declination>90</Declination>
+	</Star>
+	<Test>
+		<Theta>0</Theta>
+		<Phi>0</Phi>
+	</Test>
+<group/>
+<Stars>
+		<Density>1</Density>
+		<Max_Size>1.58163</Max_Size>
+	</Stars>
+	<Camera>
+		<Free_Camera>1</Free_Camera>
+		<Right_Ascension>15.3061</Right_Ascension>
+		<Declination>28.4694</Declination>
+	</Camera>
+</group>

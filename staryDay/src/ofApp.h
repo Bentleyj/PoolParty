@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "spectrumFinder.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -21,10 +22,44 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
+        
         ofVec3f cartesianToSpherical(ofVec3f point);
         ofVec3f sphericalToCartesian(ofVec3f point);
-        ofVec3f starCoordsToSpherical(float ra, float de);
+        ofVec3f starCoordsToSpherical(double ra, double de);
+    
+        ofxPanel gui;
+        ofParameterGroup starGroup;
+        ofParameter<float> starDensity;
+        ofParameter<float> maxStarSize;
+        ofParameter<float> rotSpeed;
+        ofParameter<float> trailLength;
+        ofParameter<float> threshold;
+
+        ofParameterGroup cameraGroup;
+        ofParameter<bool> freeCamera;
+        ofParameter<float> ra;
+        ofParameter<float> de;
+    
+        ofFbo drawBuffer, fadeBufferDraw, fadeBufferSave;
+    
+        ofImage img;
+    
+        spectrumFinder colorFinder;
+    
+        vector<ofColor> cols;
+    
+        ofVec3f camPosTarget;
+        ofVec3f camLookAtTarget;
+    
+        ofVboMesh celestialSphere;
+    
+        float rotation;
+    
+        ofShader starPoints, fade;
+    
+        vector<float> pointSize;
+    
+        float radius;
     
         ofEasyCam cam;
 		
