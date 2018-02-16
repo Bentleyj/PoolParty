@@ -1,5 +1,12 @@
 #include "ofApp.h"
 
+ofVec3f colorToUniformRange(ofColor col) {
+    float r = col.r / 255.0;
+    float g = col.g / 255.0;
+    float b = col.b / 255.0;
+    return ofVec3f(r, g, b);
+}
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     fluidSolver.load("Shaders/FluidSolver");
@@ -8,6 +15,13 @@ void ofApp::setup(){
     solverBuffer.allocate(X_RES, Y_RES);
     copyBuffer.allocate(X_RES, Y_RES);
     randomBuffer.allocate(X_RES, Y_RES);
+    particleBuffer.allocate(X_RES, Y_RES);
+    
+    img.load("Images/Tapestry.png");
+    
+    spectrumFinder f;
+
+    cols = f.getColorsFromImage(img);
 }
 
 //--------------------------------------------------------------
@@ -50,12 +64,17 @@ void ofApp::draw(){
     fluidSolver.end();
     solverBuffer.end();
     
+//    particleBuffer.begin();
     fluidShower.begin();
-    fluidSolver.setUniform2f("resolution", solverBuffer.getWidth(), solverBuffer.getHeight());
-    fluidSolver.setUniformTexture("inputTexture1", solverBuffer, 0);
+//    fluidShower.setUniformTexture("particleBuffer", particleCopyBuffer, 0);
+    fluidShower.setUniformTexture("texSolver", copyBuffer, 0);
+    fluidShower.setUniform3f("col1", colorToUniformRange(cols[0]));
+    fluidShower.setUniform3f("col2", colorToUniformRange(cols[int(cols.size()-1) / 4]));
+    fluidShower.setUniform3f("col3", colorToUniformRange((cols[int(cols.size()-1) / 4 + 1])));
+    fluidShower.setUniform3f("col4", colorToUniformRange(cols[cols.size() / 2]));
     ofDrawRectangle(0, 0, solverBuffer.getWidth(), solverBuffer.getHeight());
-    fluidSolver.end();
-//    randomBuffer.draw(200, 0);
+    fluidShower.end();
+//    particleBuffer.end();
     
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 }

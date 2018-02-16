@@ -1,15 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Cell.hpp"
-#include "ofMatrix2x2.h"
+#include "spectrumFinder.hpp"
 
 #define X_RES 1000
 #define Y_RES 1000
-
-#define RotNum 5
-#define angRnd 0.0
-#define posRnd 0.0
 
 class ofApp : public ofBaseApp{
 
@@ -36,4 +31,10 @@ class ofApp : public ofBaseApp{
         ofFbo solverBuffer;
         ofFbo copyBuffer;
         ofFbo randomBuffer;
+        ofFbo particleBuffer;
+        ofFbo particleCopyBuffer;
+    
+        vector<ofColor> cols;
+    
+        ofImage img;
 };
