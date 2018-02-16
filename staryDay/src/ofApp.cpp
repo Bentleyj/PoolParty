@@ -4,6 +4,69 @@
 void ofApp::setup(){
     cam.setPosition(0, 0, 10);
     cam.lookAt(ofVec3f(0, 0, 0));
+<<<<<<< Updated upstream
+=======
+    
+    radius = 200.0;
+    
+    ofBackground(0);
+    
+    gui.setup("Controls", "settings/starPosition.xml");
+    starGroup.setName("Stars");
+    starGroup.add(starDensity.set("Density", 0.0, 0.0, 1.0));
+    starGroup.add(maxStarSize.set("Max Size", 4.0, 0.0, 10.0));
+    starGroup.add(rotSpeed.set("Rotation Speed", 0.0, 0.0, 1.0));
+    starGroup.add(trailLength.set("Trail Length", 0.0, 0.0, 1.0));
+    starGroup.add(threshold.set("Threshold", 0.0, 0.0, 1.0));
+
+    gui.add(starGroup);
+    cameraGroup.setName("Camera");
+    cameraGroup.add(freeCamera.set("Free Camera", true));
+    cameraGroup.add(ra.set("Right Ascension",12, 0, 24));
+    cameraGroup.add(de.set("Declination", 45, -90, 90));
+    
+    gui.add(cameraGroup);
+    gui.loadFromFile("settings/starPosition.xml");
+    
+    img.load("images/Tapestry.png");
+    
+    cols = colorFinder.getColorsFromImage(img);
+    
+    ofMesh verts;
+    verts.load("models/sphere.ply");
+
+    for(int i = 0; i < verts.getNumVertices(); i++) {
+        ofVec3f v = verts.getVertex(i);
+        ofVec3f vS = cartesianToSpherical(v);
+        vS.x += radius/4 - ofRandom(0, radius/2);
+        ofVec3f vr = sphericalToCartesian(vS);
+        celestialSphere.addVertex(vr);
+        celestialSphere.addColor(cols[i%cols.size()]);
+        pointSize.push_back(ofMap(verts.getColor(i).r*255, 45, 65, 0.0, 4.0));
+    }
+    
+    starPoints.load("shaders/starSize");
+    fade.load("shaders/fade");
+    
+    camPosTarget = ofVec3f(0, 0, 0);
+
+    starPoints.begin();
+    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
+    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
+    starPoints.end();
+    
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+    
+    celestialSphere.setMode(OF_PRIMITIVE_POINTS);
+        
+    drawBuffer.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
+    
+    fadeBufferDraw.begin();
+    ofBackground(0);
+    fadeBufferDraw.end();
+>>>>>>> Stashed changes
 }
 
 //--------------------------------------------------------------
