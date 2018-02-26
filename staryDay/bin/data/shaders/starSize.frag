@@ -1,10 +1,8 @@
-#version 120
 
-varying vec3 col;
+uniform sampler2D tex;
 
-void main() {
+void main (void) {
     
-    vec2 uv = gl_FragCoord.xy;
+    gl_FragColor = texture2D(tex, gl_TexCoord[0].st) * gl_Color;
     
-    gl_FragColor = vec4(col, 1.0);
 }

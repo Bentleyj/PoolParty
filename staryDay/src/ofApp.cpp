@@ -27,8 +27,10 @@ void ofApp::setup(){
     gui.add(bufferSize.set("Buffer Size", ofGetHeight(),0.0, ofGetHeight()));
     gui.loadFromFile("settings/starPosition.xml");
     
+    ofImage img;
     img.load("images/Tapestry.jpg");
     
+    spectrumFinder colorFinder;
     cols = colorFinder.getColorsFromImage(img);
     
     ofMesh verts;
@@ -39,23 +41,24 @@ void ofApp::setup(){
         ofVec3f vS = cartesianToSpherical(v);
         vS.x += radius/4 - ofRandom(0, radius/2);
         ofVec3f vr = sphericalToCartesian(vS);
-        celestialSphere.addVertex(vr);
-        celestialSphere.addColor(cols[i%cols.size()]);
-        pointSize.push_back(ofMap(verts.getColor(i).r*255, 45, 65, 0.0, 4.0));
+        points.push_back(vr);
+        sizes.push_back(ofVec3f(ofMap(verts.getColor(i).r*255, 45, 65, 0.0, 4.0)));
+        colors.push_back(cols[i%cols.size()]);
     }
     
     starPoints.load("shaders/starSize");
     fade.load("shaders/fade");
     
     camPosTarget = ofVec3f(0, 0, 0);
-
-    starPoints.begin();
-    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
-    starPoints.end();
+    int numPoints = (int)points.size();
     
-    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-    
-    celestialSphere.setMode(OF_PRIMITIVE_POINTS);
+    vbo.setVertexData(&points[0], numPoints, GL_STATIC_DRAW);
+    vbo.setColorData(&colors[0], numPoints, GL_STATIC_DRAW);
+    vbo.setNormalData(&sizes[0], numPoints, GL_STATIC_DRAW);
+     
+    ofDisableArbTex();
+    ofLoadImage(starSprite, "images/circle.png");
+    ofEnableArbTex();
 
     drawBuffer.allocate(ofGetHeight(), ofGetHeight());
     fadeBufferDraw.allocate(ofGetHeight(), ofGetHeight());
@@ -87,24 +90,32 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+    ofEnablePointSprites();
+    
     drawBuffer.begin();
+    
     ofBackground(0);
     ofSetColor(255);
-    ofEnableDepthTest();
+    
     cam.begin();
     starPoints.begin();
+    
     starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));
     starPoints.setUniform1f("starDensity", starDensity);
     starPoints.setUniform1f("maxSize", maxStarSize);
     ofRotate(rotation, 0.5, 1, 0);
-    celestialSphere.draw();
-    //ofRotate(rotation/2, 0.5, 1, 0);
+    starSprite.bind();
+	vbo.draw(GL_POINTS, 0, (int)points.size());
+    starSprite.unbind();
     starPoints.end();
     rotation += rotSpeed;
     cam.end();
+    
     drawBuffer.end();
     
-    ofDisableDepthTest();
+    ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+    
     fadeBufferSave.begin();
     fade.begin();
     fade.setUniformTexture("thisFrame", drawBuffer, 0);
@@ -123,7 +134,7 @@ void ofApp::draw(){
     
     ofSetColor(255);
     fadeBufferDraw.draw(0, 0, bufferSize, bufferSize);
-
+    
     gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
 }

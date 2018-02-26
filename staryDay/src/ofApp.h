@@ -43,23 +43,23 @@ class ofApp : public ofBaseApp{
         ofParameter<int> bufferSize;
     
         ofFbo drawBuffer, fadeBufferDraw, fadeBufferSave;
-    
-        ofImage img;
-    
-        spectrumFinder colorFinder;
-    
+            
         vector<ofColor> cols;
     
         ofVec3f camPosTarget;
         ofVec3f camLookAtTarget;
     
-        ofVboMesh celestialSphere;
+        ofVbo vbo;
+        ofTexture starSprite;
     
         float rotation;
     
         ofShader starPoints, fade;
     
-        vector<float> pointSize;
+        vector<ofVec3f> sizes;
+        vector<ofVec3f> points;
+        vector<ofFloatColor> colors;
+
     
         float radius;
     
