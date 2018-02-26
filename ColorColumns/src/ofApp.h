@@ -1,6 +1,20 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
+#include "spectrumFinder.hpp"
+
+struct Column {
+public:
+    Column() {};
+    float height;
+    float baseHeight;
+    int order;
+    ofColor col;
+    void update(float noiseSpeed, float noiseScale, float noiseResolution) {
+        height = baseHeight + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed + order * noiseResolution)) * noiseScale;
+    }
+};
 
 class ofApp : public ofBaseApp{
 
@@ -20,5 +34,21 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+    
+        vector<ofColor> cols;
+    
+        ofxPanel gui;
+        ofParameter<int> numCols;
+        ofParameter<float> noiseSpeed;
+        ofParameter<float> noiseScale;
+        ofParameter<float> noiseResolution;
+        ofParameter<float> baseHeight;
+        ofParameter<int> bufferSize;
+    
+        vector<Column> topCols;
+        vector<Column> botCols;
+    
+        ofFbo topBuffer, botBuffer, viewBuffer;
+    
+        ofShader mix;
 };
