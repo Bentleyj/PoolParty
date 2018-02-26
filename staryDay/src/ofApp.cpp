@@ -90,7 +90,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofEnablePointSprites();
     
     drawBuffer.begin();
