@@ -91,7 +91,15 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key == ' ') {
+        for(int i = 0; i < topCols.size(); i++) {
+            topCols[i].col = cols[int(ofRandom(cols.size()))];
+        }
+        for(int i = 0; i < botCols.size(); i++) {
+            botCols[i].col = cols[int(ofRandom(cols.size()))];
 
+        }
+    }
 }
 
 //--------------------------------------------------------------
