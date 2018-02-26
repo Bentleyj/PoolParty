@@ -12,7 +12,7 @@ public:
     int order;
     ofColor col;
     void update(float noiseSpeed, float noiseScale, float noiseResolution) {
-        height = baseHeight + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed + order * noiseResolution)) * noiseScale;
+        height = baseHeight + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed, order * noiseResolution)) * noiseScale;
     }
 };
 

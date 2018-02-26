@@ -30,7 +30,7 @@ void ofApp::setup(){
     gui.add(numCols.set("Num Cols", 5, 1, 200));
     gui.add(noiseSpeed.set("Noise Speed", 0.0, 0.0, 10.0));
     gui.add(noiseScale.set("Noise Scale", 20.0, 0.0, 500.0));
-    gui.add(noiseResolution.set("Noise Res", 10.0, 0.0, 100.0));
+    gui.add(noiseResolution.set("Noise Res", 0.5, 0.0, 1.03));
     gui.add(baseHeight.set("Base Col Height", ofGetHeight()/4, 0.0, ofGetHeight()));
     gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
 
@@ -91,7 +91,15 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    if(key == ' ') {
+        for(int i = 0; i < topCols.size(); i++) {
+            topCols[i].col = cols[int(ofRandom(cols.size()))];
+        }
+        for(int i = 0; i < botCols.size(); i++) {
+            botCols[i].col = cols[int(ofRandom(cols.size()))];
 
+        }
+    }
 }
 
 //--------------------------------------------------------------
