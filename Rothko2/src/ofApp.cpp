@@ -12,6 +12,7 @@ void ofApp::setup(){
 	gui.add(noiseScale.set("noiseScale", 0.005, 0, 0.1));
     gui.add(noiseSpeed.set("noiseSpeed", 1, 0, 2));
     gui.add(horizon.set("Horizon", 0, -ofGetHeight()/2, ofGetHeight()/2));
+    gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
 	gui.loadFromFile(settingsPath);
     
     for(int i = 0; i < NUM_LINES; i++) {
@@ -33,6 +34,8 @@ void ofApp::setup(){
 	ofBackground(20);
     
     ofSetLineWidth(2);
+    
+    drawBuffer.allocate(ofGetHeight(), ofGetHeight());
     
     ofEnableAntiAliasing();
 }
@@ -67,10 +70,16 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    drawBuffer.begin();
+    ofClear(0);
     for(int i = 1; i < linesBottom.size(); i++) {
         linesBottom[i].draw();
         linesTop[i].draw();
     }
+    drawBuffer.end();
+    
+    drawBuffer.draw(0, 0, bufferSize, bufferSize);
+    
 //    for(int i = 1; i < linesTop.size(); i++) {
 //    }
 	gui.draw();

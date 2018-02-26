@@ -30,6 +30,9 @@ class ofApp : public ofBaseApp{
         ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
         ofParameter<float> horizon;
+        ofParameter<int> bufferSize;
+    
+        ofFbo drawBuffer;
 
 		vector<Particle> particles;
         vector<line> linesBottom;
