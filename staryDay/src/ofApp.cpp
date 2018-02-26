@@ -126,7 +126,6 @@ void ofApp::draw(){
 
     gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
-    
 }
 
 //--------------------------------------------------------------
@@ -199,9 +198,11 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
+    /*
     drawBuffer.allocate(w, h);
     fadeBufferDraw.allocate(w, h);
     fadeBufferSave.allocate(w, h);
+     */
 
 }
 
