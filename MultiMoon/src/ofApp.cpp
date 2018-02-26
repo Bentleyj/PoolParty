@@ -9,6 +9,7 @@ void ofApp::setup(){
     gui.add(horizon.set("Horizon", ofGetHeight()/2, 0, ofGetHeight()));
     gui.add(width.set("width", 400, 0, ofGetWidth()));
     gui.add(animate.set("animate", false));
+    gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0, ofGetHeight()));
     gui.loadFromFile(settingsPath);
     
     top.allocate(ofGetWidth(), ofGetHeight());
@@ -32,6 +33,8 @@ void ofApp::setup(){
     }
     
     ofBackground(0);
+    
+    viewBuffer.allocate(1000, 1000);
     
     index = 0;
 
@@ -67,8 +70,13 @@ void ofApp::draw(){
     }
     bottom.end();
     
+    viewBuffer.begin();
+    ofClear(0);
     top.draw(0, 0);
     bottom.draw(0, 0);
+    viewBuffer.end();
+    
+    viewBuffer.draw(0, 0, bufferSize, bufferSize);
     
     gui.draw();
 }

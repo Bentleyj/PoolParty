@@ -23,13 +23,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofxPanel gui;
-    ofParameter<float> x, y, width, horizon;
-    ofParameter<bool> animate;
-    ofFbo top, bottom;
+        ofxPanel gui;
+        ofParameter<float> x, y, width, horizon;
+        ofParameter<bool> animate;
+        ofParameter<int> bufferSize;
+        ofFbo top, bottom, viewBuffer;
     
-    int index;
+        int index;
         
-    vector<Moon> moons;
+        vector<Moon> moons;
     
 };
