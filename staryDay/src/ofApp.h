@@ -40,6 +40,8 @@ class ofApp : public ofBaseApp{
         ofParameter<float> ra;
         ofParameter<float> de;
     
+        ofParameter<int> bufferSize;
+    
         ofFbo drawBuffer, fadeBufferDraw, fadeBufferSave;
     
         ofImage img;

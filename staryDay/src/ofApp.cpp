@@ -24,9 +24,10 @@ void ofApp::setup(){
     cameraGroup.add(de.set("Declination", 45, -90, 90));
     
     gui.add(cameraGroup);
+    gui.add(bufferSize.set("Buffer Size", ofGetHeight(),0.0, ofGetHeight()));
     gui.loadFromFile("settings/starPosition.xml");
     
-    img.load("images/Tapestry.png");
+    img.load("images/Tapestry.jpg");
     
     cols = colorFinder.getColorsFromImage(img);
     
@@ -50,16 +51,15 @@ void ofApp::setup(){
 
     starPoints.begin();
     celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
-    celestialSphere.getVbo().setAttributeData(starPoints.getAttributeLocation("point_size"), &pointSize[0], 1, pointSize.size(), GL_DYNAMIC_DRAW, sizeof(float));
     starPoints.end();
     
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
     
     celestialSphere.setMode(OF_PRIMITIVE_POINTS);
 
-    drawBuffer.allocate(ofGetWidth(), ofGetHeight());
-    fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
-    fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
+    drawBuffer.allocate(ofGetHeight(), ofGetHeight());
+    fadeBufferDraw.allocate(ofGetHeight(), ofGetHeight());
+    fadeBufferSave.allocate(ofGetHeight(), ofGetHeight());
     
     fadeBufferDraw.begin();
     ofBackground(0);
@@ -98,7 +98,7 @@ void ofApp::draw(){
     starPoints.setUniform1f("maxSize", maxStarSize);
     ofRotate(rotation, 0.5, 1, 0);
     celestialSphere.draw();
-    ofRotate(rotation/2, 0.5, 1, 0);
+    //ofRotate(rotation/2, 0.5, 1, 0);
     starPoints.end();
     rotation += rotSpeed;
     cam.end();
@@ -122,10 +122,11 @@ void ofApp::draw(){
     fadeBufferDraw.end();
     
     ofSetColor(255);
-    fadeBufferDraw.draw(0, 0);
+    fadeBufferDraw.draw(0, 0, bufferSize, bufferSize);
 
     gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
+    
 }
 
 //--------------------------------------------------------------
