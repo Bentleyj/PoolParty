@@ -15,9 +15,18 @@ void ofApp::setup(){
     gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
 	gui.loadFromFile(settingsPath);
     
+    ofImage img;
+    img.load("Images/Tapestry.jpg");
+    
+    spectrumFinder f;
+    cols = f.getColorsFromImage(img);
+
+    ofColor topCol = cols[int(ofRandom(cols.size()))];
+    ofColor botCol = cols[int(ofRandom(cols.size()))];
+    
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(28, 81, 170);
+        newLine.col = topCol;
         newLine.setup(ofGetHeight());
         newLine.sign = 1;
         linesBottom.push_back(newLine);
@@ -25,7 +34,7 @@ void ofApp::setup(){
     
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(149, 113, 105);
+        newLine.col = botCol;
         newLine.setup(0);
         newLine.sign = -1;
         linesTop.push_back(newLine);
@@ -80,14 +89,25 @@ void ofApp::draw(){
     
     drawBuffer.draw(0, 0, bufferSize, bufferSize);
     
-//    for(int i = 1; i < linesTop.size(); i++) {
-//    }
 	gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == '1') {
+        for(int i = 1; i < linesBottom.size(); i++) {
+            linesBottom[i].setColor(cols[int(ofRandom(cols.size()))]);
+            linesTop[i].setColor(cols[int(ofRandom(cols.size()))]);
+        }
+    }
+    if(key == '2') {
+        ofColor topCol = cols[int(ofRandom(cols.size()))];
+        ofColor botCol = cols[int(ofRandom(cols.size()))];
+        for(int i = 1; i < linesBottom.size(); i++) {
+            linesBottom[i].setColor(topCol);
+            linesTop[i].setColor(botCol);
+        }
+    }
 }
 
 //--------------------------------------------------------------
