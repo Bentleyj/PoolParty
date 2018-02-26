@@ -15,9 +15,9 @@ void ofApp::setup(){
     solverBuffer.allocate(X_RES, Y_RES);
     copyBuffer.allocate(X_RES, Y_RES);
     randomBuffer.allocate(X_RES, Y_RES);
-    particleBuffer.allocate(X_RES, Y_RES);
+    scaleBuffer.allocate(X_RES, Y_RES);
     
-    img.load("Images/Tapestry.png");
+    img.load("Images/Tapestry.jpg");
     
     spectrumFinder f;
 
@@ -26,6 +26,11 @@ void ofApp::setup(){
     for(int i = 0; i < 4; i++) {
         colorIndexes.push_back(int(ofRandom(0, cols.size())));
     }
+    
+    string settingsPath = "settings/settings.xml";
+    gui.setup("Controls", settingsPath);
+    gui.add(bufferSize.set("Buffer Size", X_RES, 0.0, X_RES));
+    gui.loadFromFile(settingsPath);
 }
 
 //--------------------------------------------------------------
@@ -68,7 +73,7 @@ void ofApp::draw(){
     fluidSolver.end();
     solverBuffer.end();
     
-//    particleBuffer.begin();
+    scaleBuffer.begin();
     fluidShower.begin();
 //    fluidShower.setUniformTexture("particleBuffer", particleCopyBuffer, 0);
     fluidShower.setUniformTexture("texSolver", copyBuffer, 0);
@@ -78,8 +83,11 @@ void ofApp::draw(){
     fluidShower.setUniform3f("col4", colorToUniformRange(cols[colorIndexes[3]]));
     ofDrawRectangle(0, 0, solverBuffer.getWidth(), solverBuffer.getHeight());
     fluidShower.end();
-//    particleBuffer.end();
+    scaleBuffer.end();
     
+    scaleBuffer.draw(0, 0, bufferSize, bufferSize);
+    
+    gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 }
 
