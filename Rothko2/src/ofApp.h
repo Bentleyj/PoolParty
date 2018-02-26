@@ -4,6 +4,7 @@
 #include "ofxGui.h"
 #include "particle.h"
 #include "line.hpp"
+#include "spectrumFinder.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -30,10 +31,15 @@ class ofApp : public ofBaseApp{
         ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
         ofParameter<float> horizon;
+        ofParameter<int> bufferSize;
+    
+        ofFbo drawBuffer;
 
 		vector<Particle> particles;
         vector<line> linesBottom;
         vector<line> linesTop;
 
 		vector<ofVec2f> points;
+    
+        vector<ofColor> cols;
 };

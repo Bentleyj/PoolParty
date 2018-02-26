@@ -24,6 +24,7 @@ public:
     float baseHeight;
     
     line();
+    void setColor(ofColor col);
     void setup(float base);
     void update(line* comparatorLine);
     void draw();

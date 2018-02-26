@@ -71,8 +71,8 @@ void main() {
     if(uv.x > 0.9)
         tc.x = 0.9;
     
-    if(uv.y > 0.45 && uv.y < 0.55)
-        tc.y = mix(tc.y, 0.5, 0.02);
+    // if(uv.y > 0.45 && uv.y < 0.55)
+    //     tc.y = mix(tc.y, 0.5, 0.02);
     
     gl_FragColor = vec4(tc, 1.0);
 }

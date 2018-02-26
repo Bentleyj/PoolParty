@@ -17,4 +17,19 @@
 		<Right_Ascension>15.3061</Right_Ascension>
 		<Declination>28.4694</Declination>
 	</Camera>
+<Controls>
+		<Stars>
+			<Density>0</Density>
+			<Max_Size>10</Max_Size>
+			<Rotation_Speed>0.903061</Rotation_Speed>
+			<Trail_Length>0.94898</Trail_Length>
+			<Threshold>0.0816327</Threshold>
+		</Stars>
+		<Camera>
+			<Free_Camera>1</Free_Camera>
+			<Right_Ascension>12</Right_Ascension>
+			<Declination>45</Declination>
+		</Camera>
+		<Buffer_Size>126</Buffer_Size>
+	</Controls>
 </group>
