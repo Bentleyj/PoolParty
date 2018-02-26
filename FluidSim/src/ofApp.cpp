@@ -85,7 +85,7 @@ void ofApp::draw(){
     fluidShower.end();
     scaleBuffer.end();
     
-    scaleBuffer.draw(0, 0, bufferSize, bufferSize);
+    scaleBuffer.draw(-bufferSize * 0.12, -bufferSize * 0.12, bufferSize + bufferSize * 0.2, bufferSize + bufferSize * 0.2);
     
     gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
