@@ -4,4 +4,12 @@
 	<Horizon>529.92</Horizon>
 	<width>778.24</width>
 	<animate>1</animate>
+<settings_settings_xml>
+		<X>450.56</X>
+		<Y>311.04</Y>
+		<Horizon>499.2</Horizon>
+		<width>977.92</width>
+		<animate>1</animate>
+		<Buffer_Size>130</Buffer_Size>
+	</settings_settings_xml>
 </group>

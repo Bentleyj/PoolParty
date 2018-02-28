@@ -87,6 +87,8 @@ void ofApp::draw(){
     
     scaleBuffer.draw(-bufferSize * 0.12, -bufferSize * 0.12, bufferSize + bufferSize * 0.2, bufferSize + bufferSize * 0.2);
     
+    cap.draw();
+    
     gui.draw();
     ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 20);
 }

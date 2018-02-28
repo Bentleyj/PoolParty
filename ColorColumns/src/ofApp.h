@@ -36,6 +36,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
         vector<ofColor> cols;
+        ofMesh topCap, botCap;
     
         ofxPanel gui;
         ofParameter<int> numCols;
