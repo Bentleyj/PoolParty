@@ -32,7 +32,7 @@ void ofApp::setup(){
     gui.add(noiseScale.set("Noise Scale", 20.0, 0.0, 500.0));
     gui.add(noiseResolution.set("Noise Res", 0.5, 0.0, 1.03));
     gui.add(baseHeight.set("Base Col Height", ofGetHeight()/4, 0.0, ofGetHeight()));
-    gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
+    gui.add(bufferSize.set("Buffer Size", 128, 0.0, ofGetHeight()));
 
     ofBackground(0);
     
@@ -41,6 +41,40 @@ void ofApp::setup(){
     viewBuffer.allocate(ofGetHeight(), ofGetHeight());
     
     mix.load("shaders/mix");
+    
+    topCap.addVertex(ofVec3f(0, 0, 0));
+    topCap.addVertex(ofVec3f(0, 10, 0));
+    topCap.addVertex(ofVec3f(10, 10, 0));
+    topCap.addVertex(ofVec3f(10, 0, 0));
+    topCap.addIndex(0);
+    topCap.addIndex(1);
+    topCap.addIndex(2);
+    topCap.addIndex(0);
+    topCap.addIndex(2);
+    topCap.addIndex(3);
+    topCap.addColor(ofColor(255));
+    topCap.addColor(ofColor(0));
+    topCap.addColor(ofColor(0));
+    topCap.addColor(ofColor(255));
+    
+    topCap.setMode(OF_PRIMITIVE_TRIANGLES);
+    
+    botCap.addVertex(ofVec3f(0, 0, 0));
+    botCap.addVertex(ofVec3f(0, 10, 0));
+    botCap.addVertex(ofVec3f(10, 10, 0));
+    botCap.addVertex(ofVec3f(10, 0, 0));
+    botCap.addIndex(0);
+    botCap.addIndex(1);
+    botCap.addIndex(2);
+    botCap.addIndex(0);
+    botCap.addIndex(2);
+    botCap.addIndex(3);
+    botCap.addColor(ofColor(0));
+    botCap.addColor(ofColor(255));
+    botCap.addColor(ofColor(255));
+    botCap.addColor(ofColor(0));
+    
+    botCap.setMode(OF_PRIMITIVE_TRIANGLES);
 
 }
 
@@ -64,6 +98,13 @@ void ofApp::draw(){
         Column col = topCols[i];
         ofSetColor(col.col);
         ofDrawRectangle(i * topBuffer.getWidth() / numCols, 0, topBuffer.getWidth() / numCols, col.height);
+        ofPushMatrix();
+        ofTranslate(i * topBuffer.getWidth() / numCols, col.height);
+        ofScale(topBuffer.getWidth() / numCols / 10, 2);
+        topCap.setColor(0, col.col);
+        topCap.setColor(3, col.col);
+        topCap.draw();
+        ofPopMatrix();
     }
     topBuffer.end();
     
@@ -73,6 +114,13 @@ void ofApp::draw(){
         Column col = botCols[i];
         ofSetColor(col.col);
         ofDrawRectangle(i * botBuffer.getWidth() / numCols, botBuffer.getHeight() - col.height, botBuffer.getWidth() / numCols, col.height);
+        ofPushMatrix();
+        ofTranslate(i * botBuffer.getWidth() / numCols, botBuffer.getHeight() - col.height);
+        ofScale(topBuffer.getWidth() / numCols / 10, 2);
+        botCap.setColor(1, col.col);
+        botCap.setColor(2, col.col);
+        botCap.draw();
+        ofPopMatrix();
     }
     botBuffer.end();
     

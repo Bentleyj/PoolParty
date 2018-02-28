@@ -9,7 +9,7 @@ void ofApp::setup(){
     gui.add(horizon.set("Horizon", ofGetHeight()/2, 0, ofGetHeight()));
     gui.add(width.set("width", 400, 0, ofGetWidth()));
     gui.add(animate.set("animate", false));
-    gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0, ofGetHeight()));
+    gui.add(bufferSize.set("Buffer Size", 128, 0, ofGetHeight()));
     gui.loadFromFile(settingsPath);
     
     top.allocate(ofGetWidth(), ofGetHeight());

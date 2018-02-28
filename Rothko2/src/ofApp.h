@@ -33,7 +33,9 @@ class ofApp : public ofBaseApp{
         ofParameter<float> horizon;
         ofParameter<int> bufferSize;
     
-        ofFbo drawBuffer;
+        ofFbo drawBuffer, topBuffer, botBuffer;
+    
+        ofShader mix;
 
 		vector<Particle> particles;
         vector<line> linesBottom;

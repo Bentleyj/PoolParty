@@ -39,12 +39,17 @@ void ofApp::setup(){
         newLine.sign = -1;
         linesTop.push_back(newLine);
     }
+    
+    mix.load("shaders/mix");
 
 	ofBackground(20);
     
     ofSetLineWidth(2);
     
     drawBuffer.allocate(ofGetHeight(), ofGetHeight());
+    topBuffer.allocate(ofGetHeight(), ofGetHeight());
+    botBuffer.allocate(ofGetHeight(), ofGetHeight());
+
     
     ofEnableAntiAliasing();
 }
@@ -79,12 +84,29 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    drawBuffer.begin();
+    //drawBuffer.begin();
+    botBuffer.begin();
     ofClear(0);
     for(int i = 1; i < linesBottom.size(); i++) {
         linesBottom[i].draw();
+    }
+    botBuffer.end();
+    
+    topBuffer.begin();
+    ofClear(0);
+    for(int i = 1; i < linesBottom.size(); i++) {
         linesTop[i].draw();
     }
+    topBuffer.end();
+    //drawBuffer.end();
+    topBuffer.draw(0, 0, bufferSize, bufferSize);
+    
+    drawBuffer.begin();
+    mix.begin();
+    mix.setUniformTexture("top", topBuffer, 0);
+    mix.setUniformTexture("bot", botBuffer, 1);
+    ofDrawRectangle(0, 0, drawBuffer.getWidth(), drawBuffer.getHeight());
+    mix.end();
     drawBuffer.end();
     
     drawBuffer.draw(0, 0, bufferSize, bufferSize);

@@ -1,11 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGui.h"
 #include "spectrumFinder.hpp"
-
-#define X_RES 1000
-#define Y_RES 1000
+#include "ofxGui.h"
+#include "drop.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -26,22 +24,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        ofShader fluidSolver;
-        ofShader fluidShower;
-    
-        ofFbo solverBuffer;
-        ofFbo copyBuffer;
-        ofFbo randomBuffer;
-        ofFbo scaleBuffer;
-    
-        vector<int> colorIndexes;
-    
         vector<ofColor> cols;
-    
-        ofxPanel gui;
-        ofParameter<float> bufferSize;
-    
-        ofMesh cap;
-    
-        ofImage img;
+        vector<drop> drops;
+        ofColor backgroundCol;
 };
