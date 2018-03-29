@@ -49,6 +49,12 @@ void line::update(line* comparatorLine) {
     }
 }
 
+void line::setColor(ofColor col) {
+    for(int i = 0; i < mesh.getNumColors(); i+=2) {
+        mesh.setColor(i, col);
+    }
+}
+
 void line::draw() {
     ofPushStyle();
     ofSetColor(col);

@@ -1,8 +1,8 @@
 <Controls>
 	<radius>154</radius>
 <Controls/>
-<noiseSize>70</noiseSize>
-	<noiseScale>0.01</noiseScale>
+<noiseSize>380</noiseSize>
+	<noiseScale>0.004</noiseScale>
 <group>
 		<noiseIterations>10</noiseIterations>
 		<noiseSize>10</noiseSize>
@@ -10,4 +10,8 @@
 		<noiseSpeed>0.17</noiseSpeed>
 	<Horizon>384</Horizon>
 	</group>
+<noiseIterations>2</noiseIterations>
+	<noiseSpeed>0.03</noiseSpeed>
+	<Horizon>384</Horizon>
+	<Buffer_Size>130</Buffer_Size>
 </Controls>

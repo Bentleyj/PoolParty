@@ -42,13 +42,13 @@ void main() {
 
     colY = mix(col3, col4, vel.y);
     
-    colX = mix(col1, col2, vel.x);
+    // colX = mix(col1, col2, vel.x);
     
-    col = (v.x > v.y) ? colX : colY;
+    col = colY;//(v.x > v.y) ? colX : colY;
     
 //    float mag = length(vel);
 
-    col = mix(vec3(0.0), col, length(v));
+    col = mix(vec3(1.0), col, length(v));
     
     gl_FragColor = vec4(col, 1.0);
 }

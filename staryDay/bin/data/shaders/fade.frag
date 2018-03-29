@@ -18,6 +18,10 @@ void main() {
 
     
     vec3 col = thisCol + lastCol * percent;
+    if(length(col) > 0.5)
+    	if(length(thisCol) > length(col)) {
+    		col = thisCol;
+    	}
     if(length(col) < threshold)
         col = vec3(0.0);
     

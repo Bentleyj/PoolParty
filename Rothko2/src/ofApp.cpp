@@ -12,11 +12,21 @@ void ofApp::setup(){
 	gui.add(noiseScale.set("noiseScale", 0.005, 0, 0.1));
     gui.add(noiseSpeed.set("noiseSpeed", 1, 0, 2));
     gui.add(horizon.set("Horizon", 0, -ofGetHeight()/2, ofGetHeight()/2));
+    gui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
 	gui.loadFromFile(settingsPath);
+    
+    ofImage img;
+    img.load("Images/Tapestry.jpg");
+    
+    spectrumFinder f;
+    cols = f.getColorsFromImage(img);
+
+    ofColor topCol = cols[int(ofRandom(cols.size()))];
+    ofColor botCol = cols[int(ofRandom(cols.size()))];
     
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(255, 0, 0);
+        newLine.col = topCol;
         newLine.setup(ofGetHeight());
         newLine.sign = 1;
         linesBottom.push_back(newLine);
@@ -24,15 +34,22 @@ void ofApp::setup(){
     
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(0, 0, 255);
+        newLine.col = botCol;
         newLine.setup(0);
         newLine.sign = -1;
         linesTop.push_back(newLine);
     }
+    
+    mix.load("shaders/mix");
 
 	ofBackground(20);
     
     ofSetLineWidth(2);
+    
+    drawBuffer.allocate(ofGetHeight(), ofGetHeight());
+    topBuffer.allocate(ofGetHeight(), ofGetHeight());
+    botBuffer.allocate(ofGetHeight(), ofGetHeight());
+
     
     ofEnableAntiAliasing();
 }
@@ -67,18 +84,52 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    //drawBuffer.begin();
+    botBuffer.begin();
+    ofClear(0);
     for(int i = 1; i < linesBottom.size(); i++) {
         linesBottom[i].draw();
+    }
+    botBuffer.end();
+    
+    topBuffer.begin();
+    ofClear(0);
+    for(int i = 1; i < linesBottom.size(); i++) {
         linesTop[i].draw();
     }
-//    for(int i = 1; i < linesTop.size(); i++) {
-//    }
+    topBuffer.end();
+    //drawBuffer.end();
+    topBuffer.draw(0, 0, bufferSize, bufferSize);
+    
+    drawBuffer.begin();
+    mix.begin();
+    mix.setUniformTexture("top", topBuffer, 0);
+    mix.setUniformTexture("bot", botBuffer, 1);
+    ofDrawRectangle(0, 0, drawBuffer.getWidth(), drawBuffer.getHeight());
+    mix.end();
+    drawBuffer.end();
+    
+    drawBuffer.draw(0, 0, bufferSize, bufferSize);
+    
 	gui.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == '1') {
+        for(int i = 1; i < linesBottom.size(); i++) {
+            linesBottom[i].setColor(cols[int(ofRandom(cols.size()))]);
+            linesTop[i].setColor(cols[int(ofRandom(cols.size()))]);
+        }
+    }
+    if(key == '2') {
+        ofColor topCol = cols[int(ofRandom(cols.size()))];
+        ofColor botCol = cols[int(ofRandom(cols.size()))];
+        for(int i = 1; i < linesBottom.size(); i++) {
+            linesBottom[i].setColor(topCol);
+            linesTop[i].setColor(botCol);
+        }
+    }
 }
 
 //--------------------------------------------------------------

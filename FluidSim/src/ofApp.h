@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxGui.h"
 #include "spectrumFinder.hpp"
 
 #define X_RES 1000
@@ -31,12 +32,16 @@ class ofApp : public ofBaseApp{
         ofFbo solverBuffer;
         ofFbo copyBuffer;
         ofFbo randomBuffer;
-        ofFbo particleBuffer;
-        ofFbo particleCopyBuffer;
+        ofFbo scaleBuffer;
     
         vector<int> colorIndexes;
     
         vector<ofColor> cols;
+    
+        ofxPanel gui;
+        ofParameter<float> bufferSize;
+    
+        ofMesh cap;
     
         ofImage img;
 };
