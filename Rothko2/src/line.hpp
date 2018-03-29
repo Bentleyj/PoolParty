@@ -26,6 +26,8 @@ public:
     line();
     void setup(float base);
     void update(line* comparatorLine);
+    void update();
+
     void draw();
 
 };

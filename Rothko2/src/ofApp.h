@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "particle.h"
 #include "line.hpp"
 
 class ofApp : public ofBaseApp{
@@ -30,8 +29,10 @@ class ofApp : public ofBaseApp{
         ofParameter<float> noiseSpeed;
 		ofParameter<float> noiseScale;
         ofParameter<float> horizon;
+    
+        ofFbo bottomBuffer, topBuffer;
+    
 
-		vector<Particle> particles;
         vector<line> linesBottom;
         vector<line> linesTop;
 

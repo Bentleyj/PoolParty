@@ -61,6 +61,8 @@ void ofApp::setup(){
     fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
     fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
     
+    ofSetBackgroundAuto(false);
+    
     fadeBufferDraw.begin();
     ofBackground(0);
     fadeBufferDraw.end();
@@ -90,7 +92,7 @@ void ofApp::draw(){
     drawBuffer.begin();
     ofBackground(0);
     ofSetColor(255);
-    ofEnableDepthTest();
+    //ofEnableDepthTest();
     cam.begin();
     starPoints.begin();
     starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));

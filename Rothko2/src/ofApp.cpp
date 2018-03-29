@@ -16,7 +16,7 @@ void ofApp::setup(){
     
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(28, 81, 170);
+        newLine.col = ofColor(255, 0, 0);
         newLine.setup(ofGetHeight());
         newLine.sign = 1;
         linesBottom.push_back(newLine);
@@ -24,7 +24,7 @@ void ofApp::setup(){
     
     for(int i = 0; i < NUM_LINES; i++) {
         line newLine;
-        newLine.col = ofColor(149, 113, 105);
+        newLine.col = ofColor(0, 0, 255);
         newLine.setup(0);
         newLine.sign = -1;
         linesTop.push_back(newLine);

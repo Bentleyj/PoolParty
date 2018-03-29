@@ -21,9 +21,9 @@ void line::setup(float base) {
         mesh.addVertex(ofVec3f(p.x, p.y, 0));
         mesh.addColor(col);
         mesh.addVertex(ofVec3f(p.x, base));
-        mesh.addColor(255);
-
+        mesh.addColor(col);
     }
+    
     for(int i = 0; i < mesh.getNumVertices()-2; i++) {
         mesh.addIndex(i);
         mesh.addIndex(i+1);
