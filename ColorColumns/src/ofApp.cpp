@@ -82,6 +82,8 @@ void ofApp::setup(){
     botCap.setMode(OF_PRIMITIVE_TRIANGLES);
     
     lastSwapTime = ofGetElapsedTimef();
+    
+    showGui = false;
 }
 
 //--------------------------------------------------------------
@@ -150,7 +152,9 @@ void ofApp::draw(){
     
     viewBuffer.draw(0, 0);
     
-    gui.draw();
+    if(showGui) {
+        gui.draw();
+    }
 }
 
 //--------------------------------------------------------------
@@ -162,6 +166,9 @@ void ofApp::keyPressed(int key){
         for(int i = 0; i < botCols.size(); i++) {
             botCols[i].nextCol = cols[int(ofRandom(cols.size()))];
         }
+    }
+    if(key == 'g') {
+        showGui = !showGui;
     }
 }
 

@@ -40,6 +40,7 @@ class ofApp : public ofBaseApp{
         ofMesh topCap, botCap;
     
         float lastSwapTime;
+        bool showGui;
         
         ofxPanel gui;
         ofParameter<int> numCols;
