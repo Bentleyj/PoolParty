@@ -2,8 +2,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    cam.setPosition(0, 0, 0);
+    cam.setPosition(0, 0, 100);
     cam.lookAt(ofVec3f(0, 0, 0));
+    cam.setFarClip(10000);
+//    cam.setNearClip(0);
+    cout<< cam.getFarClip() << endl;
+    cout<< cam.getNearClip() << endl;
+    
+    showGui = false;
     
     radius = 200.0;
     
@@ -35,11 +41,13 @@ void ofApp::setup(){
     
     ofMesh verts;
     verts.load("models/sphere.ply");
+    
+    cout << verts.getNumVertices() << endl;
 
     for(int i = 0; i < verts.getNumVertices(); i++) {
         ofVec3f v = verts.getVertex(i);
         ofVec3f vS = cartesianToSpherical(v);
-        vS.x += radius/4 - ofRandom(0, radius/2);
+        vS.x -= radius/4 - ofRandom(0, radius/2);
         ofVec3f vr = sphericalToCartesian(vS);
         points.push_back(vr);
         sizes.push_back(ofVec3f(ofMap(verts.getColor(i).r*255, 45, 65, 0.0, 4.0)));
@@ -60,15 +68,17 @@ void ofApp::setup(){
     ofLoadImage(starSprite, "images/circle.png");
     ofEnableArbTex();
 
-    drawBuffer.allocate(ofGetHeight(), ofGetHeight());
-    fadeBufferDraw.allocate(ofGetHeight(), ofGetHeight());
-    fadeBufferSave.allocate(ofGetHeight(), ofGetHeight());
+    drawBuffer.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferDraw.allocate(ofGetWidth(), ofGetHeight());
+    fadeBufferSave.allocate(ofGetWidth(), ofGetHeight());
     
     ofSetBackgroundAuto(false);
     
     fadeBufferDraw.begin();
     ofBackground(0);
     fadeBufferDraw.end();
+    
+    fft.setup();
 }
 
 //--------------------------------------------------------------
@@ -87,6 +97,8 @@ void ofApp::update(){
         lookDir.z = ofLerp(lookDir.z, camLookAtTarget.z, 0.1);
         cam.lookAt(lookDir);
     }
+    
+    fft.update();
 }
 
 //--------------------------------------------------------------
@@ -105,7 +117,22 @@ void ofApp::draw(){
 //    ofEnableDepthTest();
     starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));
     starPoints.setUniform1f("starDensity", starDensity);
+//    cout<<fft.maxSound<<endl;
+//    maxStarSize = ofMap(fft.maxSound, 0.0, 100.0, 0.2, 0.5);
     starPoints.setUniform1f("maxSize", maxStarSize);
+    vector<float> spectrum;
+    for(int i = 0; i < fft.fftSpectrum.size(); i++) {
+        spectrum.push_back(ofMap(fft.fftSpectrum[i], 0, 20, 0, 20));
+    }
+    vector<ofVec3f> newPoints;
+    for(int i = 0; i < points.size(); i++) {
+        newPoints.push_back(points[i]);
+        newPoints[i] = cartesianToSpherical(newPoints[i]);
+        newPoints[i].x += spectrum[i%32];//100;//radius/4 - ofRandom(0, radius/2);
+        newPoints[i] = sphericalToCartesian(newPoints[i]);
+    }
+    vbo.setVertexData(&newPoints[0], (int)newPoints.size(), GL_STATIC_DRAW);
+    starPoints.setUniform1fv("offsets", &(spectrum[0]), spectrum.size());
     ofRotate(rotation, 0.5, 1, 0);
     starSprite.bind();
 	vbo.draw(GL_POINTS, 0, (int)points.size());
@@ -136,15 +163,21 @@ void ofApp::draw(){
     fadeBufferDraw.end();
     
     ofSetColor(255);
-    fadeBufferDraw.draw(0, 0, bufferSize, bufferSize);
+    fadeBufferDraw.draw(0, 0, ofGetWidth(), ofGetHeight());
     
-    gui.draw();
-    ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
+    if(showGui) {
+        gui.draw();
+        //ofDrawBitmapStringHighlight(ofToString(ofGetFrameRate()), ofGetWidth() - 100, ofGetHeight() - 10);
+        
+        //fft.drawBars();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+    if(key == 'g') {
+        showGui = !showGui;
+    }
 }
 
 //--------------------------------------------------------------

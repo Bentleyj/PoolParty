@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "spectrumFinder.hpp"
+#include "ofxProcessFFT.h"
 
 class ofApp : public ofBaseApp{
 
@@ -59,10 +60,12 @@ class ofApp : public ofBaseApp{
         vector<ofVec3f> sizes;
         vector<ofVec3f> points;
         vector<ofFloatColor> colors;
-
     
         float radius;
     
         ofEasyCam cam;
-		
+    
+        ProcessFFT fft;
+    
+        bool showGui;
 };
