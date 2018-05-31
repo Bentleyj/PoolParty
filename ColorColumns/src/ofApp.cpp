@@ -40,9 +40,9 @@ void ofApp::setup(){
 
     ofBackground(0);
     
-    topBuffer.allocate(ofGetHeight(), ofGetHeight());
-    botBuffer.allocate(ofGetHeight(), ofGetHeight());
-    viewBuffer.allocate(ofGetHeight(), ofGetHeight());
+    topBuffer.allocate(ofGetWidth(), ofGetHeight());
+    botBuffer.allocate(ofGetWidth(), ofGetHeight());
+    viewBuffer.allocate(ofGetWidth(), ofGetHeight());
     
     mix.load("shaders/mix");
     blur.load("shaders/blur");
