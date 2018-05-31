@@ -99,11 +99,10 @@ void ofApp::draw(){
     
     ofBackground(0);
     ofSetColor(255);
-    //ofEnableDepthTest();
     
     cam.begin();
     starPoints.begin();
-    
+//    ofEnableDepthTest();
     starPoints.setUniform1f("distanceToCenter", ofMap((cam.getPosition() - ofVec3f(0, 0, 0)).length(), 0.0, 666.0, 1.0, 0.5, true));
     starPoints.setUniform1f("starDensity", starDensity);
     starPoints.setUniform1f("maxSize", maxStarSize);
@@ -113,6 +112,7 @@ void ofApp::draw(){
     starSprite.unbind();
     starPoints.end();
     rotation += rotSpeed;
+//    ofDisableDepthTest();
     cam.end();
     
     drawBuffer.end();

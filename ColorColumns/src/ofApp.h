@@ -11,13 +11,14 @@ public:
     float baseHeight;
     int order;
     ofColor col;
-    void update(float noiseSpeed, float noiseScale, float noiseResolution) {
+    ofColor nextCol;
+    void update(float noiseSpeed, float noiseScale, float noiseResolution, float colLerpSpeed) {
         height = baseHeight + (0.5 - ofNoise(ofGetElapsedTimef() * noiseSpeed, order * noiseResolution)) * noiseScale;
+        col.lerp(nextCol, colLerpSpeed);
     }
 };
 
 class ofApp : public ofBaseApp{
-
 	public:
 		void setup();
 		void update();
@@ -38,6 +39,8 @@ class ofApp : public ofBaseApp{
         vector<ofColor> cols;
         ofMesh topCap, botCap;
     
+        float lastSwapTime;
+        
         ofxPanel gui;
         ofParameter<int> numCols;
         ofParameter<float> noiseSpeed;
@@ -45,11 +48,13 @@ class ofApp : public ofBaseApp{
         ofParameter<float> noiseResolution;
         ofParameter<float> baseHeight;
         ofParameter<int> bufferSize;
+        ofParameter<float> colorLerpSpeed;
+        ofParameter<float> timeBetweenSwaps;
     
         vector<Column> topCols;
         vector<Column> botCols;
     
         ofFbo topBuffer, botBuffer, viewBuffer;
     
-        ofShader mix;
+        ofShader mix, blur;
 };

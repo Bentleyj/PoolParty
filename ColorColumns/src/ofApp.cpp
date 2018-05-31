@@ -33,6 +33,10 @@ void ofApp::setup(){
     gui.add(noiseResolution.set("Noise Res", 0.5, 0.0, 1.03));
     gui.add(baseHeight.set("Base Col Height", ofGetHeight()/4, 0.0, ofGetHeight()));
     gui.add(bufferSize.set("Buffer Size", 128, 0.0, ofGetHeight()));
+    gui.add(colorLerpSpeed.set("Color Speed", 0.005, 0.0, 1.0));
+    gui.add(timeBetweenSwaps.set("Color Duration", 30.0, 1.0, 180.0));
+    
+    gui.loadFromFile(settingsPath);
 
     ofBackground(0);
     
@@ -41,6 +45,7 @@ void ofApp::setup(){
     viewBuffer.allocate(ofGetHeight(), ofGetHeight());
     
     mix.load("shaders/mix");
+    blur.load("shaders/blur");
     
     topCap.addVertex(ofVec3f(0, 0, 0));
     topCap.addVertex(ofVec3f(0, 10, 0));
@@ -75,18 +80,29 @@ void ofApp::setup(){
     botCap.addColor(ofColor(0));
     
     botCap.setMode(OF_PRIMITIVE_TRIANGLES);
-
+    
+    lastSwapTime = ofGetElapsedTimef();
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     for(int i = 0; i < topCols.size(); i++) {
         topCols[i].baseHeight = baseHeight;
-        topCols[i].update(noiseSpeed, noiseScale, noiseResolution);
+        topCols[i].update(noiseSpeed, noiseScale, noiseResolution, colorLerpSpeed);
     }
     for(int i = 0; i < botCols.size(); i++) {
         botCols[i].baseHeight = baseHeight;
-        botCols[i].update(noiseSpeed, noiseScale, noiseResolution);
+        botCols[i].update(noiseSpeed, noiseScale, noiseResolution, colorLerpSpeed);
+    }
+    
+    if(ofGetElapsedTimef() > lastSwapTime + timeBetweenSwaps) {
+        for(int i = 0; i < topCols.size(); i++) {
+            topCols[i].nextCol = cols[int(ofRandom(cols.size()))];
+        }
+        for(int i = 0; i < botCols.size(); i++) {
+            botCols[i].nextCol = cols[int(ofRandom(cols.size()))];
+        }
+        lastSwapTime = ofGetElapsedTimef();
     }
 }
 
@@ -100,7 +116,7 @@ void ofApp::draw(){
         ofDrawRectangle(i * topBuffer.getWidth() / numCols, 0, topBuffer.getWidth() / numCols, col.height);
         ofPushMatrix();
         ofTranslate(i * topBuffer.getWidth() / numCols, col.height);
-        ofScale(topBuffer.getWidth() / numCols / 10, 2);
+        ofScale(topBuffer.getWidth() / numCols / 10, 0.1);
         topCap.setColor(0, col.col);
         topCap.setColor(3, col.col);
         topCap.draw();
@@ -116,7 +132,7 @@ void ofApp::draw(){
         ofDrawRectangle(i * botBuffer.getWidth() / numCols, botBuffer.getHeight() - col.height, botBuffer.getWidth() / numCols, col.height);
         ofPushMatrix();
         ofTranslate(i * botBuffer.getWidth() / numCols, botBuffer.getHeight() - col.height);
-        ofScale(topBuffer.getWidth() / numCols / 10, 2);
+        ofScale(topBuffer.getWidth() / numCols / 10, 0.1);
         botCap.setColor(1, col.col);
         botCap.setColor(2, col.col);
         botCap.draw();
@@ -132,7 +148,7 @@ void ofApp::draw(){
     mix.end();
     viewBuffer.end();
     
-    viewBuffer.draw(0, 0, bufferSize, bufferSize);
+    viewBuffer.draw(0, 0);
     
     gui.draw();
 }
@@ -141,11 +157,10 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     if(key == ' ') {
         for(int i = 0; i < topCols.size(); i++) {
-            topCols[i].col = cols[int(ofRandom(cols.size()))];
+            topCols[i].nextCol = cols[int(ofRandom(cols.size()))];
         }
         for(int i = 0; i < botCols.size(); i++) {
-            botCols[i].col = cols[int(ofRandom(cols.size()))];
-
+            botCols[i].nextCol = cols[int(ofRandom(cols.size()))];
         }
     }
 }

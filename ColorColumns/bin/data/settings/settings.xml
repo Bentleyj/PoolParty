@@ -6,4 +6,14 @@
 	<Base_Col_Height>495.36</Base_Col_Height>
 	<Buffer_Size>128</Buffer_Size>
 <Settings/>
+<group>
+		<Num_Cols>2</Num_Cols>
+		<Noise_Speed>0.2</Noise_Speed>
+		<Noise_Scale>47.5</Noise_Scale>
+		<Noise_Res>0.5974</Noise_Res>
+		<Base_Col_Height>552.96</Base_Col_Height>
+		<Buffer_Size>503</Buffer_Size>
+	<Color_Speed>0.005</Color_Speed>
+	<Color_Duration>29.64</Color_Duration>
+	</group>
 </Settings>
